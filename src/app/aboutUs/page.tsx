@@ -1,6 +1,4 @@
 'use client';
-
-import React, { useEffect, useRef, useState } from 'react';
 import ParallaxSection from '../animations/ImageParallax';
 import Tag from '../components/tag';
 import AnimationCopy from '../animations/WritingTextAnimation';
@@ -8,9 +6,6 @@ import PerformanceMetrics from '../components/PerformanceMetrics';
 import TiltCard from '../animations/TiltCard';
 import CoreValueCard from '../components/MainCoreValuesCard';
 import { IconAwardFilled } from '@tabler/icons-react';
-import { text } from 'stream/consumers';
-import Image from 'next/image';
-import Dummy from '../dummy';
 import TeamMembersSection from '../sessions/TeamMembersSection';
 import GallerySection from '../sessions/GallerySection';
 

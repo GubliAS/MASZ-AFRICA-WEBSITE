@@ -18,6 +18,9 @@ function page() {
       <CoreValueSession />
       <TestimonialSession />
       <FaqSession />
+
+
+    
     </div>
   );
 }

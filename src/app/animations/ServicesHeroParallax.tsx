@@ -1,0 +1,139 @@
+'use client';
+
+import React, { useRef, useEffect } from 'react';
+import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function ServicesHeroParallax({
+  imageSrc,
+  imageAlt = 'Parallax image',
+  title,
+  subtitle,
+  height = 'lg',
+}) {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const mediaRef = useRef<HTMLDivElement | null>(null);
+  const textRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !mediaRef.current || !textRef.current) return;
+
+    const mm = gsap.matchMedia();
+
+    const ctx = gsap.context(() => {
+      /* ---------------- MOBILE ---------------- */
+      mm.add('(max-width: 1023px)', () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+
+        tl.to(
+          mediaRef.current,
+          {
+            y: '20%',
+            scale: 1.05,
+            ease: 'none',
+          },
+          0
+        );
+
+        tl.to(
+          textRef.current,
+          {
+            y: '-10%',
+            ease: 'none',
+          },
+          0
+        );
+      });
+
+      /* ---------------- DESKTOP ---------------- */
+      mm.add('(min-width: 1024px)', () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+
+        tl.to(
+          mediaRef.current,
+          {
+            y: '40%',
+            scale: 1.12,
+            ease: 'none',
+          },
+          0
+        );
+
+        tl.to(
+          textRef.current,
+          {
+            y: '-20%',
+            ease: 'none',
+          },
+          0
+        );
+      });
+    }, sectionRef);
+
+    return () => {
+      ctx.revert();
+      mm.revert();
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className={`relative w-full overflow-hidden ${
+        height === 'lg'
+          ? 'h-[520px] lg:h-[1100px]'
+          : 'h-[420px] lg:h-[900px]'
+      }`}
+    >
+      {/* MEDIA LAYER */}
+      <div
+        ref={mediaRef}
+        className="absolute top-[-6%] left-0 w-full h-[110%] lg:h-[120%]"
+      >
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          fill
+          priority
+          className="object-cover object-top"
+        />
+
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70 pointer-events-none" />
+      </div>
+
+      {/* TEXT LAYER */}
+      <div ref={textRef} className="relative z-10 h-full flex items-end">
+        <div className="max-w-[1200px] mx-auto px-6 pb-12 lg:pb-24">
+         
+          <h2 className="text-light text-xl-semibold lg:text-6xl font-bold leading-tight">
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="mt-4 text-sm-regular lg:text-xl-regular text-light lg:w-[1000px]">
+              {subtitle}
+            </p>
+          )}
+
+        </div>
+      </div>
+    </section>
+  );
+}

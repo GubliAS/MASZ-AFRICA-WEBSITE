@@ -6,64 +6,50 @@ import AnimationCopy from '../animations/WritingTextAnimation';
 import { Layers } from 'lucide-react';
 import { Square3Stack3DIcon } from '@heroicons/react/16/solid';
 
-
 interface serviceBenefitsProps {
   id: number;
   title: string;
   description: string;
 }
 
-
-
-
-
 export const serviceBenefits: serviceBenefitsProps[] = [
   {
     id: 1,
-    title: "Optimized grinding efficiency",
+    title: 'Optimized grinding efficiency',
     description:
-      "Premium forged and cast steel balls ensure uniform size and hardness for consistent milling performance. This improves energy utilization, reduces unnecessary material loss, and enhances overall mill productivity.",
+      'Premium forged and cast steel balls ensure uniform size and hardness for consistent milling performance. This improves energy utilization, reduces unnecessary material loss, and enhances overall mill productivity.',
   },
   {
     id: 2,
-    title: "Increased throughput",
+    title: 'Increased throughput',
     description:
-      "Durable media reduce breakage, allowing higher processing volumes without loss of efficiency. Plants can achieve faster processing cycles while maintaining stable operational output.",
+      'Durable media reduce breakage, allowing higher processing volumes without loss of efficiency. Plants can achieve faster processing cycles while maintaining stable operational output.',
   },
   {
     id: 3,
-    title: "Enhanced process consistency",
+    title: 'Enhanced process consistency',
     description:
-      "Uniform hardness and composition support predictable grinding outcomes and product quality. This stability simplifies process control and minimizes unexpected variations during production.",
+      'Uniform hardness and composition support predictable grinding outcomes and product quality. This stability simplifies process control and minimizes unexpected variations during production.',
   },
   {
     id: 4,
-    title: "Reliable performance under intensive conditions",
+    title: 'Reliable performance under intensive conditions',
     description:
-      "Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.",
+      'Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.',
   },
   {
     id: 5,
-    title: "Reduced mill wear and downtime",
+    title: 'Reduced mill wear and downtime',
     description:
-      "High-quality media minimize abrasion on liners and components, extending mill life. Reduced maintenance frequency helps lower operating costs and improve plant availability.",
+      'High-quality media minimize abrasion on liners and components, extending mill life. Reduced maintenance frequency helps lower operating costs and improve plant availability.',
   },
-   {
+  {
     id: 6,
-    title: "Reliable performance under intensive conditions",
+    title: 'Reliable performance under intensive conditions',
     description:
-      "Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.",
+      'Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.',
   },
 ];
-
-
-
-
-
-
-
-
-
 
 function CareersPage() {
   return (
@@ -184,33 +170,36 @@ function CareersPage() {
         <div className="benefits bg-[#f3f3f3] lg:py-[120]">
           <div className="benefits-main-content flex">
             <div className="left-side  lg:mx-[200]">
-
               <div className="benefits-list flex items-center justify-center lg:flex-start lg:gap-6 lg:flex-wrap">
-
                 {/* Benefit card section */}
                 {serviceBenefits.map((item) => (
-                  <div key={item.id} className="item-list bg-white flex flex-col lg:max-w-[400] lg:h-[350] items-center justify-center lg:gap-10  lg:px-[30] lg:py-[40]">
-                    <div className="item-icon bg-surface-card-colored-secondary rounded-full lg:p-[10]">
-                      <Square3Stack3DIcon className='lg:h-8 lg:w-auto text-primary-default'/>
+                  <div
+                    key={item.id}
+                    className="item-list group relative overflow-hidden bg-white flex flex-col 
+                    lg:max-w-[400px] lg:h-[350px] items-center justify-center 
+                    lg:gap-10 lg:px-[30px] lg:py-[40px] cursor-pointer"
+                  >
+                    {/* Liquid Layer */}
+                    <span className="liquid-bg absolute inset-0 -z-0" />
+
+                    <div className="item-icon relative z-10 bg-surface-card-colored-secondary rounded-full lg:p-[10px] transition-colors duration-500 group-hover:bg-white">
+                      <Square3Stack3DIcon className="lg:h-8 lg:w-auto text-primary-default transition-colors duration-500 group-hover:text-blue-600" />
                     </div>
 
-                    <div className="item-text text-center flex flex-col items-center justify-center">
+                    <div className="item-text relative z-10 text-center flex flex-col items-center justify-center transition-colors duration-500 group-hover:text-white">
                       <div className="title capitalize lg:text-xl-medium">
                         {item.title}
                       </div>
-                      <div className="subtext lg:mt-[20]  lg:text-md-regular">
+                      <div className="subtext lg:mt-[20px] lg:text-md-regular">
                         {item.description}
                       </div>
                     </div>
                   </div>
-
                 ))}
-          
               </div>
-
             </div>
 
-{/* benefits image section on the right */}
+            {/* benefits image section on the right */}
             {/* <div className="right-side bg-green-400 lg:w-[50%] lg:h-[70vh]">
               <div className="image-container relative lg:h-full overflow-hidden">
                 <Image

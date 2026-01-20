@@ -860,3 +860,87 @@ body {
 
 
 
+
+
+
+
+
+
+/* BENEFITS SECTION AT THE SERVICES DETAILS SIDE */
+
+/* LIST CONTAINER */
+.edge-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* BASE CARD */
+.edge-border-effect {
+  position: relative;
+  cursor: pointer;
+
+  /* Default divider borders */
+  border-top: 0.5px solid rgba(0,0,0,0.12);
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+/* Remove first/last default borders */
+.edge-list > .edge-border-effect:first-child {
+  border-top: none;
+}
+.edge-list > .edge-border-effect:last-child {
+  border-bottom: none;
+}
+
+/* ANIMATED TOP BORDER */
+.edge-border-effect::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 3px;           /* thin line */
+  width: 100%;
+  background: #2563eb;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+  pointer-events: none;
+}
+
+/* ANIMATED BOTTOM BORDER */
+.edge-border-effect::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;           /* thin line */
+  width: 100%;
+  background: #7c3aed;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s ease;
+  pointer-events: none;
+}
+
+/* HOVER / TAP EFFECT */
+.edge-border-effect:hover::before,
+.edge-border-effect:hover::after,
+.edge-border-effect:active::before,
+.edge-border-effect:active::after,
+.edge-border-effect:focus-within::before,
+.edge-border-effect:focus-within::after {
+  transform: scaleX(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -10,8 +10,8 @@ gsap.registerPlugin(ScrollTrigger);
 export default function ServicesHeroParallax({
   imageSrc,
   imageAlt = 'Parallax image',
+  tag,
   title,
-  subtitle,
   height = 'lg',
 }) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -123,14 +123,15 @@ export default function ServicesHeroParallax({
       <div ref={textRef} className="relative z-10 h-full flex items-end">
         <div className="max-w-[1200px] mx-auto px-6 pb-12 lg:pb-24">
          
-          <h2 className="text-light text-xl-semibold lg:text-6xl font-bold leading-tight">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="mt-4 text-sm-regular lg:text-xl-regular text-light lg:w-[1000px]">
-              {subtitle}
-            </p>
-          )}
+        <h2 className="flex text-white text-sm lg:text-base font-semibold border border-white/70 rounded-2xl px-4 py-2 uppercase tracking-wide">
+  {tag}
+</h2>
+
+{title && (
+  <p className="mt-4 text-white text-xl lg:text-3xl font-bold leading-tight max-w-[1000px]">
+    {title}
+  </p>
+)}
 
         </div>
       </div>

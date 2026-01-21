@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 interface CardData {
   id: number;
+  slug: string;
   tag: string;
   number: string;
   title: string;
@@ -19,6 +20,7 @@ interface CardData {
 const cardsData: CardData[] = [
   {
     id: 1,
+    slug: 'grinding-media',
     tag: 'product',
     number: '01',
     title: 'Grinding media',
@@ -30,6 +32,7 @@ const cardsData: CardData[] = [
   },
   {
     id: 2,
+    slug: 'activated-carbon',
     tag: 'service',
     number: '02',
     title: 'ACTIVATED CARBON',
@@ -42,7 +45,8 @@ const cardsData: CardData[] = [
   },
   {
     id: 3,
-    tag: 'innovation',
+    slug: 'metal-and-steel-pipes'
+,    tag: 'innovation',
     number: '03',
     title: 'METAL AND STEEL PIPES',
     description:
@@ -54,6 +58,7 @@ const cardsData: CardData[] = [
   },
   {
     id: 4,
+    slug: 'gear-box-servicing-and-heavy-equipment-maintenance',
     tag: 'technology',
     number: '04',
     title: 'GEAR BOX SERVICING AND HEAVY EQUIPMENT MAINTENANCE',
@@ -66,6 +71,7 @@ const cardsData: CardData[] = [
   },
   {
     id: 5,
+    slug: 'crusher-seals-installation-and-equipment-protection',
     tag: 'consulting',
     number: '05',
     title: 'CRUSHER SEALS INSTALLATION AND EQUIPMENT PROTECTION',
@@ -78,6 +84,7 @@ const cardsData: CardData[] = [
   },
   {
     id: 6,
+    slug: 'procurement-and-supply-chain-management',
     tag: 'support',
     number: '06',
     title: 'PROCUREMENT AND SUPPLY CHAIN MANAGEMENT',
@@ -90,6 +97,7 @@ const cardsData: CardData[] = [
   },
   {
     id: 7,
+    slug: 'technical-consultancy-and-field-support',
     tag: 'training',
     number: '07',
     title: 'TECHNICAL CONSULTANCY AND FIELD SUPPORT',
@@ -225,7 +233,7 @@ function ServicesCardsSection(): React.JSX.Element {
                     <p className="text-sm lg:text-md-regular text-white/90 mb-6 leading-relaxed">
                       {card.description}
                     </p>
-                    <Link href={card.href}>
+                    <Link href={`/services/${card.slug}`}>
                       <Button
                         label="Explore our services"
                         variant="primary"

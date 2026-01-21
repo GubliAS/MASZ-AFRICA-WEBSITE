@@ -17,39 +17,6 @@ type CoreValue = {
   image: string;
 };
 
-const coreValues = [
-  {
-    number: 1,
-    title: 'Innovation',
-    description:
-      'We constantly strive for new ideas and solutions to improve our services.',
-  },
-  {
-    number: 2,
-    title: 'Integrity',
-    description:
-      'We act ethically, transparently, and always keep our promises.',
-  },
-  {
-    number: 3,
-    title: 'Excellence',
-    description:
-      'We deliver quality and performance above expectations in everything we do.',
-  },
-  {
-    number: 4,
-    title: 'Customer Partnership',
-    description:
-      'We build strong relationships with clients through trust and collaboration.',
-  },
-  {
-    number: 5,
-    title: 'Safety & Sustainability',
-    description:
-      'We prioritize safety and environmental responsibility in all operations.',
-  },
-];
-
 const valueCards: CoreValue[] = [
   {
     id: 1,
@@ -118,80 +85,7 @@ const achievements = [
   },
 ];
 
-const teamMemberDetails = [
-  {
-    id: 1,
-    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
-  the company’s strategic vision and drives operational excellence across all its services.
-  With extensive experience in procurement, supply chain management, engineering, and business operations,
-  <br /><br />
-  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
-  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
-  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
-  <br /><br />
-  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
-  Africa’s industrial and economic development.`,
-    image: '/aboutAssets/TEAM-1.jpg',
-  },
-  {
-    id: 2,
-    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
-  the company’s strategic vision and drives operational excellence across all its services.
-  With extensive experience in procurement, supply chain management, engineering, and business operations,
-  <br /><br />
-  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
-  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
-  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
-  <br /><br />
-  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
-  Africa’s industrial and economic development.`,
-    image: '/aboutAssets/TEAM-1.jpg',
-  },
-  {
-    id: 3,
-    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
-  the company’s strategic vision and drives operational excellence across all its services.
-  With extensive experience in procurement, supply chain management, engineering, and business operations,
-  <br /><br />
-  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
-  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
-  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
-  <br /><br />
-  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
-  Africa’s industrial and economic development.`,
-    image: '/aboutAssets/TEAM-1.jpg',
-  },
-  {
-    id: 4,
-    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
-  the company’s strategic vision and drives operational excellence across all its services.
-  With extensive experience in procurement, supply chain management, engineering, and business operations,
-  <br /><br />
-  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
-  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
-  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
-  <br /><br />
-  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
-  Africa’s industrial and economic development.`,
-    image: '/aboutAssets/TEAM-1.jpg',
-  },
-  {
-    id: 5,
-    description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads 
-  the company’s strategic vision and drives operational excellence across all its services.
-  With extensive experience in procurement, supply chain management, engineering, and business operations,
-  <br /><br />
-  Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation.
-  Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, 
-  strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.
-  <br /><br />
-  Beyond his corporate role, Samuel is passionate about driving innovation, empowering talent, and supporting 
-  Africa’s industrial and economic development.`,
-    image: '/aboutAssets/TEAM-1.jpg',
-  },
 
-  ,
-];
 
 function AboutUSPage() {
   return (

@@ -1,85 +1,66 @@
-"use client"; // If using Next.js 13 app directory
-
-import { useEffect, useRef } from "react";
+'use client'
+import { useRef, useEffect } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function BenefitSectionHero() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const subtextRef = useRef<HTMLDivElement>(null);
+export default function ServiceHero() {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const imageRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || !imageRef.current) return;
 
-    const titleLines = titleRef.current?.innerHTML.split(". ").map((line) => line + "."); // Split by sentence
-    const subtextLines = subtextRef.current?.innerHTML.split(". ").map((line) => line + ".");
-
-    // Replace content with spans for animation
-    titleRef.current.innerHTML = titleLines
-      .map((line) => `<span class="line-block opacity-0 block">${line}</span>`)
-      .join("");
-    subtextRef.current.innerHTML = subtextLines
-      .map((line) => `<span class="line-block opacity-0 block">${line}</span>`)
-      .join("");
-
-    // GSAP animation
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 80%", // when the top of the section hits 80% of viewport
-      },
-    });
-
-    tl.to(titleRef.current.querySelectorAll(".line-block"), {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      stagger: 0.3,
-      ease: "power2.out",
-    })
-      .to(
-        subtextRef.current.querySelectorAll(".line-block"),
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        imageRef.current,
+        { y: "-10%" },
         {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power2.out",
-        },
-        "+=0.2"
+          y: "10%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
       );
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
     <div
       ref={sectionRef}
-      className="beneit-section-hero bg-[#f3f3f3] w-full lg:h-[700px] relative overflow-hidden"
+      className="service-hero-section h-[600px] lg:h-screen"
     >
-      <Image
-        src="/serviceAssets/Image-16.jpg"
-        alt="Grinding media"
-        fill
-        priority
-        className="object-cover object-top"
-      />
-      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-
-      <div className="text-container text-light absolute bottom-20 left-0 right-0 flex flex-col items-start lg:mx-[200px]">
-        <div
-          ref={titleRef}
-          className="title uppercase lg:text-4xl-semibold leading-13 translate-y-5"
-        >
-          Engineered for Efficiency and Profitability.
+      <div className="image-container relative h-full overflow-hidden">
+        
+        {/* 🔥 Parallax wrapper */}
+        <div ref={imageRef} className="absolute inset-0 scale-110">
+          <Image
+            src="/serviceAssets/Image-1-3.webp"
+            alt="Grinding media"
+            fill
+            priority
+            className="object-cover"
+          />
         </div>
-        <div
-          ref={subtextRef}
-          className="subtext lg:text-lg-medium max-w-[500px] translate-y-5 mt-4"
-        >
-          Delivering reliable mining consumables and expert technical support to keep your operations running smoothly, reduce downtime, and maximize efficiency—helping your business save costs and boost profitability. Partner with us for innovative solutions and unwavering support that drive growth and success in every project.
+
+        <div className="absolute inset-0 bg-black/60 pointer-events-none" />
+
+        <div className="text-container text-light absolute bottom-20 left-0 right-0 flex items-center justify-center flex-col">
+          <div className="hero-tag text-md-medium uppercase border-2 rounded-full lg:p-[10]">
+            Consumables
+          </div>
+
+          <div className="title uppercase lg:text-4xl-semibold">
+            grinding media
+          </div>
         </div>
       </div>
     </div>

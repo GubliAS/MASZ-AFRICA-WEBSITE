@@ -1,11 +1,16 @@
 import React from 'react';
-import Tag from '../components/tag';
-import ServicesHeroParallax from '../animations/ImageParallax';
+import Tag from '../../components/tag';
 import Image from 'next/image';
-import AnimationCopy from '../animations/WritingTextAnimation';
+import AnimationCopy from '../../animations/WritingTextAnimation';
 import { Layers } from 'lucide-react';
 import { Square3Stack3DIcon } from '@heroicons/react/16/solid';
-import Dummy from '../dummy'
+import { serviceDetailsTemplate } from '@/app/Data/serviceDetails';
+
+interface pageProps {
+    params: {
+        slug:string;
+    }
+}
 
 
 
@@ -16,46 +21,18 @@ interface serviceBenefitsProps {
   description: string;
 }
 
-export const serviceBenefits: serviceBenefitsProps[] = [
-  {
-    id: 1,
-    title: 'Optimized grinding efficiency',
-    description:
-      'Premium forged and cast steel balls ensure uniform size and hardness for consistent milling performance. This improves energy utilization, reduces unnecessary material loss, and enhances overall mill productivity.',
-  },
-  {
-    id: 2,
-    title: 'Increased throughput',
-    description:
-      'Durable media reduce breakage, allowing higher processing volumes without loss of efficiency. Plants can achieve faster processing cycles while maintaining stable operational output.',
-  },
-  {
-    id: 3,
-    title: 'Enhanced process consistency',
-    description:
-      'Uniform hardness and composition support predictable grinding outcomes and product quality. This stability simplifies process control and minimizes unexpected variations during production.',
-  },
-  {
-    id: 4,
-    title: 'Reliable performance under intensive conditions',
-    description:
-      'Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.',
-  },
-  {
-    id: 5,
-    title: 'Reduced mill wear and downtime',
-    description:
-      'High-quality media minimize abrasion on liners and components, extending mill life. Reduced maintenance frequency helps lower operating costs and improve plant availability.',
-  },
-  {
-    id: 6,
-    title: 'Reliable performance under intensive conditions',
-    description:
-      'Designed to maintain structural integrity in high-load and high-impact milling operations. This ensures dependable performance even in demanding industrial environments.',
-  },
-];
 
-function CareersPage() {
+
+function CareersPage({ params }:pageProps) {
+
+  const service = serviceDetailsTemplate.find(
+    (item) => item.slug === params.slug
+   )
+
+   if(!service) {
+    return <div className="p-20">Service not found</div>;
+}
+
   return (
     <section className="">
       <div className="main-section-content-container">
@@ -204,19 +181,6 @@ function CareersPage() {
                 ))}
               </div>
             </div>
-
-            {/* benefits image section on the right */}
-            {/* <div className="right-side bg-green-400 lg:w-[50%] lg:h-[70vh]">
-              <div className="image-container relative lg:h-full overflow-hidden">
-                <Image
-                 src='/serviceAssets/Image-4-1.webp'
-                 alt='Grinding media'
-                 fill 
-                 priority
-                 className='object-cover'
-                />
-              </div>
-            </div> */}
 
 
           </div>

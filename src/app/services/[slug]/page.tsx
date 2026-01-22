@@ -7,53 +7,46 @@ import { Square3Stack3DIcon } from '@heroicons/react/16/solid';
 import { serviceDetailsTemplate } from '@/app/Data/serviceDetails';
 
 interface pageProps {
-    params: {
-        slug:string;
-    }
+    params: Promise<{
+      slug: string
+    }>
 }
 
 
+async function CareersPage({ params }:pageProps) {
 
-
-interface serviceBenefitsProps {
-  id: number;
-  title: string;
-  description: string;
-}
-
-
-
-function CareersPage({ params }:pageProps) {
+  const { slug } = await params;
 
   const service = serviceDetailsTemplate.find(
-    (item) => item.slug === params.slug
+    (item) => item.slug === slug
    )
 
    if(!service) {
-    return <div className="p-20">Service not found</div>;
+    return <div className="p-20">Service not found: {slug}</div>;
 }
+
 
   return (
     <section className="">
       <div className="main-section-content-container">
-        <div className="upper-info mt-[80] lg:mt-[150] lg:mx-[200]">
+        {/* <div className="upper-info mt-[80] lg:mt-[150] lg:mx-[200]">
           <Tag text="products and services" />
           <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold lg:tracking-tight mt-[50] lg:mt-[100] mb-[30] lg:mb-[50]">
             <div className="dark-text mb-[-8] lg:mb-[-20] ">
-              consumables that keep your mine
+              {service.headerFirst}
             </div>
             <div className="blue-text text-primary-default">
-              moving without compromise
+              {service.headerSecond}
             </div>
           </div>
-        </div>
+        </div> */}
 
 
 {/* Hero section Image */}
-        <div className="service-hero-section h-[600] lg:h-screen">
+        <div className="service-hero-section h-[600] lg:h-[850]">
           <div className="image-container relative h-full lg:h-full overflow-hidden ">
             <Image
-              src="/serviceAssets/Image-1-3.webp"
+              src={service.heroImage}
               alt="Grinding media"
               fill
               priority
@@ -64,10 +57,10 @@ function CareersPage({ params }:pageProps) {
 
             <div className="text-container text-light absolute bottom-20 left-0 right-0 flex items-center justify-center flex-col">
               <div className="hero-tag text-md-medium uppercase border-2 rounded-full lg:p-[10]">
-                Consumables
+                {service.heroTag}
               </div>
               <div className="title uppercase lg:text-4xl-semibold">
-                grinding media
+                {service.heroTitle}
               </div>
             </div>
           </div>
@@ -78,44 +71,9 @@ function CareersPage({ params }:pageProps) {
           <div className="description-content mx-[21] lg:mx-[200] my-[100] lg:my-[150]">
             <Tag text="details" className="mb-[40] lg:mb-[80]" />
             <AnimationCopy>
-              <div className="description text-md-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
-                MASZ-AFRICA supplies high-performance forged and cast steel
-                grinding balls, meticulously engineered to deliver consistent,
-                efficient, and reliable results in even the most demanding
-                milling environments. Our grinding media are
-                precision-manufactured to meet stringent international quality
-                standards, ensuring superior strength, exceptional wear
-                resistance, and an extended service life that minimizes downtime
-                and reduces operational costs. <br />
-                <br />
-                Sourced exclusively from globally accredited production
-                facilities that fully comply with ISO 9001 and ASTM
-                specifications, each batch of grinding media undergoes rigorous,
-                multi-stage quality control. This includes strict hardness
-                testing, dimensional verification, and impact resistance checks,
-                guaranteeing uniform performance, minimal breakage, and
-                consistent results across all milling operations. The result is
-                dependable grinding media that withstand extreme pressures,
-                high-impact loads, and abrasive ore conditions without
-                compromising efficiency. <br />
-                <br />
-                At MASZ-AFRICA, we go beyond simply supplying high-quality
-                products. Our specialized technical support and on-site
-                consultation services are designed to optimize your milling
-                process and production outcomes. Our experienced engineers and
-                metallurgists evaluate critical factors, including mill type,
-                ore composition, feed size, grinding conditions, and operational
-                parameters, to recommend the ideal grinding media in terms of
-                composition, size distribution, and hardness profile. <br />
-                <br />
-                By tailoring solutions to your unique process requirements,
-                MASZ-AFRICA ensures maximum throughput, reduced energy
-                consumption, minimized wear on mill liners, and improved overall
-                operational efficiency. Whether you are aiming for higher
-                productivity, lower maintenance costs, or longer media life, our
-                grinding media and expert support deliver measurable results
-                that enhance both performance and profitability.
-              </div>
+              <div dangerouslySetInnerHTML={{ __html: service.description || '' }} className="description text-md-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight"/>
+               
+              
             </AnimationCopy>
           </div>
         </div>
@@ -124,8 +82,8 @@ function CareersPage({ params }:pageProps) {
         <div className="benefit-section-hero bg-[#f3f3f3] w-full lg:h-[700]">
           <div className="image-container relative w-full lg:h-full overflow-hidden">
             <Image
-              src="/serviceAssets/Image-16.jpg"
-              alt="Grinding media"
+              src={service.benefitsImage}
+              alt={service.benefitsAltText}
               fill
               priority
               className="object-cover object-top"
@@ -135,16 +93,11 @@ function CareersPage({ params }:pageProps) {
 
             <div className="text-container text-light absolute bottom-70 left-0 right-0 flex ">
               <div className="title uppercase  lg:text-4xl-semibold lg:w-[650] lg:mx-[200] leading-13">
-                Engineered for Efficiency and Profitability.
+                {service.benefitsTitle}
               </div>
 
               <div className="subtext lg:text-lg-medium lg:max-w-[500]">
-                Delivering reliable mining consumables and expert technical
-                support to keep your operations running smoothly, reduce
-                downtime, and maximize efficiency—helping your business save
-                costs and boost profitability. Partner with us for innovative
-                solutions and unwavering support that drive growth and success
-                in every project.
+                {service.benefitsSubtitle}
               </div>
             </div>
           </div>
@@ -155,7 +108,7 @@ function CareersPage({ params }:pageProps) {
             <div className="left-side  lg:mx-[200]">
               <div className="benefits-list flex items-center justify-center lg:flex-start lg:gap-6 lg:flex-wrap">
                 {/* Benefit card section */}
-                {serviceBenefits.map((item) => (
+                {service.benefits.map((item) => (
                   <div
                     key={item.id}
                     className="item-list group relative overflow-hidden bg-white flex flex-col 

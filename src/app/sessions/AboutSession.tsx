@@ -7,7 +7,7 @@ import AnimationCopy from '../animations/WritingTextAnimation';
 
 function AboutSession() {
   return (
-    <section className="lg:mx-[200] lg:my-[180]">
+    <section className="lg:ml-[200] relative lg:my-[180]">
       <div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-start lg:gap-[50px]">
         {/* Left: Text + Button */}
         <div className="session-container lg:w-1/2">
@@ -63,7 +63,7 @@ function AboutSession() {
         <div className="hidden lg:flex lg:w-1/2 lg:justify-end lg:items-start">
           <div className="about-us-image relative w-full h-[900px] flex items-center justify-center  transition-all ease-in-out">
             <Image
-              src="/homeAssets/Image-2.jpg"
+              src="/homeAssets/Image-14.webp"
               alt=""
               fill
               priority

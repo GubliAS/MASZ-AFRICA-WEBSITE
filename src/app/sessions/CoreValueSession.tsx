@@ -5,16 +5,16 @@ import Image from 'next/image';
 
 function CoreValueSession() {
   return (
-    <section className="lg:my-[180] lg:mx-[200]">
+    <section className="lg:my-[180]">
       <div className="core-value-section-container">
         {/* Header */}
-        <div className="section-header uppercase text-xl-semibold ml-[22px] my-[30px] lg:text-4xl-semibold">
+        <div className="section-header uppercase text-xl-semibold lg:mx-[200] ml-[22px] my-[30px] lg:text-4xl-semibold">
           what makes us <span className="text-primary-default">stand out</span>
         </div>
 
         {/* Description */}
         <AnimationCopy>
-          <div className="core-value-section-subtext text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
+          <div className="core-value-section-subtext lg:mx-[200] text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
             Our uniqueness comes from blending product authenticity with real
             technical intelligence and dependable service delivery. Every item
             we supply is verified, traceable, and backed by expert insight
@@ -35,7 +35,7 @@ function CoreValueSession() {
         </AnimationCopy>
 
         {/* Metrics */}
-        <div className="metrics-container my-[50px] gap-6 mx-[21] lg:flex">
+        <div className="metrics-container lg: lg:mx-[200] lg:mb-[100] my-[50px] gap-6 mx-[21] lg:flex">
           <PerformanceMetrics text="years of combined experience" value="15+" />
           <PerformanceMetrics
             text="clients who rely on our consistent delivery and expertise."
@@ -65,7 +65,7 @@ function CoreValueSession() {
           </div>
 
           {/* Image 2 & 3 */}
-          <div className="flex gap-[20px] lg:gap-[40] mx-[21px]">
+          <div className="flex gap-[20px] lg:gap-[40] mx-[21px] lg:mx-0">
             <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800]">
               <Image
                 src="/homeAssets/Image-4.jpg"
@@ -74,7 +74,7 @@ function CoreValueSession() {
                 className="object-cover"
               />
             </div>
-            <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800]">
+            <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800] lg:mx-0">
               <Image
                 src="/homeAssets/Image-5.jpg"
                 alt="Core value visual"

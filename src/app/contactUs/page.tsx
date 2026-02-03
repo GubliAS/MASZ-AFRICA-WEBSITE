@@ -1,9 +1,12 @@
-import React from 'react'
+'use client';
 
-function ContactUsPage() {
+import React from 'react';
+import ScrollReveal from '../components/ScrollReveal';
+
+export default function ContactUsPage() {
   return (
-    <div>ContactUsPage</div>
-  )
+    <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
+      <div>ContactUsPage</div>
+    </ScrollReveal>
+  );
 }
-
-export default ContactUsPage

@@ -60,16 +60,16 @@ export default function FaqSession() {
   return (
     <section className="mt-[100px] mx-[21px] lg:mx-[200] lg:my-[120] lg:">
       <div className="main-faq-section-container lg:flex lg:justify-between">
-        <div className="faq-left-side-for-large-screens">
+        <div className="faq-left-side-for-large-screens" data-scroll-reveal-item>
           <Tag text="Frequently asked questions" />
           <div className="faq-title-and-card-for-large-screens lg:flex lg:flex-col lg:justify-between">
-            <div className="text-xl-semibold my-[30px] leading-6 lg:text-4xl-semibold lg:leading-13 lg:my-[70]">
+            <div className="text-xl-semibold my-[30px] leading-6 lg:text-4xl-semibold lg:leading-13 lg:my-[70]" data-scroll-reveal-item>
               GOT ANY QUESTIONS? <br />
               <span className="text-primary-default">WE'VE GOT ANSWERS</span>
             </div>
 
             {/* faq-cta-card displayed on mobile */}
-            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[] transition-all duration-300">
+            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[] transition-all duration-300" data-scroll-reveal-item>
               <div className="header uppercase text-light text-lg-semibold lg:text-2xl-semibold">
                 Still have a question?
               </div>
@@ -97,6 +97,7 @@ export default function FaqSession() {
             return (
               <div
                 key={item.id}
+                data-scroll-reveal-item
                 className={`relative mb-4 select-none
                 border-2 transition-colors duration-400
                 ${
@@ -170,7 +171,7 @@ export default function FaqSession() {
         </div>
 
         {/* faq-cta-card displayed on mobile */}
-        <div className="lg:hidden faq-cta-card bg-surface-card-colored-primary px-[25] py-[25] my-[100] transition-all duration-300">
+        <div className="lg:hidden faq-cta-card bg-surface-card-colored-primary px-[25] py-[25] my-[100] transition-all duration-300" data-scroll-reveal-item>
           <div className="header uppercase text-light text-lg-semibold">
             Still have a question?
           </div>

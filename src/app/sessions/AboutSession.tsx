@@ -10,7 +10,7 @@ function AboutSession() {
     <section className="lg:ml-[200] relative lg:my-[180]">
       <div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-start lg:gap-[50px]">
         {/* Left: Text + Button */}
-        <div className="session-container lg:w-1/2">
+        <div className="session-container lg:w-1/2" data-scroll-reveal-item>
           <Tag text="About us" className="ml-[22]" />
           <div className="about-us-header text-xl-semibold uppercase ml-[22] my-[30] lg:my-[70] lg:text-4xl-semibold">
             Who <span className="text-primary-default">We are</span>
@@ -60,7 +60,7 @@ function AboutSession() {
         </div>
 
         {/* Right: Large screen image */}
-        <div className="hidden lg:flex lg:w-1/2 lg:justify-end lg:items-start">
+        <div className="hidden lg:flex lg:w-1/2 lg:justify-end lg:items-start" data-scroll-reveal-item>
           <div className="about-us-image relative w-full h-[900px] flex items-center justify-center  transition-all ease-in-out">
             <Image
               src="/homeAssets/Image-14.webp"

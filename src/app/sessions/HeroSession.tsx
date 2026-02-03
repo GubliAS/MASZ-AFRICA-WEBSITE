@@ -9,7 +9,7 @@ import HeroTryParallax from './HeroTryParallax'
 function HeroSession() {
   return (
     <div className="hero-session-container mt-[50]">
-      <div className="hero-message lg:flex lg:items-center  lg:justify-between lg:mx-[200] lg:my-[80]">
+      <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[200] lg:my-[80]">
         <div className="hero-logo flex items-center justify-center mt-[40] lg:mt-0">
           <Image
             src="/maszAssets/logotype.svg"

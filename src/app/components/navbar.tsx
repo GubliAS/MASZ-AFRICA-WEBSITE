@@ -5,6 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MoveRight } from 'lucide-react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePathname } from 'next/navigation';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const navLinks = [
   { id: '1', label: 'home', path: '/' },
@@ -17,9 +21,71 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
+  const headerRef = useRef<HTMLElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
-  const [activeLink, setActiveLink] = useState(navLinks[0].label); // default: home
+
+  const pathname = usePathname();
+
+  // Navbar expands gradually as you scroll down, contracts gradually as you scroll up (1:1 with scroll)
+  const SCROLL_RANGE_PX = 200;
+
+  useEffect(() => {
+    const header = headerRef.current;
+    const inner = innerRef.current;
+    if (!header || !inner) return;
+
+    const ctx = gsap.context(() => {
+      gsap.set(header, {
+        width: '80%',
+        left: '10%',
+        y: '20%',
+        backgroundColor: '#ffffff',
+        backdropFilter: 'blur(0px)',
+      });
+      gsap.set(inner, { marginLeft: '2.5rem', marginRight: '2.5rem' });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: document.body,
+          start: 'top top',
+          end: `${SCROLL_RANGE_PX}px top`,
+          scrub: true,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            header.classList.toggle('navbar--expanded', self.progress > 0.4);
+          },
+        },
+      });
+
+      tl.to(
+        header,
+        {
+          width: '100%',
+          left: '0%',
+          y: 0,
+          backgroundColor: 'rgba(13, 13, 13, 0.94)',
+          backdropFilter: 'blur(14px)',
+          ease: 'none',
+          duration: 1,
+        },
+        0
+      );
+      tl.to(
+        inner,
+        {
+          marginLeft: '5.5rem',
+          marginRight: '5.5rem',
+          ease: 'none',
+          duration: 1,
+        },
+        0
+      );
+    }, header);
+
+    return () => ctx.revert();
+  }, []);
 
   // Hide menu initially
   useEffect(() => {
@@ -29,6 +95,7 @@ function Navbar() {
         opacity: 0,
         transformOrigin: 'top',
       });
+
       itemRefs.current.forEach((el) => {
         if (el) gsap.set(el, { y: 20, opacity: 0 });
         const arrow = el?.querySelector('svg');
@@ -80,111 +147,133 @@ function Navbar() {
   }, [menuOpen]);
 
   return (
-    <header className="navbar left-0 right-0 z-[100]  w-full h-[90]">
-      <div className="main-nav-container flex justify-between items-center h-full mx-[20] lg:mx-[200]">
-        <div className="nav-logo">
-          <Image
-            src="/maszAssets/website-logo.svg"
-            width={140}
-            height={50}
-            alt="masz africa logo"
-            style={{ height: 25, width: 'auto' }}
-          />
-        </div>
+    <>
+      {/* Spacer so content doesn't hide behind fixed navbar */}
+      <div className="h-[90px]" />
 
-        <div className="nav-list flex items-center">
-          <div className="large-screens-navbar hidden lg:flex mr-[50] p-[20] text-default-body">
-            <ul className="large-screen-navbar-list flex gap-8 uppercase items-center text-md-medium">
-              {navLinks.map((list) => (
-                <li key={list.id} className="relative">
+      <header
+        ref={headerRef}
+        className="navbar navbar--compact fixed top-0 z-[100] h-[90px] will-change-transform"
+        style={{
+          width: '80%',
+          left: '10%',
+          transform: 'translateY(20%)',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        <div
+          ref={innerRef}
+          className="main-nav-container flex justify-between items-center h-full lg:mx-10"
+        >
+          {/* Logo */}
+          <div className="nav-logo">
+            <Image
+              src="/maszAssets/website-logo.svg"
+              width={140}
+              height={50}
+              alt="masz africa logo"
+              style={{ height: 25, width: 'auto' }}
+            />
+          </div>
+
+          <div className="nav-list flex items-center">
+            {/* Desktop Nav */}
+            <div className="hidden lg:flex mr-[50px] p-[20px] text-default-body">
+              <ul className="flex gap-8 uppercase items-center text-md-medium">
+                {navLinks.map((list) => {
+                  const isActive = pathname === list.path;
+
+                  return (
+                    <li key={list.id} className="relative">
+                      <Link
+                        href={list.path}
+                        className={`
+                          relative inline-block px-1 py-1 font-medium text-default-body
+                          before:content-[''] before:absolute before:left-0 before:top-[-10px]
+                          before:h-[4px] before:w-0 before:bg-blue-500
+                          before:transition-[width,opacity] before:duration-300 before:opacity-0
+                          after:content-[''] after:absolute after:left-0 after:bottom-[-10px]
+                          after:h-[4px] after:w-0 after:bg-blue-500
+                          after:transition-[width,opacity] after:duration-300 after:opacity-0
+                          hover:before:w-full hover:after:w-full hover:before:opacity-100 hover:after:opacity-100
+                          ${
+                            isActive
+                              ? 'before:w-full after:w-full before:opacity-100 after:opacity-100 text-b'
+                              : ''
+                          }
+                        `}
+                      >
+                        {list.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* CTA */}
+            <div className="contact-us-cta flex justify-between items-center mr-[10px]">
+              <Link
+                href="/contactUs"
+                className="font-medium bg-surface-card-colored-primary text-light px-[8px] py-[7px] flex"
+              >
+                Contact Us
+                <MoveRight size={20} className="mt-[2px] mx-1" />
+              </Link>
+            </div>
+
+            {/* Mobile Menu Icon */}
+            <div
+              className="menu-icon ml-2 w-[30px] h-[30px] flex flex-col justify-center items-center gap-[4px] cursor-pointer lg:hidden"
+              onClick={toggleMenu}
+            >
+              <span
+                className={`block h-[3px] w-full bg-black rounded transition-all duration-500 ${
+                  menuOpen ? 'rotate-45 translate-y-2' : ''
+                }`}
+              />
+              <span
+                className={`block h-[3px] w-full bg-black rounded transition-all duration-500 ${
+                  menuOpen ? 'opacity-0' : ''
+                }`}
+              />
+              <span
+                className={`block h-[3px] w-full bg-black rounded transition-all duration-500 ${
+                  menuOpen ? '-rotate-45 -translate-y-2' : ''
+                }`}
+              />
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <div
+            ref={menuRef}
+            className="nav-bar-list-items bg-surface-card-primary fixed z-40 top-[90px] w-full left-0 right-0 h-[calc(100vh-90px)] transform origin-top lg:hidden"
+          >
+            <ul className="navList-item">
+              {navLinks.map((link, index) => (
+                <li
+                  key={link.id}
+                  ref={(el) => {
+                    itemRefs.current[index] = el;
+                  }}
+                  className="border-b border-gray-500 px-[18px] py-[20px] flex justify-between items-center"
+                >
                   <Link
-                    href={list.path}
-                    onClick={() => setActiveLink(list.label)}
-                    className={`
-                      relative inline-block px-1 py-1 font-medium text-default-body
-                      before:content-[''] before:absolute before:left-0 before:top-[-10px] before:h-[4px] before:w-0 before:bg-blue-500 before:transition-all before:duration-300
-                      after:content-[''] after:absolute after:left-0 after:bottom-[-10px] after:h-[4px] after:w-0 after:bg-blue-500 after:transition-all after:duration-300
-                      hover:before:w-full hover:after:w-full 
-                      ${
-                        activeLink === list.label
-                          ? 'before:w-full after:w-full'
-                          : ''
-                      }
-          `}
+                    href={link.path}
+                    className="capitalize text-3xl-regular"
+                    onClick={() => setMenuOpen(false)}
                   >
-                    {list.label}
+                    {link.label}
                   </Link>
+                  <MoveRight size={20} />
                 </li>
               ))}
             </ul>
           </div>
-
-          <div className="contact-us-cta flex justify-between items-center mr-[10]">
-            <Link
-              href="/contactUs"
-              className="font-medium bg-surface-card-colored-primary text-light px-[8] py-[7] flex"
-            >
-              Contact Us
-              <MoveRight size={20} className="mt-[2] mx-1" />
-            </Link>
-          </div>
-
-          <div
-            className="menu-icon ml-2 w-[30] h-[30] flex flex-col justify-center items-center gap-[4] cursor-pointer lg:hidden"
-            onClick={toggleMenu}
-          >
-            <span
-              className={`block h-[3] w-full bg-black rounded transform transition-all duration-500 ease-in-out ${
-                menuOpen ? 'rotate-45 translate-y-2' : ''
-              }`}
-            />
-            <span
-              className={`block h-[3] w-full bg-black rounded transition-all duration-500 ease-in-out ${
-                menuOpen ? 'opacity-0' : ''
-              }`}
-            />
-            <span
-              className={`block h-[3] w-full bg-black rounded transform transition-all duration-500 ease-in-out ${
-                menuOpen ? '-rotate-45 -translate-y-2' : ''
-              }`}
-            />
-          </div>
         </div>
-
-        <div
-          ref={menuRef}
-          className="nav-bar-list-items bg-surface-card-primary fixed z-40 top-22 w-full left-0 right-0 h-full transform origin-top lg:hidden"
-        >
-          <ul className="navList-item">
-            {navLinks.map((link, index) => (
-              <li
-                key={link.id}
-                ref={(el) => {
-                  itemRefs.current[index] = el;
-                }}
-                className="border-b border-gray-500 px-[18] py-[20] flex justify-between items-center"
-              >
-                <Link
-                  href={link.path}
-                  className="capitalize text-3xl-regular"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-                <MoveRight
-                  size={20}
-                  className={`transform transition-all duration-500 ease-in-out ${
-                    menuOpen
-                      ? 'opacity-100 translate-x-0'
-                      : 'opacity-0 -translate-x-4'
-                  }`}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 

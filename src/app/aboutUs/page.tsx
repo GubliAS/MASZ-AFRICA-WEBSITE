@@ -8,6 +8,8 @@ import CoreValueCard from '../components/MainCoreValuesCard';
 import { IconAwardFilled } from '@tabler/icons-react';
 import TeamMembersSection from '../sessions/TeamMembersSection';
 import GallerySection from '../sessions/GallerySection';
+import ScrollReveal from '../components/ScrollReveal';
+import dynamic from 'next/dynamic';
 
 type CoreValue = {
   id: number;
@@ -88,9 +90,24 @@ const achievements = [
 
 
 function AboutUSPage() {
+
+
+
+  const ParallaxSection = dynamic(() => import('../animations/ImageParallax'), { ssr: false });
+
+  // Make TiltCard client-only
+  const TiltCard = dynamic(() => import('../animations/TiltCard'), { ssr: false });
+
+  // Make AnimationCopy client-only
+  const AnimationCopy = dynamic(() => import('../animations/WritingTextAnimation'), { ssr: false });
+
+
+
+
   return (
     <section className="w-full">
       <div className="main-about-page-content">
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="main-about-hero-content">
           <div className="tag-container mx-[21] mt-[30] lg:mt-[60] lg:mx-[200]">
             <Tag text="About us" />
@@ -113,8 +130,10 @@ function AboutUSPage() {
             ShowText={false}
           />
         </div>
+        </ScrollReveal>
 
         {/* conpany-description-section */}
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="company-description-content lg:my-[100]">
           <div className="desctiption-text mx-[21] lg:mx-[200] ">
             <Tag text="our story" className="my-[40]" />
@@ -165,8 +184,10 @@ function AboutUSPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* vision-mission-hero-section */}
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="vision-mission-section-container">
           <div className="vision-mission-parallax-section">
             <ParallaxSection
@@ -176,8 +197,10 @@ function AboutUSPage() {
             />
           </div>
         </div>
+        </ScrollReveal>
 
         {/* vision-statement-section */}
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="vision-mission-statement lg:mx-[200] lg:my-[150] ">
           <div className="vision-statement lg:flex lg:justify-between ">
             <div className="text mx-[21]">
@@ -207,8 +230,10 @@ function AboutUSPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* mission-statement */}
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="mission-statement lg:mx-[200]  lg:my-[250]">
           <div className="mission-statement lg:flex lg:justify-between lg:flex-row">
             <div className="hidden lg:block image-container relative w-full lg:w-1/2 h-[520px]">
@@ -245,8 +270,10 @@ function AboutUSPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* Core Values section */}
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="core-values-section bg-[#f3f3f3]  my-[100] lg:pt-[50]">
           <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[200]">
             <Tag text="Our core values" className="my-[60]" />
@@ -271,8 +298,10 @@ function AboutUSPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* key-achievements-section */}
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="key-achievements-section ">
           <div className="main-section-content mx-[21] lg:ml-[200] lg:pb-[100] lg:flex ">
             <div className="left-side ">
@@ -334,6 +363,7 @@ function AboutUSPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* <div className="Team-members-section h-screen bg-[#f3f3f3]">
           <div className="team-member-section-main-content flex lg:flex-col lg:justify-center lg:items-center gap-40 lg:pt-[100]">
@@ -419,11 +449,15 @@ function AboutUSPage() {
           </div>
         </div> */}
 
-        <TeamMembersSection />
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
+          <TeamMembersSection />
+        </ScrollReveal>
 
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
         <div className="gallery-container lg:py-[100]">
           <GallerySection/>
         </div>
+        </ScrollReveal>
         
       </div>
     </section>

@@ -1,11 +1,15 @@
-import React from 'react'
-import Tag from '../components/tag'
-import AnimationCopy from '../animations/WritingTextAnimation'
-import ServicesCardsSection from '../sessions/ServicesCardsSection'
+'use client';
 
-function page() {
+import React from 'react';
+import Tag from '../components/tag';
+import AnimationCopy from '../animations/WritingTextAnimation';
+import ServicesCardsSection from '../sessions/ServicesCardsSection';
+import ScrollReveal from '../components/ScrollReveal';
+
+export default function Page() {
   return (
-    <section className=''>
+    <section className="">
+      <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
       <div className="services-main-content mx-[21] lg:mx-[200] mt-[80] lg:mt-[150] max-h-[800] pb-[100] lg:pb-0 lg:h-screen ">
         <Tag text='products and Services'/>
         <div className="text-content lg:mt-[50]">
@@ -26,12 +30,13 @@ function page() {
           </AnimationCopy>
         </div>
       </div>
+      </ScrollReveal>
 
+      <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
       <div className="service-cards-section">
-        <ServicesCardsSection/>
+        <ServicesCardsSection />
       </div>
+      </ScrollReveal>
     </section>
-  )
+  );
 }
-
-export default page

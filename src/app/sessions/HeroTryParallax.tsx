@@ -17,7 +17,8 @@ export default function HeroParallax() {
 
     const mm = gsap.matchMedia();
 
-    const ctxctx = gsap.context(() => {
+    // ✅ FIX: Properly declared context
+    const ctx = gsap.context(() => {
       /* ---------------- MOBILE ---------------- */
       mm.add('(max-width: 1023px)', () => {
         const tl = gsap.timeline({
@@ -81,9 +82,11 @@ export default function HeroParallax() {
       });
     }, sectionRef);
 
+    // ✅ CLEANUP (NO MORE Rctx ERROR)
     return () => {
-      Rctx.revert();
+      ctx.revert();
       mm.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
@@ -93,8 +96,8 @@ export default function HeroParallax() {
       <section
         ref={sectionRef}
         className="relative w-full h-screen overflow-hidden z-0"
-      >a
-        {/* MEDIA LAYER (TALLER than container ✅) */}
+      >
+        {/* MEDIA LAYER */}
         <div
           ref={mediaRef}
           className="absolute left-0 w-full h-[120%] lg:h-[130%] -top-[20%] will-change-transform"

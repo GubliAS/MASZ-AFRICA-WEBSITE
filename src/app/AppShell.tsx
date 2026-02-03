@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import Navbar from './components/navbar';
 import LenisProvider from './providers/LenisProvider';
 import Footer from './components/footer';
+import Chatbot from './components/chatbot';
 
 // Make CallToAction client-only (no SSR)
 const CallToAction = dynamic(() => import('./sessions/CallToAction'), {
@@ -17,6 +18,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <LenisProvider>{children}</LenisProvider>
       <CallToAction />
       <Footer />
+      <Chatbot />
     </>
   );
 }

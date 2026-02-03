@@ -39,7 +39,7 @@ function ServiceSession() {
       <div className="services-section-container my-[100]">
         <Tag text="services" className="ml-[22]" />
 
-        <div className="services-section-header text-xl-semibold uppercase ml-[22] my-[30] lg:my-[70] lg:text-4xl-semibold">
+        <div className="services-section-header text-xl-semibold uppercase ml-[22] my-[30] lg:my-[70] lg:text-4xl-semibold" data-scroll-reveal-item>
           Explore our <span className="text-primary-default">products</span>{' '}
           <span>and</span>{' '}
           <span className="text-primary-default">services</span>
@@ -50,6 +50,7 @@ function ServiceSession() {
             {serviceList.map((list) => (
               <li
                 key={list.id}
+                data-scroll-reveal-item
                 tabIndex={0} // allows focus for :focus-within
                 className="relative mx-[22px] flex cursor-pointer border-b border-gray-300 outline-none service-item"
               >

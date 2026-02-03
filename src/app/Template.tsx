@@ -31,5 +31,9 @@ export default function Template({ children }: { children: React.ReactNode }) {
     });
   }, [pathname]);
 
-  return <div ref={containerRef}>{children}</div>;
+  return (
+    <div ref={containerRef} className="page-enter-initial">
+      {children}
+    </div>
+  );
 }

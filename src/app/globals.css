@@ -345,6 +345,12 @@ body {
  
 }
 
+/* Page enter: initial state so first paint (incl. SSR) has no jump – removed by GSAP after animate */
+.page-enter-initial {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
 /* XS */
 @utility text-xs-regular {
   font-size: var(--text-display-xs-regular);

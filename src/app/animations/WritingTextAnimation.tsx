@@ -15,6 +15,8 @@ interface AnimationCopyProps {
   colorInitial?: string;
   colorAccent?: string;
   colorFinal?: string;
+  /** When true, animates from the first letter on mount (time-based) instead of scroll-driven. Use after line-by-line reveal. */
+  animateOnMount?: boolean;
 }
 
 interface SplitRefs {
@@ -28,7 +30,8 @@ export default function AnimationCopy({
     children,
     colorInitial = '#dddddd',
     colorAccent = '#abff02',
-    colorFinal = '#000000'
+    colorFinal = '#000000',
+    animateOnMount = false,
  }: AnimationCopyProps ){
 
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -74,6 +77,17 @@ export default function AnimationCopy({
         );
 
         gsap.set(allChars, { color: colorInitial });
+
+        if (animateOnMount) {
+            gsap.to(allChars, {
+                color: colorFinal,
+                duration: 0.12,
+                stagger: 0.02,
+                ease: 'none',
+                overwrite: 'auto',
+            });
+            return;
+        }
 
         const scheduleFinalTransition = (char: any, index: number) => {
             if (colorTransitionTimers.current.has(index)) {
@@ -141,9 +155,8 @@ export default function AnimationCopy({
         })
 
     }, {
-        
         scope: containerRef,
-        dependencies: [colorInitial, colorAccent, colorFinal],
+        dependencies: [colorInitial, colorAccent, colorFinal, animateOnMount],
     })
 
     if (React.Children.count(children) === 1) {

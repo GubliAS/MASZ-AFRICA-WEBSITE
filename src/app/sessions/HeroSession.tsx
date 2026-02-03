@@ -4,9 +4,15 @@ import React from 'react';
 import Image from 'next/image';
 import Button from '../components/button';
 import { MoveRight } from 'lucide-react';
-import HeroTryParallax from './HeroTryParallax'
+import HeroTryParallax from './HeroTryParallax';
+import LineByLineText from '../components/LineByLineText';
 
-function HeroSession() {
+interface HeroSessionProps {
+  /** When true, the hero subtext line-by-line animation starts (after scroll reveal is about to end). */
+  startTextAnimation?: boolean;
+}
+
+function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
   return (
     <div className="hero-session-container mt-[50]">
       <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[200] lg:my-[80]">
@@ -20,14 +26,17 @@ function HeroSession() {
           />
         </div>
 
-        {/* Static descriptive text */}
+        {/* Hero subtext: line-by-line reveal after scroll reveal */}
         <div className="hero-section-logo-and-subtext lg:w-[40%]">
-          <div className="text-sm-medium text-default-body mx-[24] mt-[30] lg:text-xl-medium tracking-tight">
+          <LineByLineText
+            startAnimation={startTextAnimation}
+            className="text-sm-medium text-default-body mx-[24] mt-[30] lg:text-xl-medium tracking-tight"
+          >
             Unleash reliable mining performance with MASZ-Africa, delivering
             certified consumables built for tough environments, supported by
             real engineering expertise and on-site technical service, so your
             operation stays efficient, productive, and continuously running.
-          </div>
+          </LineByLineText>
 
           {/* Button now shows correctly */}
           <Button

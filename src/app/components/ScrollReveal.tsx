@@ -20,6 +20,8 @@ export interface ScrollRevealProps {
   /** Stagger delay (seconds) for child elements. Use data-scroll-reveal-item on inner elements, or direct children animate. */
   staggerChildren?: number;
   scale?: boolean;
+  /** Called when the main reveal animation is about to end (at 85% progress). Use to chain e.g. hero text animation. */
+  onRevealNearlyComplete?: () => void;
 }
 
 const directionFrom = {
@@ -47,6 +49,7 @@ export default function ScrollReveal({
   stagger,
   staggerChildren,
   scale = false,
+  onRevealNearlyComplete,
 }: ScrollRevealProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -109,11 +112,21 @@ export default function ScrollReveal({
 
       // 1) Parent / wrapper animation
       const parentTarget = staggerChildren != null ? el : (stagger != null ? el.children : el);
+      const toVarsWithCallback = { ...toVars };
+      if (onRevealNearlyComplete) {
+        (toVarsWithCallback as gsap.TweenVars).onUpdate = function () {
+          const tween = this;
+          if (tween.progress() >= 0.85 && !(tween as any)._revealFired) {
+            (tween as any)._revealFired = true;
+            onRevealNearlyComplete();
+          }
+        };
+      }
       gsap.fromTo(
         parentTarget,
         fromVars,
         {
-          ...toVars,
+          ...toVarsWithCallback,
           stagger: staggerChildren != null ? 0 : (stagger ?? 0),
           scrollTrigger: scrollTriggerConfig,
         }
@@ -160,8 +173,20 @@ export default function ScrollReveal({
     return () => ctx.revert();
   }, [direction, delay, duration, once, start, stagger, staggerChildren, scale]);
 
+  const from = directionFrom[direction];
+  const initialStyle: React.CSSProperties = {
+    opacity: 0,
+    transform: scale
+      ? `translate3d(${from.x}px, ${from.y}px, 0) scale(0.94)`
+      : `translate3d(${from.x}px, ${from.y}px, 0)`,
+  };
+
   return (
-    <div ref={wrapperRef} className={className ?? undefined}>
+    <div
+      ref={wrapperRef}
+      className={className ?? undefined}
+      style={initialStyle}
+    >
       {children}
     </div>
   );

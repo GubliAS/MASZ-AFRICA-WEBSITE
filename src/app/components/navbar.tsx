@@ -40,7 +40,7 @@ function Navbar() {
       gsap.set(header, {
         width: '80%',
         left: '10%',
-        y: '20%',
+        y: '0',
         backgroundColor: '#ffffff',
         backdropFilter: 'blur(0px)',
       });

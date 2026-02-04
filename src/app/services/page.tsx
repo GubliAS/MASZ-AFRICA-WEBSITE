@@ -20,6 +20,7 @@ export default function Page() {
             <div className="line-2 text-primary-default">
               Global minining backbone
             </div>
+
           </div>
           <AnimationCopy>
 

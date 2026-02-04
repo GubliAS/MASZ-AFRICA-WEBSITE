@@ -14,13 +14,22 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) =>
-        Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth but responsive
+      duration: 0.85,
+      easing: (t: number) => 1 - Math.pow(1 - t, 4),
       smoothWheel: true,
     });
 
-    // 🔄 Sync Lenis with requestAnimationFrame
+    // Batch ScrollTrigger updates — throttle to reduce work during fast scrolling
+    let rafId: number | null = null;
+    lenis.on('scroll', () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          ScrollTrigger.update();
+          rafId = null;
+        });
+      }
+    });
+
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -29,8 +38,6 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
     requestAnimationFrame(raf);
     lenisRef.current = lenis;
 
-    // 🔗 Sync with GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
     ScrollTrigger.scrollerProxy(document.body, {
       scrollTop(value) {
         return arguments.length
@@ -47,9 +54,19 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
       },
     });
 
+    ScrollTrigger.config({ ignoreMobileResize: true });
     ScrollTrigger.refresh();
 
+    let refreshTid: ReturnType<typeof setTimeout>;
+    const debouncedRefresh = () => {
+      clearTimeout(refreshTid);
+      refreshTid = setTimeout(() => ScrollTrigger.refresh(), 150);
+    };
+    window.addEventListener('resize', debouncedRefresh);
+
     return () => {
+      window.removeEventListener('resize', debouncedRefresh);
+      clearTimeout(refreshTid);
       lenisRef.current = null;
       lenis.destroy();
     };

@@ -26,57 +26,40 @@ export default function HeroParallax() {
             trigger: sectionRef.current,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: true,
+            scrub: 1,
           },
         });
 
         tl.to(
           mediaRef.current,
-          {
-            y: '18%',
-            scale: 1.06,
-            ease: 'none',
-          },
+          { y: '18%', scale: 1.06, ease: 'none', force3D: true },
           0
         );
-
         tl.to(
           textRef.current,
-          {
-            y: '-10%',
-            ease: 'none',
-          },
+          { y: '-10%', ease: 'none', force3D: true },
           0
         );
       });
 
-      /* ---------------- DESKTOP ---------------- */
       mm.add('(min-width: 1024px)', () => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: true,
+            scrub: 1,
           },
         });
 
         tl.to(
           mediaRef.current,
-          {
-            y: '35%',
-            scale: 1.12,
-            ease: 'none',
-          },
+          { y: '35%', scale: 1.12, ease: 'none', force3D: true },
           0
         );
-
         tl.to(
           textRef.current,
-          {
-            y: '-18%',
-            ease: 'none',
-          },
+          { y: '-18%', ease: 'none', force3D: true },
           0
         );
       });

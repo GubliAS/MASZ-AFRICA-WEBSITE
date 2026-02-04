@@ -58,7 +58,7 @@ export default function ScrollReveal({
     const el = wrapperRef.current;
     if (!el) return;
     const from = directionFrom[direction];
-    const initial: gsap.TweenVars = { ...from, opacity: 0 };
+    const initial: gsap.TweenVars = { ...from, opacity: 0, force3D: true };
     if (scale) initial.scale = 0.94;
     gsap.set(el, initial);
     if (staggerChildren != null) {
@@ -73,7 +73,7 @@ export default function ScrollReveal({
               : Array.from(el.children);
       if (childTargets.length > 0) {
         const childFrom = directionFromChild[direction];
-        gsap.set(childTargets, { ...childFrom, opacity: 0 });
+        gsap.set(childTargets, { ...childFrom, opacity: 0, force3D: true });
       }
     }
   }, [direction, scale, staggerChildren]);
@@ -107,6 +107,7 @@ export default function ScrollReveal({
         delay,
         ease: 'power2.inOut',
         overwrite: 'auto',
+        force3D: true,
       };
       if (scale) toVars.scale = 1;
 
@@ -122,7 +123,7 @@ export default function ScrollReveal({
           }
         };
       }
-      gsap.fromTo(
+      const parentTween = gsap.fromTo(
         parentTarget,
         fromVars,
         {
@@ -131,6 +132,9 @@ export default function ScrollReveal({
           scrollTrigger: scrollTriggerConfig,
         }
       );
+      if (once && parentTween.scrollTrigger) {
+        parentTween.then(() => parentTween.scrollTrigger?.kill());
+      }
 
       // 2) Children stagger: elements with [data-scroll-reveal-item] first, else direct children (or first child's children)
       if (staggerChildren != null) {
@@ -151,7 +155,7 @@ export default function ScrollReveal({
             opacity: 0,
             ease: 'power2.inOut',
           };
-          gsap.fromTo(
+          const childTween = gsap.fromTo(
             childTargets,
             childFromVars,
             {
@@ -163,9 +167,13 @@ export default function ScrollReveal({
               delay: 0.2,
               ease: 'power2.inOut',
               overwrite: 'auto',
+              force3D: true,
               scrollTrigger: { ...scrollTriggerConfig },
             }
           );
+          if (once && childTween.scrollTrigger) {
+            childTween.then(() => childTween.scrollTrigger?.kill());
+          }
         }
       }
     }, el);

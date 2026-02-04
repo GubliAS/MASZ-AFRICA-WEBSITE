@@ -25,6 +25,7 @@ function Navbar() {
   const innerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const isExpandedRef = useRef(false);
 
   const pathname = usePathname();
 
@@ -51,10 +52,14 @@ function Navbar() {
           trigger: document.body,
           start: 'top top',
           end: `${SCROLL_RANGE_PX}px top`,
-          scrub: true,
+          scrub: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            header.classList.toggle('navbar--expanded', self.progress > 0.4);
+            const shouldBeExpanded = self.progress > 0.4;
+            if (shouldBeExpanded !== isExpandedRef.current) {
+              isExpandedRef.current = shouldBeExpanded;
+              header.classList.toggle('navbar--expanded', shouldBeExpanded);
+            }
           },
         },
       });
@@ -69,6 +74,7 @@ function Navbar() {
           backdropFilter: 'blur(14px)',
           ease: 'none',
           duration: 1,
+          force3D: true,
         },
         0
       );
@@ -79,6 +85,7 @@ function Navbar() {
           marginRight: '5.5rem',
           ease: 'none',
           duration: 1,
+          force3D: true,
         },
         0
       );

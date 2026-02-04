@@ -3,6 +3,9 @@
 import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface TiltCardProps {
   imageSrc: string;
@@ -107,43 +110,26 @@ export default function TiltCard({
     }
   };
 
-  // ------------------ Scroll Parallax (ALWAYS ON) ------------------
+  // Scroll parallax via ScrollTrigger (batched with Lenis, no extra scroll listener)
   useEffect(() => {
     const card = cardRef.current;
     const inner = innerRef.current;
     const text = textRef.current;
     if (!card || !inner) return;
 
-    const handleScroll = () => {
-      const rect = card.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const cardCenter = rect.top + rect.height / 2;
-      const distanceFromCenter = windowHeight / 2 - cardCenter;
+    const st = ScrollTrigger.create({
+      trigger: card,
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1,
+      onUpdate: (self) => {
+        const p = self.progress - 0.5;
+        gsap.set(inner, { y: p * 80, force3D: true });
+        if (text) gsap.set(text, { y: p * 60, force3D: true });
+      },
+    });
 
-      const parallaxY = distanceFromCenter / 20;
-      const textY = distanceFromCenter / 15;
-
-      gsap.to(inner, {
-        y: parallaxY,
-        duration: 0.5,
-        ease: 'power3.out',
-      });
-
-      if (text) {
-        gsap.to(text, {
-          y: textY,
-          duration: 0.5,
-          ease: 'power3.out',
-        });
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => st.kill();
   }, []);
 
   return (
@@ -152,7 +138,7 @@ export default function TiltCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={`relative h-[400] lg:h-[520px] overflow-hidden cursor-pointer ${className}`}
-      style={{ transformStyle: 'preserve-3d' }}
+      style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
     >
       <div
         ref={innerRef}

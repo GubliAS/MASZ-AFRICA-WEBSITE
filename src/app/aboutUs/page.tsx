@@ -2,14 +2,20 @@
 import ParallaxSection from '../animations/ImageParallax';
 import Tag from '../components/tag';
 import AnimationCopy from '../animations/WritingTextAnimation';
-import PerformanceMetrics from '../components/PerformanceMetrics';
+import AnimatedMetricCard from '../components/AnimatedMetricCard';
 import TiltCard from '../animations/TiltCard';
 import CoreValueCard from '../components/MainCoreValuesCard';
 import { IconAwardFilled } from '@tabler/icons-react';
 import TeamMembersSection from '../sessions/TeamMembersSection';
 import GallerySection from '../sessions/GallerySection';
 import ScrollReveal from '../components/ScrollReveal';
+import LineByLineText from '../components/LineByLineText';
 import dynamic from 'next/dynamic';
+import { useState, useRef, useEffect, useLayoutEffect, memo, forwardRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 type CoreValue = {
   id: number;
@@ -89,11 +95,370 @@ const achievements = [
 
 
 
+const OUR_STORY_TEXT = (
+  <>
+    MASZ-AFRICA Ltd is a Ghana-based private limited liability
+    company that provides high-quality mining consumables,
+    engineering support, and procurement solutions to mining and
+    mineral processing industries across Africa. <br />
+    <br />
+    Established in September 2025 by a multidisciplinary team with
+    more than 15 years of combined experience in metallurgy,
+    engineering, finance, supply chain management, and business
+    improvement, the company was created to address the lack of
+    dependable, responsive, and technically knowledgeable supply
+    partners within the African mining sector.From the beginning,
+    MASZ-Africa has focused on quality, reliability, and client
+    satisfaction. Through strong partnerships with globally
+    recognized manufacturers and original equipment suppliers, the
+    company delivers world-class products supported by solid
+    technical expertise and consistent on-time delivery. <br />
+    <br />
+    With a growing presence across West Africa, MASZ-Africa aims to
+    become a continental leader in mining supply, logistics, and
+    technical services. The company is committed to empowering
+    mining operations with reliable supplies, innovative solutions,
+    and smooth service delivery that keeps production running
+    efficiently.
+  </>
+);
+
+const METRICS = [
+  { text: 'years of combined experience', value: '15+' },
+  { text: 'clients who rely on our consistent delivery and expertise.', value: '5+' },
+  { text: 'client satisfaction built on trust, transparency, and performance.', value: '99%' },
+  { text: 'on-time delivery, driven by efficiency and dependable logistics.', value: '98%' },
+];
+
+function OurStorySection({ startTextAnimation = false }: { startTextAnimation?: boolean }) {
+  const [lineByLineComplete, setLineByLineComplete] = useState(false);
+  const [showAnimationCopy, setShowAnimationCopy] = useState(false);
+  const [startBodyAnimation, setStartBodyAnimation] = useState(false);
+  const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
+  const [emptyCardIndex, setEmptyCardIndex] = useState(0);
+  const [startContentPhase, setStartContentPhase] = useState(false);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const hasScrolledDownFromTopRef = useRef(false);
+  const hasReturnedToTopRef = useRef(false);
+  const pendingCopyRef = useRef<{ idleId: number; timeoutId: ReturnType<typeof setTimeout> } | null>(null);
+
+  // Set initial state before paint to prevent layout shift
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const overlay = overlayRef.current;
+    if (!section) return;
+    // Ensure section has initial state set before paint
+    gsap.set(section, { opacity: 1, force3D: true });
+    // Ensure overlay is properly hidden initially
+    if (overlay) {
+      gsap.set(overlay, { 
+        opacity: 0, 
+        visibility: 'hidden', 
+        pointerEvents: 'none',
+        force3D: true 
+      });
+    }
+  }, []);
+
+  // Start body animation when scroll reveal triggers
+  useEffect(() => {
+    if (startTextAnimation) {
+      setStartBodyAnimation(true);
+    }
+  }, [startTextAnimation]);
+
+  // When body line-by-line completes, start empty cards phase (shells appear one after the other)
+  useEffect(() => {
+    if (!lineByLineComplete) return;
+    setStartMetricsAnimation(true);
+  }, [lineByLineComplete]);
+
+  // When all 4 empty cards have been shown, start content phase (text + number per card)
+  useEffect(() => {
+    if (emptyCardIndex < 4) return;
+    setStartContentPhase(true);
+    setActiveCardIndex(0);
+  }, [emptyCardIndex]);
+
+  // Only run AnimationCopy on second scroll down from top (not on first load/first scroll)
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const clearPending = () => {
+      const p = pendingCopyRef.current;
+      if (p) {
+        cancelIdleCallback(p.idleId);
+        clearTimeout(p.timeoutId);
+        pendingCopyRef.current = null;
+      }
+    };
+
+    // Track scroll position to detect "second scroll down from top"
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    const TOP_THRESHOLD = 150; // Consider "at top" if within 150px
+    let wasAtTop = lastScrollY <= TOP_THRESHOLD;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const isAtTop = currentScrollY <= TOP_THRESHOLD;
+      const isScrollingDown = currentScrollY > lastScrollY;
+      const justLeftTop = wasAtTop && !isAtTop && isScrollingDown;
+
+      // If user scrolled back to top, mark that they've returned
+      if (isAtTop && hasScrolledDownFromTopRef.current && !hasReturnedToTopRef.current) {
+        hasReturnedToTopRef.current = true;
+      }
+
+      // Detect second scroll down from top: was at top, now scrolling down and leaving top
+      if (justLeftTop && hasReturnedToTopRef.current && !showAnimationCopy) {
+        clearPending();
+        const runCopy = () => {
+          clearPending();
+          setShowAnimationCopy(true);
+          // Smooth fade-in after state update — use GSAP for GPU-accelerated transition
+          requestAnimationFrame(() => {
+            const overlay = overlayRef.current;
+            if (overlay) {
+              gsap.set(overlay, { visibility: 'visible', pointerEvents: 'auto', ariaHidden: false });
+              gsap.fromTo(overlay, 
+                { opacity: 0, force3D: true },
+                { opacity: 1, duration: 0.5, ease: 'power2.out', force3D: true }
+              );
+            }
+          });
+        };
+        // Triple rAF for ultra-smooth transition — ensures all layout is settled
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const idleId = requestIdleCallback(runCopy, { timeout: 500 });
+              const timeoutId = setTimeout(runCopy, 500);
+              pendingCopyRef.current = { idleId, timeoutId };
+            });
+          });
+        });
+      }
+
+      // Track first scroll down from top
+      if (justLeftTop && !hasScrolledDownFromTopRef.current) {
+        hasScrolledDownFromTopRef.current = true;
+      }
+
+      wasAtTop = isAtTop;
+      lastScrollY = currentScrollY;
+    };
+
+    // Listen to scroll events to detect "scroll down from top"
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearPending();
+    };
+  }, [showAnimationCopy]);
+
+  return (
+    <div ref={sectionRef} className="desctiption-text mx-[21] lg:mx-[200]" style={{ contain: 'layout style paint' }}>
+      <Tag text="our story" className="my-[40]" />
+      {/* Phase 1: line-by-line; Phase 2: static text; Phase 3: AnimationCopy overlay (spacer keeps layout, no jump) */}
+      {!lineByLineComplete ? (
+        <LineByLineText
+          startAnimation={startBodyAnimation}
+          onComplete={() => setLineByLineComplete(true)}
+          className="main-text-description text-lg-medium lg:text-2xl-medium lg:mt-[80] lg:leading-8 lg:tracking-tight text-default-body"
+        >
+          {OUR_STORY_TEXT}
+        </LineByLineText>
+      ) : (
+        <div className="relative overflow-hidden" style={{ contain: 'layout style paint' }}>
+          {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
+          <div
+            className="main-text-description text-lg-medium lg:text-2xl-medium lg:mt-[80] lg:leading-8 lg:tracking-tight text-default-body text-[#000000]"
+            style={showAnimationCopy ? { visibility: 'hidden', pointerEvents: 'none' } : undefined}
+            aria-hidden={showAnimationCopy}
+          >
+            {OUR_STORY_TEXT}
+          </div>
+          {/* Pre-render AnimationCopy but keep it completely hidden until ready — prevents mount-time layout shift */}
+          <div 
+            ref={overlayRef}
+            className="absolute top-0 left-0 right-0" 
+            style={{ 
+              opacity: 0,
+              visibility: 'hidden',
+              pointerEvents: 'none',
+              contain: 'layout style paint',
+              isolation: 'isolate',
+            }}
+            aria-hidden={true}
+          >
+            <AnimationCopy>
+              <div className="main-text-description text-lg-medium lg:text-2xl-medium lg:mt-[80] lg:leading-8 lg:tracking-tight">
+                {OUR_STORY_TEXT}
+              </div>
+            </AnimationCopy>
+          </div>
+        </div>
+      )}
+      {/* Metrics: Phase 1 – empty card shells appear one after the other; Phase 2 – per card: text line-by-line then number (YouTube-style scroll) */}
+      <div className="metrics-container my-[50px] lg:flex lg:gap-8 mt-[50]">
+        {METRICS.map((metric, index) => (
+          <AnimatedMetricCard
+            key={index}
+            text={metric.text}
+            value={metric.value}
+            showAsEmpty={startMetricsAnimation && emptyCardIndex === index}
+            showContent={startContentPhase && activeCardIndex === index}
+            onEmptyShown={() => setEmptyCardIndex((i) => Math.min(i + 1, METRICS.length))}
+            onSequenceComplete={() =>
+              setActiveCardIndex((i) => Math.min(i + 1, METRICS.length))
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const MemoOurStorySection = memo(OurStorySection);
+
+const CoreValuesCardsContainer = forwardRef<HTMLDivElement, { cards: CoreValue[] }>(
+  ({ cards }, containerRef) => {
+    const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+    const internalRef = useRef<HTMLDivElement>(null);
+    
+    // Use the forwarded ref or fallback to internal ref
+    const ref = typeof containerRef === 'function' ? internalRef : (containerRef || internalRef);
+
+    // Set initial states before paint to prevent layout shift
+    useLayoutEffect(() => {
+      cardsRef.current.forEach((cardEl) => {
+        if (cardEl) {
+          gsap.set(cardEl, {
+            x: 120, // Start from right side (positive x = right)
+            opacity: 0,
+            force3D: true,
+          });
+        }
+      });
+    }, []);
+
+    // Animate cards sequentially when section comes into view
+    useEffect(() => {
+      const container = (ref as React.MutableRefObject<HTMLDivElement | null>).current;
+      if (!container) return;
+
+      const cardElements = cardsRef.current.filter(Boolean) as HTMLElement[];
+      if (cardElements.length === 0) return;
+
+      const st = ScrollTrigger.create({
+        trigger: container,
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          // Animate each card sequentially from right to left
+          cardElements.forEach((card, index) => {
+            gsap.to(card, {
+              x: 0,
+              opacity: 1,
+              duration: 0.8,
+              delay: index * 0.15, // Stagger delay between cards
+              ease: 'power3.out',
+              force3D: true,
+            });
+          });
+        },
+      });
+
+      return () => {
+        st.kill();
+      };
+    }, [ref]);
+
+    // Handle both ref types
+    const setRef = (el: HTMLDivElement | null) => {
+      if (typeof containerRef === 'function') {
+        containerRef(el);
+      } else if (containerRef) {
+        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      }
+      internalRef.current = el;
+    };
+
+    return (
+      <div 
+        ref={setRef}
+        className="flex flex-col lg:flex-row gap-4 lg:gap-"
+        style={{ contain: 'layout style paint' }}
+      >
+        {cards.map((card, index) => (
+          <div
+            key={card.id}
+            ref={(el) => {
+              cardsRef.current[index] = el;
+            }}
+            style={{ contain: 'layout style paint' }}
+          >
+            <CoreValueCard card={card} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+);
+
+CoreValuesCardsContainer.displayName = 'CoreValuesCardsContainer';
+
+function ParallaxTextTrigger({ onTrigger }: { onTrigger: () => void }) {
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const hasTriggeredRef = useRef(false);
+
+  useEffect(() => {
+    const trigger = triggerRef.current;
+    if (!trigger || hasTriggeredRef.current) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const [e] = entries;
+        if (!e || hasTriggeredRef.current) return;
+        if (e.isIntersecting) {
+          hasTriggeredRef.current = true;
+          // Delay slightly to ensure image is visible first
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              onTrigger();
+            });
+          });
+        }
+      },
+      { root: null, rootMargin: '0px', threshold: 0.1 }
+    );
+    io.observe(trigger);
+    return () => io.disconnect();
+  }, [onTrigger]);
+
+  return <div ref={triggerRef} style={{ position: 'absolute', top: '85%', width: '1px', height: '1px', pointerEvents: 'none' }} />;
+}
+
 function AboutUSPage() {
+  const [ourStoryRevealNearlyComplete, setOurStoryRevealNearlyComplete] = useState(false);
+  const [parallaxTextRevealNearlyComplete, setParallaxTextRevealNearlyComplete] = useState(false);
+  const [visionRevealNearlyComplete, setVisionRevealNearlyComplete] = useState(false);
+  const [missionRevealNearlyComplete, setMissionRevealNearlyComplete] = useState(false);
+  const coreValuesContainerRef = useRef<HTMLDivElement>(null);
 
-
-
-  const ParallaxSection = dynamic(() => import('../animations/ImageParallax'), { ssr: false });
+  const ParallaxSection = dynamic(() => import('../animations/ImageParallax'), { 
+    ssr: false,
+    loading: () => (
+      <div 
+        className="relative w-full overflow-hidden h-[520px] lg:h-[1100px] bg-gray-200 animate-pulse"
+        style={{ contain: 'layout style paint' }}
+      />
+    ),
+  });
 
   // Make TiltCard client-only
   const TiltCard = dynamic(() => import('../animations/TiltCard'), { ssr: false });
@@ -107,8 +472,8 @@ function AboutUSPage() {
   return (
     <section className="w-full">
       <div className="main-about-page-content">
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="main-about-hero-content">
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <div className="main-about-hero-content" style={{ contain: 'layout style paint' }}>
           <div className="tag-container mx-[21] mt-[30] lg:mt-[60] lg:mx-[200]">
             <Tag text="About us" />
           </div>
@@ -125,83 +490,46 @@ function AboutUSPage() {
           </div>
 
           {/* PARALLAX IMAGE */}
-          <ParallaxSection
-            imageSrc="/aboutAssets/Image-6.webp"
-            ShowText={false}
-          />
-        </div>
-        </ScrollReveal>
-
-        {/* conpany-description-section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="company-description-content lg:my-[100]">
-          <div className="desctiption-text mx-[21] lg:mx-[200] ">
-            <Tag text="our story" className="my-[40]" />
-            <AnimationCopy>
-              <div className="main-text-description text-lg-medium lg:text-2xl-medium lg:mt-[80] lg:leading-8 lg:tracking-tight">
-                MASZ-AFRICA Ltd is a Ghana-based private limited liability
-                company that provides high-quality mining consumables,
-                engineering support, and procurement solutions to mining and
-                mineral processing industries across Africa. <br />
-                <br />
-                Established in September 2025 by a multidisciplinary team with
-                more than 15 years of combined experience in metallurgy,
-                engineering, finance, supply chain management, and business
-                improvement, the company was created to address the lack of
-                dependable, responsive, and technically knowledgeable supply
-                partners within the African mining sector.From the beginning,
-                MASZ-Africa has focused on quality, reliability, and client
-                satisfaction. Through strong partnerships with globally
-                recognized manufacturers and original equipment suppliers, the
-                company delivers world-class products supported by solid
-                technical expertise and consistent on-time delivery. <br />
-                <br />
-                With a growing presence across West Africa, MASZ-Africa aims to
-                become a continental leader in mining supply, logistics, and
-                technical services. The company is committed to empowering
-                mining operations with reliable supplies, innovative solutions,
-                and smooth service delivery that keeps production running
-                efficiently.
-              </div>
-            </AnimationCopy>
-            <div className="metrics-container my-[50px] lg:flex lg:gap-8 mt-[50]">
-              <PerformanceMetrics
-                text="years of combined experience"
-                value="15+"
-              />
-              <PerformanceMetrics
-                text="clients who rely on our consistent delivery and expertise."
-                value="5+"
-              />
-              <PerformanceMetrics
-                text="client satisfaction built on trust, transparency, and performance."
-                value="99%"
-              />
-              <PerformanceMetrics
-                text="on-time delivery, driven by efficiency and dependable logistics."
-                value="98%"
-              />
-            </div>
-          </div>
-        </div>
-        </ScrollReveal>
-
-        {/* vision-mission-hero-section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="vision-mission-section-container">
-          <div className="vision-mission-parallax-section">
+          <div style={{ contain: 'layout style paint', willChange: 'transform' }}>
             <ParallaxSection
-              imageSrc="/aboutAssets/image-4.webp"
-              title="DEFINING THE FUTURE WE STAND FOR"
-              subtitle="Our guiding principles define how we operate today—and the impact we aim to make tomorrow. They guide our work, shape our decisions, and keep us aligned with the needs of a fast-evolving mining sector. Every step we take reflects our commitment to progress and long-term value."
+              imageSrc="/aboutAssets/Image-6.webp"
+              imageAlt="About us hero image"
             />
           </div>
         </div>
         </ScrollReveal>
 
+        {/* conpany-description-section */}
+        <ScrollReveal 
+          direction="up" 
+          duration={1.5} 
+          start="top 85%" 
+          scale
+          once
+          onRevealNearlyComplete={() => setOurStoryRevealNearlyComplete(true)}
+        >
+        <div className="company-description-content lg:my-[100]" style={{ contain: 'layout style paint' }}>
+          <MemoOurStorySection startTextAnimation={ourStoryRevealNearlyComplete} />
+        </div>
+        </ScrollReveal>
+
+        {/* vision-mission-hero-section */}
+        <div className="vision-mission-section-container" style={{ contain: 'layout style paint' }}>
+          <div className="vision-mission-parallax-section" style={{ opacity: 1, visibility: 'visible', contain: 'layout style paint' }}>
+            <ParallaxSection
+              imageSrc="/aboutAssets/image-4.webp"
+              title="DEFINING THE FUTURE WE STAND FOR"
+              subtitle="Our guiding principles define how we operate today—and the impact we aim to make tomorrow. They guide our work, shape our decisions, and keep us aligned with the needs of a fast-evolving mining sector. Every step we take reflects our commitment to progress and long-term value."
+              startTextAnimation={parallaxTextRevealNearlyComplete}
+            />
+          </div>
+          {/* Use Intersection Observer instead of ScrollReveal to avoid animating the image */}
+          <ParallaxTextTrigger onTrigger={() => setParallaxTextRevealNearlyComplete(true)} />
+        </div>
+
         {/* vision-statement-section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="vision-mission-statement lg:mx-[200] lg:my-[150] ">
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <div className="vision-mission-statement lg:mx-[200] lg:my-[150] " style={{ contain: 'layout style paint' }}>
           <div className="vision-statement lg:flex lg:justify-between ">
             <div className="text mx-[21]">
               <Tag text="our vision" className="my-[80] lg:my-0" />
@@ -233,8 +561,8 @@ function AboutUSPage() {
         </ScrollReveal>
 
         {/* mission-statement */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="mission-statement lg:mx-[200]  lg:my-[250]">
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <div className="mission-statement lg:mx-[200]  lg:my-[250]" style={{ contain: 'layout style paint' }}>
           <div className="mission-statement lg:flex lg:justify-between lg:flex-row">
             <div className="hidden lg:block image-container relative w-full lg:w-1/2 h-[520px]">
               <TiltCard
@@ -273,8 +601,8 @@ function AboutUSPage() {
         </ScrollReveal>
 
         {/* Core Values section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="core-values-section bg-[#f3f3f3]  my-[100] lg:pt-[50]">
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <div className="core-values-section bg-[#f3f3f3]  my-[100] lg:pt-[50]" style={{ contain: 'layout style paint' }}>
           <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[200]">
             <Tag text="Our core values" className="my-[60]" />
             <div className="core-values-text-wrapper">
@@ -290,19 +618,15 @@ function AboutUSPage() {
               </div>
             </div>
             <div className="core-value-core-content-wrapper lg:pb-[200] lg:pt-[80]">
-              <div className="flex flex-col lg:flex-row gap-4 lg:gap- ">
-                {valueCards.map((card) => (
-                  <CoreValueCard key={card.id} card={card} />
-                ))}
-              </div>
+              <CoreValuesCardsContainer ref={coreValuesContainerRef} cards={valueCards} />
             </div>
           </div>
         </div>
         </ScrollReveal>
 
         {/* key-achievements-section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="key-achievements-section ">
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <div className="key-achievements-section " style={{ contain: 'layout style paint' }}>
           <div className="main-section-content mx-[21] lg:ml-[200] lg:pb-[100] lg:flex ">
             <div className="left-side ">
               <Tag text="key achievements" />
@@ -449,12 +773,12 @@ function AboutUSPage() {
           </div>
         </div> */}
 
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
           <TeamMembersSection />
         </ScrollReveal>
 
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
-        <div className="gallery-container lg:py-[100]">
+        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <div className="gallery-container lg:py-[100]" style={{ contain: 'layout style paint' }}>
           <GallerySection/>
         </div>
         </ScrollReveal>

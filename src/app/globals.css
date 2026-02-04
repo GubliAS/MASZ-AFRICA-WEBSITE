@@ -337,18 +337,50 @@
   }
 }
 
+html {
+  scroll-behavior: auto; /* Lenis handles smooth scrolling */
+}
+
 body {
   background: var(--white);
   color: var(--black);
   font-family: "Mona Sans", sans-serif;
-  
- 
+  /* Optimize font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Page enter: initial state so first paint (incl. SSR) has no jump – removed by GSAP after animate */
 .page-enter-initial {
   opacity: 0;
   transform: translateY(16px);
+}
+
+/* Performance optimizations */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* Ensure parallax images are always visible — prevent any parent animations from hiding them */
+[data-parallax-image="true"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* GPU-accelerated transforms for animated elements */
+[data-scroll-reveal-item],
+.about-us-text,
+.core-value-section-subtext,
+.metrics-container {
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Force GPU layer */
+}
+
+/* Remove will-change after animations complete to free resources */
+.animation-complete {
+  will-change: auto;
 }
 
 /* XS */

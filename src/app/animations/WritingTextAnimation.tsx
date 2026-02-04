@@ -39,24 +39,37 @@ export default function AnimationCopy({
     const lastScrollProgress = useRef(0);
     const colorTransitionTimers = useRef(new Map());
     const completedChars = useRef(new Set());
+    const lastCharColor = useRef(new Map<number, string>());
 
     useGSAP(() => {
 
         if (!containerRef.current) return;
 
+        const container = containerRef.current;
+        // Check if parent is already visible — if so, hide during SplitText; if not, keep hidden
+        const parent = container.parentElement;
+        const isParentVisible = parent && window.getComputedStyle(parent).visibility !== 'hidden';
+        if (isParentVisible) {
+            // Hide during SplitText so reflow happens off-screen — prevents visible jump when copy appears
+            gsap.set(container, { opacity: 0 });
+        } else {
+            // Already hidden by parent, keep it hidden
+            gsap.set(container, { opacity: 0, visibility: 'hidden' });
+        }
+
         splitRefs.current = [];
         lastScrollProgress.current = 0;
         colorTransitionTimers.current.clear();
         completedChars.current.clear();
+        lastCharColor.current.clear();
 
         let elements = [];
-        if (containerRef.current?.hasAttribute("data-copy-wrapper")){
-            elements = Array.from(containerRef.current.children);
+        if (container?.hasAttribute("data-copy-wrapper")){
+            elements = Array.from(container.children);
         } else {
-            elements = [containerRef.current]
+            elements = [container]
         }
 
-        // ✅ FIXED: Added 'element' parameter
         elements.forEach((element) => {
             const wordSplit = SplitText.create(element, {
                 type: 'words',
@@ -79,6 +92,7 @@ export default function AnimationCopy({
         gsap.set(allChars, { color: colorInitial });
 
         if (animateOnMount) {
+            gsap.to(container, { opacity: 1, duration: 0.25, ease: 'power2.out', force3D: true });
             gsap.to(allChars, {
                 color: colorFinal,
                 duration: 0.12,
@@ -113,7 +127,7 @@ export default function AnimationCopy({
         };
 
         ScrollTrigger.create({
-            trigger: containerRef.current,
+            trigger: container,
             start: "top 80%",
             end: "top 10%",
             scrub: 1,
@@ -122,37 +136,42 @@ export default function AnimationCopy({
                 const totalChars = allChars.length;
                 const isScrollDown = progress >= lastScrollProgress.current;
                 const currentCharIndex = Math.floor(progress * totalChars);
+                const lastColor = lastCharColor.current;
                 allChars.forEach((char: any, index: number) => {
+                    let targetColor: string;
                     if (!isScrollDown && index >= currentCharIndex) {
                         if (colorTransitionTimers.current.has(index)){
                             clearTimeout(colorTransitionTimers.current.get(index));
                             colorTransitionTimers.current.delete(index);
                         }
                         completedChars.current.delete(index);
-                        gsap.set(char, { color: colorInitial});
-                        return
+                        targetColor = colorInitial;
+                    } else if (completedChars.current.has(index)) {
+                        return;
+                    } else if (index <= currentCharIndex) {
+                        targetColor = colorAccent;
+                        if (!colorTransitionTimers.current.has(index)) scheduleFinalTransition(char, index);
+                    } else {
+                        targetColor = colorInitial;
                     }
-
-                        if (completedChars.current.has(index)){
-                            return;
-                        }
-
-                        if (index <= currentCharIndex) {
-                            gsap.set(char, {color: colorAccent});
-                            if (!colorTransitionTimers.current.has(index)) {
-                                scheduleFinalTransition(char, index)
-                            }
-                        } else {
-                            gsap.set(char, { color: colorInitial})
-                        }
-
-
+                    if (lastColor.get(index) !== targetColor) {
+                        lastColor.set(index, targetColor);
+                        gsap.set(char, { color: targetColor });
+                    }
                 });
-
                 lastScrollProgress.current = progress;
             },
 
-        })
+        });
+
+        // Fade in after SplitText + ScrollTrigger — GPU layer for smooth reveal
+        // Only fade in if parent is visible (otherwise parent controls visibility)
+        if (isParentVisible) {
+            gsap.to(container, { opacity: 1, duration: 0.4, ease: 'power2.out', force3D: true });
+        } else {
+            // Parent will handle visibility, just ensure opacity is ready
+            gsap.set(container, { opacity: 1, visibility: 'inherit' });
+        }
 
     }, {
         scope: containerRef,
@@ -160,12 +179,20 @@ export default function AnimationCopy({
     })
 
     if (React.Children.count(children) === 1) {
-        return React.cloneElement(children as React.ReactElement, { ref: containerRef });
+        const child = children as React.ReactElement;
+        return React.cloneElement(child, {
+            ref: containerRef,
+            style: { 
+                ...(child.props?.style as object), 
+                contain: 'layout paint',
+                willChange: 'color',
+            },
+        });
     }
 
     return (
 
-        <div ref={containerRef}  data-copy-wrapper="true">
+        <div ref={containerRef} data-copy-wrapper="true" style={{ contain: 'layout paint', willChange: 'color' }}>
             {children}
         </div>
     )

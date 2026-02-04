@@ -1,9 +1,26 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MoveRight } from 'lucide-react';
 import Button from '../components/button';
 import Tag from '../components/tag';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+/** Pure function: progress 0–1 through section, card index → scale (no React state) */
+function getCardScale(progress: number, index: number): number {
+  const cardsCount = 7;
+  const cardProgress = progress * cardsCount;
+  const cardPosition = cardProgress - index;
+  const calculatedMinScale = 0.7 + index * 0.05;
+  const minScale = Math.min(calculatedMinScale, 1.0);
+  const maxScale = 1.0;
+  if (cardPosition < 0) return maxScale;
+  if (cardPosition >= 0 && cardPosition < 1) return maxScale - (maxScale - minScale) * cardPosition;
+  return minScale;
+}
 
 interface CardData {
   id: number;
@@ -111,68 +128,37 @@ const cardsData: CardData[] = [
 ];
 
 function ServicesCardsSection(): React.JSX.Element {
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
   const sectionRef = useRef<HTMLElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const sectionHeight = sectionRef.current.offsetHeight;
-        const windowHeight = window.innerHeight;
+    const section = sectionRef.current;
+    if (!section) return;
 
-        // Calculate scroll progress through the section
-        const scrolled = -rect.top;
-        const totalScroll = sectionHeight - windowHeight;
-        const progress = Math.max(0, Math.min(scrolled / totalScroll, 1));
+    let st: ScrollTrigger | null = null;
+    const rafId = requestAnimationFrame(() => {
+      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+      if (cards.length === 0) return;
+      cards.forEach((el, i) => gsap.set(el, { scale: getCardScale(0, i), transformOrigin: 'top center', force3D: true }));
+      st = ScrollTrigger.create({
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          cardRefs.current.forEach((el, i) => {
+            if (el) gsap.set(el, { scale: getCardScale(progress, i), force3D: true });
+          });
+        },
+      });
+    });
 
-        setScrollProgress(progress);
-      }
+    return () => {
+      cancelAnimationFrame(rafId);
+      st?.kill();
     };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const getCardScale = (index: number): number => {
-    const cardsCount = cardsData.length;
-    const cardProgress = scrollProgress * cardsCount;
-
-    // Calculate how far this card is in the scroll sequence
-    const cardPosition = cardProgress - index;
-
-    // Reverse the scale logic: earlier cards have SMALLER min scales, later cards have LARGER min scales
-    // This way, when card enters, it's already wider than the previous stacked card
-    // Card 0: min = 0.70
-    // Card 1: min = 0.74
-    // Card 2: min = 0.78
-    // Card 3: min = 0.82
-    // Card 4: min = 0.86
-    // Card 5: min = 0.90
-    // Card 6: min = 0.94
-    const calculatedMinScale = 0.7 + index * 0.05;
-
-    // Cap the minimum scale at 1.0 to prevent cards from exceeding 100%
-    const minScale = Math.min(calculatedMinScale, 1.0);
-    const maxScale = 1.0;
-
-    // For cards where minScale = maxScale (last ones), they don't scale at all
-    // They stay at 100% throughout
-
-    if (cardPosition < 0) {
-      // Card hasn't entered yet - stays at max scale, ready to enter
-      return maxScale;
-    } else if (cardPosition >= 0 && cardPosition < 1) {
-      // Card is active - scales down as next card approaches
-      // If minScale = maxScale, this results in no scaling
-      return maxScale - (maxScale - minScale) * cardPosition;
-    } else {
-      // Card has been passed and is stacked - stays at minimum scale
-      return minScale;
-    }
-  };
 
   return (
     <section ref={sectionRef} className="bg-[#f3f3f3] py-20">
@@ -186,11 +172,9 @@ function ServicesCardsSection(): React.JSX.Element {
           }}
         >
           <div
+            ref={(el) => { cardRefs.current[index] = el; }}
             className="card-content w-full lg:w-[78%] lg:h-[580px] cursor-pointer overflow-hidden shadow-2xl transition-transform duration-300 ease-out hover:scale-[1.02]"
-            style={{
-              transform: `scale(${getCardScale(index)})`,
-              transformOrigin: 'top center',
-            }}
+            style={{ transformOrigin: 'top center', willChange: 'transform' }}
           >
             {/* Upper Section */}
             <div className="upper-section flex justify-between items-center p-6 lg:p-8 bg-white">

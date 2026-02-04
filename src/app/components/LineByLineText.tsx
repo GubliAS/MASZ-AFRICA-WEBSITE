@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, ReactNode } from 'react';
+import React, { useEffect, useRef, useLayoutEffect, ReactNode } from 'react';
 import SplitType from 'split-type';
 import gsap from 'gsap';
 
@@ -37,10 +37,13 @@ export default function LineByLineText({
   const wrapperRef = useRef<HTMLDivElement | HTMLParagraphElement | HTMLSpanElement>(null);
   const splitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
 
-  // Split text into lines on mount and keep them hidden until startAnimation
-  useEffect(() => {
+  // Split text into lines BEFORE paint to prevent layout shift — useLayoutEffect ensures this happens synchronously
+  useLayoutEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
+
+    // Set initial opacity to prevent flash
+    gsap.set(el, { opacity: 1, force3D: true });
 
     const split = new SplitType(el as HTMLElement, { types: 'lines' });
     const lines = split.lines;
@@ -48,7 +51,8 @@ export default function LineByLineText({
     if (!lines || lines.length === 0) return;
 
     splitRef.current = { split, lines: Array.from(lines) };
-    gsap.set(lines, { opacity: 0, y: yFrom });
+    // Set lines to hidden state immediately — prevents any visible jump
+    gsap.set(lines, { opacity: 0, y: yFrom, force3D: true });
 
     return () => {
       split.revert();
@@ -68,6 +72,7 @@ export default function LineByLineText({
       stagger,
       ease: 'power2.out',
       delay,
+      force3D: true,
       onComplete: () => {
         onComplete?.();
       },
@@ -75,7 +80,15 @@ export default function LineByLineText({
   }, [startAnimation, duration, stagger, delay, onComplete]);
 
   return (
-    <Wrapper ref={wrapperRef as any} className={className ?? undefined} style={{ overflow: 'hidden' }}>
+    <Wrapper 
+      ref={wrapperRef as any} 
+      className={className ?? undefined} 
+      style={{ 
+        overflow: 'hidden',
+        contain: 'layout style paint',
+        willChange: startAnimation ? 'transform, opacity' : 'auto',
+      }}
+    >
       {children}
     </Wrapper>
   );

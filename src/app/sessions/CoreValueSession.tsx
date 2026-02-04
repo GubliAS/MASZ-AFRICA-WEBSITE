@@ -5,6 +5,8 @@ import gsap from 'gsap';
 import SplitType from 'split-type';
 import AnimationCopy from '../animations/WritingTextAnimation';
 import AnimatedMetricCard from '../components/AnimatedMetricCard';
+import PerfectCarousel3D from '../components/PerfectCarousel3D';
+import RingCarousel3D from '../components/RingCarousel3D';
 import Image from 'next/image';
 import LineByLineText from '../components/LineByLineText';
 
@@ -255,7 +257,7 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
         )}
 
         {/* Metrics: Phase 1 – empty card shells appear one after the other; Phase 2 – per card: text line-by-line then number (YouTube-style scroll) */}
-        <div className="metrics-container lg: lg:mx-[200] lg:mb-[100] my-[50px] gap-6 mx-[21] lg:flex">
+        <div className="metrics-container lg: lg:mx-[200] lg:mb-[40] my-[30px] gap-6 mx-[21] lg:flex">
           {METRICS.map((metric, index) => (
             <AnimatedMetricCard
               key={index}
@@ -270,6 +272,9 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
             />
           ))}
         </div>
+
+        {/* Ring Carousel 3D (Three.js) */}
+        <RingCarousel3D />
 
         {/* Images */}
         <div className="core-value-section-images flex flex-col gap-[20px] lg:flex">
@@ -286,7 +291,7 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
 
           {/* Image 2 & 3 */}
           <div className="flex gap-[20px] lg:gap-[40] mx-[21px] lg:mx-0">
-            <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800]">
+            <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800] lg:hidden">
               <Image
                 src="/homeAssets/Image-4.jpg"
                 alt="Core value visual"
@@ -294,7 +299,7 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
                 className="object-cover"
               />
             </div>
-            <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800] lg:mx-0">
+            <div className="relative h-[200px] flex-1 overflow-hidden lg:h-[800] lg:mx-0 lg:hidden">
               <Image
                 src="/homeAssets/Image-5.jpg"
                 alt="Core value visual"

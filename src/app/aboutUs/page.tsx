@@ -454,7 +454,7 @@ function AboutUSPage() {
     ssr: false,
     loading: () => (
       <div 
-        className="relative w-full overflow-hidden h-[520px] lg:h-[1100px] bg-gray-200 animate-pulse"
+        className="relative w-full overflow-hidden h-[520px] lg:h-[1100px] bg-[#0D0D0D]"
         style={{ contain: 'layout style paint' }}
       />
     ),
@@ -516,11 +516,16 @@ function AboutUSPage() {
         {/* vision-mission-hero-section */}
         <div className="vision-mission-section-container" style={{ contain: 'layout style paint' }}>
           <div className="vision-mission-parallax-section" style={{ opacity: 1, visibility: 'visible', contain: 'layout style paint' }}>
-            <ParallaxSection
+            {/* <ParallaxSection
               imageSrc="/aboutAssets/image-4.webp"
               title="DEFINING THE FUTURE WE STAND FOR"
               subtitle="Our guiding principles define how we operate today—and the impact we aim to make tomorrow. They guide our work, shape our decisions, and keep us aligned with the needs of a fast-evolving mining sector. Every step we take reflects our commitment to progress and long-term value."
               startTextAnimation={parallaxTextRevealNearlyComplete}
+            /> */}
+
+            <ParallaxSection
+              imageSrc="/aboutAssets/Image-4.webp"
+              imageAlt="About us hero image"
             />
           </div>
           {/* Use Intersection Observer instead of ScrollReveal to avoid animating the image */}

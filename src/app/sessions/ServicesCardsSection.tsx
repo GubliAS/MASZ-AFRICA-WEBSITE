@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useEffect, useRef } from 'react';
 import { MoveRight } from 'lucide-react';
 import Button from '../components/button';
 import Tag from '../components/tag';
@@ -131,11 +131,20 @@ function ServicesCardsSection(): React.JSX.Element {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Set initial scale in JSX so first paint is correct before any GSAP/ScrollTrigger runs
+  useLayoutEffect(() => {
+    const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+    cards.forEach((el, i) => {
+      if (el) gsap.set(el, { scale: getCardScale(0, i), transformOrigin: 'top center', force3D: true });
+    });
+  }, []);
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     let st: ScrollTrigger | null = null;
+    let refreshTid: ReturnType<typeof setTimeout>;
     const rafId = requestAnimationFrame(() => {
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
       if (cards.length === 0) return;
@@ -152,10 +161,14 @@ function ServicesCardsSection(): React.JSX.Element {
           });
         },
       });
+      ScrollTrigger.refresh();
+      // Recalc after layout/Lenis are fully ready (fixes first-load wrong positions)
+      refreshTid = setTimeout(() => ScrollTrigger.refresh(), 150);
     });
 
     return () => {
       cancelAnimationFrame(rafId);
+      clearTimeout(refreshTid!);
       st?.kill();
     };
   }, []);
@@ -174,7 +187,11 @@ function ServicesCardsSection(): React.JSX.Element {
           <div
             ref={(el) => { cardRefs.current[index] = el; }}
             className="card-content w-full lg:w-[78%] lg:h-[580px] cursor-pointer overflow-hidden shadow-2xl transition-transform duration-300 ease-out hover:scale-[1.02]"
-            style={{ transformOrigin: 'top center', willChange: 'transform' }}
+            style={{
+              transformOrigin: 'top center',
+              willChange: 'transform',
+              transform: `scale(${getCardScale(0, index)})`,
+            }}
           >
             {/* Upper Section */}
             <div className="upper-section flex justify-between items-center p-6 lg:p-8 bg-white">

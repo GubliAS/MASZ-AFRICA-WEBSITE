@@ -18,47 +18,30 @@ export default function ParallaxSection({
 }) {
   const [titleComplete, setTitleComplete] = useState(false);
   const [showTextContainer, setShowTextContainer] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const mediaRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLDivElement | null>(null);
 
-  // Show text container only after scroll reveal completes — prevents jump
+  // Show text container when trigger fires — single rAF so it feels seamless with scroll
   useEffect(() => {
     if (!startTextAnimation || showTextContainer) return;
-
-    let idleId: number | null = null;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    // Triple rAF + idle callback to ensure scroll reveal is fully complete and layout is settled
-    requestAnimationFrame(() => {
+    const id = requestAnimationFrame(() => {
+      setShowTextContainer(true);
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            const showText = () => {
-              setShowTextContainer(true);
-              // Smoothly reveal text container after state update
-              requestAnimationFrame(() => {
-                if (textRef.current) {
-                  gsap.to(textRef.current, {
-                    opacity: 1,
-                    visibility: 'visible',
-                    pointerEvents: 'auto',
-                    duration: 0.4,
-                    ease: 'power2.out',
-                    force3D: true,
-                  });
-                }
-              });
-            };
-          idleId = requestIdleCallback(showText, { timeout: 300 });
-          timeoutId = setTimeout(showText, 300);
-        });
+        if (textRef.current) {
+          gsap.to(textRef.current, {
+            opacity: 1,
+            visibility: 'visible',
+            pointerEvents: 'auto',
+            duration: 0.5,
+            ease: 'power2.out',
+            force3D: true,
+          });
+        }
       });
     });
-
-    return () => {
-      if (idleId !== null) cancelIdleCallback(idleId);
-      if (timeoutId !== null) clearTimeout(timeoutId);
-    };
+    return () => cancelAnimationFrame(id);
   }, [startTextAnimation, showTextContainer]);
 
   // Set initial states before paint to prevent layout shift — ensure image is ALWAYS visible
@@ -93,23 +76,6 @@ export default function ParallaxSection({
     }
   }, [title, subtitle]);
 
-  // Ensure image stays visible after ScrollTrigger setup — prevents any conflicts
-  useEffect(() => {
-    if (!mediaRef.current || !sectionRef.current) return;
-    
-    // Small delay to ensure all animations are set up, then lock visibility
-    const timeoutId = setTimeout(() => {
-      if (mediaRef.current) {
-        gsap.set(mediaRef.current, { opacity: 1, visibility: 'visible', force3D: true });
-      }
-      if (sectionRef.current) {
-        gsap.set(sectionRef.current, { opacity: 1, visibility: 'visible', force3D: true });
-      }
-    }, 100);
-    
-    return () => clearTimeout(timeoutId);
-  }, []);
-
   useEffect(() => {
     if (!sectionRef.current || !mediaRef.current) return;
     const hasText = title || subtitle;
@@ -118,6 +84,10 @@ export default function ParallaxSection({
     const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
+      const media = mediaRef.current;
+      if (!media) return;
+      gsap.set(media, { y: 0, scale: 1, opacity: 1, visibility: 'visible', force3D: true });
+
       /* ---------------- MOBILE ---------------- */
       mm.add('(max-width: 1023px)', () => {
         const tl = gsap.timeline({
@@ -125,18 +95,20 @@ export default function ParallaxSection({
             trigger: sectionRef.current,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1,
+            scrub: 1.2,
           },
         });
-
-        tl.to(
-          mediaRef.current,
+        tl.fromTo(
+          media,
+          { y: 0, scale: 1 },
           { y: '20%', scale: 1.05, ease: 'none', force3D: true },
           0
         );
         if (textEl) {
-          tl.to(
+          gsap.set(textEl, { y: 0, force3D: true });
+          tl.fromTo(
             textEl,
+            { y: 0 },
             { y: '-10%', ease: 'none', force3D: true },
             0
           );
@@ -149,33 +121,27 @@ export default function ParallaxSection({
             trigger: sectionRef.current,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1,
+            scrub: 1.2,
           },
         });
-
-        tl.to(
-          mediaRef.current,
+        tl.fromTo(
+          media,
+          { y: 0, scale: 1 },
           { y: '40%', scale: 1.12, ease: 'none', force3D: true },
           0
         );
         if (textEl) {
-          tl.to(
+          gsap.set(textEl, { y: 0, force3D: true });
+          tl.fromTo(
             textEl,
+            { y: 0 },
             { y: '-20%', ease: 'none', force3D: true },
             0
           );
         }
       });
-      
-      // CRITICAL: After ScrollTrigger setup, ensure image stays visible
-      requestAnimationFrame(() => {
-        if (mediaRef.current) {
-          gsap.set(mediaRef.current, { opacity: 1, visibility: 'visible', force3D: true });
-        }
-        if (sectionRef.current) {
-          gsap.set(sectionRef.current, { opacity: 1, visibility: 'visible', force3D: true });
-        }
-      });
+
+      ScrollTrigger.refresh();
     }, sectionRef);
 
     return () => {
@@ -219,18 +185,13 @@ export default function ParallaxSection({
           alt={imageAlt}
           fill
           priority
-          className="object-cover object-top"
+          className="object-cover object-top transition-opacity duration-500 ease-out"
           style={{ 
-            opacity: 1, 
+            opacity: imageLoaded ? 1 : 0,
             visibility: 'visible',
             pointerEvents: 'none',
           }}
-          onLoad={() => {
-            // Ensure image stays visible after load
-            if (mediaRef.current) {
-              gsap.set(mediaRef.current, { opacity: 1, visibility: 'visible', force3D: true });
-            }
-          }}
+          onLoad={() => setImageLoaded(true)}
         />
 
         {/* OVERLAY */}

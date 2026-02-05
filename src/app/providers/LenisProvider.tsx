@@ -19,17 +19,42 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
       smoothWheel: true,
     });
 
-    // Batch ScrollTrigger updates — throttle to reduce work during fast scrolling
+    /**
+     * PERFORMANCE OPTIMIZATION: Throttled ScrollTrigger Updates
+     * 
+     * DESKTOP OPTIMIZATION:
+     * - Throttles ScrollTrigger.update() to max once per frame
+     * - Prevents excessive calculations during fast scrolling
+     * - Reduces CPU work by batching scroll events
+     * 
+     * Why this helps:
+     * - ScrollTrigger.update() is expensive (recalculates all triggers)
+     * - Without throttling: Called multiple times per scroll event → lag
+     * - With throttling: Called max once per frame → smooth
+     */
     let rafId: number | null = null;
+    let lastUpdateTime = 0;
+    const UPDATE_INTERVAL = 16; // ~60fps max update rate (16ms = 60fps)
+
     lenis.on('scroll', () => {
-      if (rafId === null) {
+      const now = performance.now();
+      // PERFORMANCE: Throttle ScrollTrigger updates to max 60fps
+      // Prevents excessive updates during fast scrolling
+      if (rafId === null && now - lastUpdateTime >= UPDATE_INTERVAL) {
         rafId = requestAnimationFrame(() => {
           ScrollTrigger.update();
+          lastUpdateTime = performance.now();
           rafId = null;
         });
       }
     });
 
+    /**
+     * PERFORMANCE: Lenis RAF loop
+     * 
+     * This runs continuously to update smooth scroll position.
+     * Optimized to run efficiently without blocking.
+     */
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -54,15 +79,42 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
       },
     });
 
-    ScrollTrigger.config({ ignoreMobileResize: true });
+    /**
+     * PERFORMANCE: ScrollTrigger Configuration
+     * 
+     * ignoreMobileResize: Prevents refresh on mobile resize (saves CPU)
+     * refresh(): Initial refresh to set up all triggers
+     * 
+     * Note: refresh() is called once on mount, then debounced on resize
+     */
+    ScrollTrigger.config({ 
+      ignoreMobileResize: true,
+      // PERFORMANCE: Reduce refresh sensitivity for desktop
+      // Prevents excessive recalculations during window operations
+      autoRefreshEvents: "visibilitychange,resize",
+    });
     ScrollTrigger.refresh();
 
+    /**
+     * PERFORMANCE: Debounced ScrollTrigger Refresh on Resize
+     * 
+     * Why debounce?
+     * - Resize events fire many times during window resize
+     * - ScrollTrigger.refresh() is expensive (recalculates all triggers)
+     * - Debouncing waits until resize stops before refreshing
+     * 
+     * Increased delay to 250ms for desktop (was 150ms)
+     * - Desktop users resize less frequently
+     * - Longer delay = fewer refreshes = better performance
+     */
     let refreshTid: ReturnType<typeof setTimeout>;
     const debouncedRefresh = () => {
       clearTimeout(refreshTid);
-      refreshTid = setTimeout(() => ScrollTrigger.refresh(), 150);
+      refreshTid = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 250); // PERFORMANCE: Increased delay for desktop (was 150ms)
     };
-    window.addEventListener('resize', debouncedRefresh);
+    window.addEventListener('resize', debouncedRefresh, { passive: true });
 
     return () => {
       window.removeEventListener('resize', debouncedRefresh);

@@ -273,8 +273,7 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
           ))}
         </div>
 
-        {/* Ring Carousel 3D (Three.js) */}
-        <RingCarousel3D />
+            <RingCarousel3D />
 
         {/* Images */}
         <div className="core-value-section-images flex flex-col gap-[20px] lg:flex">

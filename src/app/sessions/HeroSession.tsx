@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Button from '../components/button';
 import { MoveRight } from 'lucide-react';
-import HeroTryParallax from './HeroTryParallax';
+import ParallaxAnimation from '../animations/ParallaxAnimation';
 import LineByLineText from '../components/LineByLineText';
 
 interface HeroSessionProps {
@@ -15,7 +15,19 @@ interface HeroSessionProps {
 function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
   return (
     <div className="hero-session-container mt-[50]">
-      <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[200] lg:my-[80]">
+      <div className="relative">
+        {/* Grid background behind logo and subtext */}
+        <div
+          className="absolute inset-0 opacity-[0.4] pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)
+            `,
+            backgroundSize: '64px 64px',
+          }}
+        />
+        <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[200] lg:my-[80] relative z-10">
         <div className="hero-logo flex items-center justify-center mt-[40] lg:mt-0">
           <Image
             src="/maszAssets/logotype.svg"
@@ -60,6 +72,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
           />
         </div>
       </div>
+      </div>
 
       {/* <div className="hero-image mt-[50]">
         <div className="hero-image-info h-[600] relative overflow-hidden z-0">
@@ -103,7 +116,52 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
         </div>
       </div> */}
 
-      <HeroTryParallax/>
+      <div className="hero-image mt-[50] lg:mb-[100]">
+        <ParallaxAnimation
+          imageSrc="/homeAssets/image-10.webp"
+          imageAlt="Hero Image"
+          height="fullscreen"
+          mobileY="18%"
+          desktopY="35%"
+          mobileScale={1.06}
+          desktopScale={1.12}
+          mobileTextY="-10%"
+          desktopTextY="-18%"
+          scrub={1}
+          showOverlay={true}
+          overlayClassName="bg-surface-overlay opacity-100 lg:opacity-30"
+        >
+          <div className="hero-image-text-info absolute inset-0 z-20 text-light font-bold lg:flex lg:items-center lg:justify-between lg:w-full lg:top-[100] will-change-transform">
+            <div className="hero-image-info-header flex items-center flex-col justify-center w-[430] lg:w-[790]">
+              <p className="uppercase text-xl-semibold text-center py-[20] lg:p-0 lg:text-4xl-semibold lg:text-left lg:ml-[200] lg:leading-13">
+                Empowering the global mining industry through
+              </p>
+
+              <Image
+                src="/homeAssets/arrow-icon.svg"
+                alt=""
+                width={24}
+                height={24}
+                className="h-auto lg:hidden"
+              />
+            </div>
+
+            <div className="hero-image-info-subtext mx-[55] lg:mr-[200] flex items-center justify-center flex-col backdrop-blur-sm p-[25] my-[20] lg:my-0 electric-border lg:w-[650] lg:h-[400]">
+              <div className="subtext-header uppercase text-xl-semibold my-[10] lg:text-4xl-semibold">
+                innovation
+              </div>
+
+              <div className="subtext-itself font-medium text-sm-medium my-[10] lg:text-xl-regular lg:w-[500]">
+                Our approach to innovation is practical, solving real problems
+                mines face everyday. Whether it's choosing the right media,
+                improving equipment life, or refining a supply process, we bring
+                ideas and technical insight that make your work smoother and
+                more efficient.
+              </div>
+            </div>
+          </div>
+        </ParallaxAnimation>
+      </div>
     </div>
   );
 }

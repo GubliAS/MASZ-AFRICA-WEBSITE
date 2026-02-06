@@ -6,8 +6,9 @@ import Image from 'next/image';
 
 function TestimonialSession() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const offsetRef = useRef(0);
 
   const testimonialDetails = [
     {
@@ -78,15 +79,17 @@ function TestimonialSession() {
   const scrollingItems = [...testimonialDetails, ...testimonialDetails];
 
   useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
     let animationFrameId: number;
+    const totalWidth = (scrollingItems.length / 2) * 304; // card width + gap
 
     const step = () => {
       if (!isPaused) {
-        setOffset((prev) => {
-          const totalWidth = (scrollingItems.length / 2) * 304; // card width + gap
-          const newOffset = prev + 0.5;
-          return newOffset >= totalWidth ? 0 : newOffset;
-        });
+        offsetRef.current += 0.5;
+        if (offsetRef.current >= totalWidth) offsetRef.current = 0;
+        track.style.transform = `translateX(-${offsetRef.current}px)`;
       }
       animationFrameId = requestAnimationFrame(step);
     };
@@ -120,24 +123,24 @@ function TestimonialSession() {
               onMouseLeave={() => setIsPaused(false)}
             >
               <div
+                ref={trackRef}
                 className="flex gap-6 mt-[50]"
-                style={{
-                  transform: `translateX(-${offset}px)`,
-                  transition: 'transform 0s linear',
-                }}
+                style={{ transition: 'transform 0s linear' }}
               >
                 {scrollingItems.map((item, index) => (
                   <div
                     key={index}
                     className="bg-surface-card-primary border-default-card-stroke w-[280] lg:w-[320] p-5 flex-shrink-0"
                   >
-                    <div className="relative w-10 h-10 mb-4  overflow-hidden ">
+                    <div className="relative w-10 h-10 mb-4 overflow-hidden">
                       <Image
                         src={item.logo}
                         alt=""
                         fill
                         className="object-cover"
-                        priority
+                        quality={60}
+                        sizes="40px"
+                        loading="lazy"
                       />
                     </div>
                     <p className="text-sm-medium text-default-body lg:my-[40]">
@@ -150,7 +153,9 @@ function TestimonialSession() {
                           alt=""
                           fill
                           className="object-cover"
-                          priority
+                          quality={60}
+                          sizes="40px"
+                          loading="lazy"
                         />
                       </div>
                       <div>

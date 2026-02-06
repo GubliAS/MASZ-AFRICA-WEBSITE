@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import gsap from 'gsap';
-import SplitType from 'split-type';
 import Tag from '../components/tag';
 import Image from 'next/image';
 import Button from '../components/button';
 import { MoveRight } from 'lucide-react';
 import AnimationCopy from '../animations/WritingTextAnimation';
+import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
 import LineByLineText from '../components/LineByLineText';
 
 const ABOUT_BODY_TEXT = (
@@ -48,50 +48,12 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
   const [showAnimationCopy, setShowAnimationCopy] = useState(false);
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const headerTextRef = useRef<HTMLDivElement>(null);
-  const headerSplitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
   const hasLeftSectionRef = useRef(false);
   const prevInViewRef = useRef(false);
   const hasScrolledDownFromTopRef = useRef(false);
   const hasReturnedToTopRef = useRef(false);
-  const hasStartedHeaderRef = useRef(false);
   const pendingCopyRef = useRef<{ idleId: number; timeoutId: ReturnType<typeof setTimeout> } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-
-  // Split header into lines on mount and hide until animation starts
-  useEffect(() => {
-    const el = headerTextRef.current;
-    if (!el) return;
-
-    const split = new SplitType(el, { types: 'lines' });
-    const lines = split.lines;
-    if (!lines || lines.length === 0) return;
-
-    headerSplitRef.current = { split, lines: Array.from(lines) };
-    gsap.set(lines, { opacity: 0, y: HEADER_LINE_Y });
-
-    return () => {
-      split.revert();
-      headerSplitRef.current = null;
-    };
-  }, []);
-
-  // When scroll reveal fires: animate header line-by-line, then start body animation
-  useEffect(() => {
-    if (!startTextAnimation || hasStartedHeaderRef.current || !headerSplitRef.current) return;
-    hasStartedHeaderRef.current = true;
-
-    const { lines } = headerSplitRef.current;
-    gsap.to(lines, {
-      opacity: 1,
-      y: 0,
-      duration: HEADER_DURATION,
-      stagger: HEADER_STAGGER,
-      delay: HEADER_DELAY,
-      ease: 'power2.out',
-      onComplete: () => setStartBodyAnimation(true),
-    });
-  }, [startTextAnimation]);
 
   // Only run AnimationCopy on second scroll down from top (not on first load/first scroll)
   useEffect(() => {
@@ -190,9 +152,17 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
         <div className="session-container lg:w-1/2" data-scroll-reveal-item>
           <Tag text="About us" className="ml-[22]" />
           <div className="about-us-header text-xl-semibold uppercase ml-[22] my-[30] lg:my-[70] lg:text-4xl-semibold">
-            <div ref={headerTextRef} style={{ overflow: 'hidden' }}>
+            <HeaderLineByLineAnimation
+              startAnimation={startTextAnimation}
+              onComplete={() => setStartBodyAnimation(true)}
+              lineY={HEADER_LINE_Y}
+              duration={HEADER_DURATION}
+              stagger={HEADER_STAGGER}
+              delay={HEADER_DELAY}
+              style={{ overflow: 'hidden' }}
+            >
               Who <span className="text-primary-default">We are</span>
-            </div>
+            </HeaderLineByLineAnimation>
           </div>
 
           {/* Phase 1: line-by-line; Phase 2: static text; Phase 3: AnimationCopy overlay (spacer keeps layout, no jump) */}

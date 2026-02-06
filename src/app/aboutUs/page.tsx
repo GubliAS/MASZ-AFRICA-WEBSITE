@@ -1,8 +1,6 @@
 'use client';
-import ParallaxSection from '../animations/ImageParallax';
 import Tag from '../components/tag';
 import AnimationCopy from '../animations/WritingTextAnimation';
-import AnimatedMetricCard from '../components/AnimatedMetricCard';
 import TiltCard from '../animations/TiltCard';
 import CoreValueCard from '../components/MainCoreValuesCard';
 import { IconAwardFilled } from '@tabler/icons-react';
@@ -10,8 +8,11 @@ import TeamMembersSection from '../sessions/TeamMembersSection';
 import GallerySection from '../sessions/GallerySection';
 import ScrollReveal from '../components/ScrollReveal';
 import LineByLineText from '../components/LineByLineText';
+import MetricsCardAnimation from '../animations/MetricsCardAnimation';
+import ParallaxAnimation from '../animations/ParallaxAnimation';
+import AnimatedCardsContainer from '../animations/AnimatedCardsContainer';
 import dynamic from 'next/dynamic';
-import { useState, useRef, useEffect, useLayoutEffect, memo, forwardRef } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, memo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -100,8 +101,7 @@ const OUR_STORY_TEXT = (
     MASZ-AFRICA Ltd is a Ghana-based private limited liability
     company that provides high-quality mining consumables,
     engineering support, and procurement solutions to mining and
-    mineral processing industries across Africa. <br />
-    <br />
+    mineral processing industries across Africa.
     Established in September 2025 by a multidisciplinary team with
     more than 15 years of combined experience in metallurgy,
     engineering, finance, supply chain management, and business
@@ -112,8 +112,7 @@ const OUR_STORY_TEXT = (
     satisfaction. Through strong partnerships with globally
     recognized manufacturers and original equipment suppliers, the
     company delivers world-class products supported by solid
-    technical expertise and consistent on-time delivery. <br />
-    <br />
+    technical expertise and consistent on-time delivery.
     With a growing presence across West Africa, MASZ-Africa aims to
     become a continental leader in mining supply, logistics, and
     technical services. The company is committed to empowering
@@ -169,18 +168,11 @@ function OurStorySection({ startTextAnimation = false }: { startTextAnimation?: 
     }
   }, [startTextAnimation]);
 
-  // When body line-by-line completes, start empty cards phase (shells appear one after the other)
+  // When body line-by-line completes, start metrics animation
   useEffect(() => {
     if (!lineByLineComplete) return;
     setStartMetricsAnimation(true);
   }, [lineByLineComplete]);
-
-  // When all 4 empty cards have been shown, start content phase (text + number per card)
-  useEffect(() => {
-    if (emptyCardIndex < 4) return;
-    setStartContentPhase(true);
-    setActiveCardIndex(0);
-  }, [emptyCardIndex]);
 
   // Only run AnimationCopy on second scroll down from top (not on first load/first scroll)
   useEffect(() => {
@@ -303,114 +295,29 @@ function OurStorySection({ startTextAnimation = false }: { startTextAnimation?: 
           </div>
         </div>
       )}
-      {/* Metrics: Phase 1 – empty card shells appear one after the other; Phase 2 – per card: text line-by-line then number (YouTube-style scroll) */}
-      <div className="metrics-container my-[50px] lg:flex lg:gap-8 mt-[50]">
-        {METRICS.map((metric, index) => (
-          <AnimatedMetricCard
-            key={index}
-            text={metric.text}
-            value={metric.value}
-            showAsEmpty={startMetricsAnimation && emptyCardIndex === index}
-            showContent={startContentPhase && activeCardIndex === index}
-            onEmptyShown={() => setEmptyCardIndex((i) => Math.min(i + 1, METRICS.length))}
-            onSequenceComplete={() =>
-              setActiveCardIndex((i) => Math.min(i + 1, METRICS.length))
-            }
-          />
-        ))}
-      </div>
+      {/* Metrics Cards Animation */}
+      <MetricsCardAnimation
+        metrics={METRICS}
+        startAnimation={startMetricsAnimation}
+        className="my-[50px] lg:flex lg:gap-8 mt-[50]"
+      />
     </div>
   );
 }
 
 const MemoOurStorySection = memo(OurStorySection);
 
-const CoreValuesCardsContainer = forwardRef<HTMLDivElement, { cards: CoreValue[] }>(
-  ({ cards }, containerRef) => {
-    const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-    const internalRef = useRef<HTMLDivElement>(null);
-    
-    // Use the forwarded ref or fallback to internal ref
-    const ref = typeof containerRef === 'function' ? internalRef : (containerRef || internalRef);
-
-    // Set initial states before paint to prevent layout shift
-    useLayoutEffect(() => {
-      cardsRef.current.forEach((cardEl) => {
-        if (cardEl) {
-          gsap.set(cardEl, {
-            x: 120, // Start from right side (positive x = right)
-            opacity: 0,
-            force3D: true,
-          });
-        }
-      });
-    }, []);
-
-    // Animate cards sequentially when section comes into view
-    useEffect(() => {
-      const container = (ref as React.MutableRefObject<HTMLDivElement | null>).current;
-      if (!container) return;
-
-      const cardElements = cardsRef.current.filter(Boolean) as HTMLElement[];
-      if (cardElements.length === 0) return;
-
-      const st = ScrollTrigger.create({
-        trigger: container,
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-          // Animate each card sequentially from right to left
-          cardElements.forEach((card, index) => {
-            gsap.to(card, {
-              x: 0,
-              opacity: 1,
-              duration: 0.8,
-              delay: index * 0.15, // Stagger delay between cards
-              ease: 'power3.out',
-              force3D: true,
-            });
-          });
-        },
-      });
-
-      return () => {
-        st.kill();
-      };
-    }, [ref]);
-
-    // Handle both ref types
-    const setRef = (el: HTMLDivElement | null) => {
-      if (typeof containerRef === 'function') {
-        containerRef(el);
-      } else if (containerRef) {
-        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
-      }
-      internalRef.current = el;
-    };
-
-    return (
-      <div 
-        ref={setRef}
-        className="flex flex-col lg:flex-row gap-4 lg:gap-"
-        style={{ contain: 'layout style paint' }}
-      >
-        {cards.map((card, index) => (
-          <div
-            key={card.id}
-            ref={(el) => {
-              cardsRef.current[index] = el;
-            }}
-            style={{ contain: 'layout style paint' }}
-          >
-            <CoreValueCard card={card} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-);
-
-CoreValuesCardsContainer.displayName = 'CoreValuesCardsContainer';
+function CoreValuesCardsContainer({ cards }: { cards: CoreValue[] }) {
+  return (
+    <AnimatedCardsContainer className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+      {cards.map((card) => (
+        <div key={card.id} style={{ contain: 'layout style paint' }}>
+          <CoreValueCard card={card} />
+        </div>
+      ))}
+    </AnimatedCardsContainer>
+  );
+}
 
 function ParallaxTextTrigger({ onTrigger }: { onTrigger: () => void }) {
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -448,17 +355,6 @@ function AboutUSPage() {
   const [parallaxTextRevealNearlyComplete, setParallaxTextRevealNearlyComplete] = useState(false);
   const [visionRevealNearlyComplete, setVisionRevealNearlyComplete] = useState(false);
   const [missionRevealNearlyComplete, setMissionRevealNearlyComplete] = useState(false);
-  const coreValuesContainerRef = useRef<HTMLDivElement>(null);
-
-  const ParallaxSection = dynamic(() => import('../animations/ImageParallax'), { 
-    ssr: false,
-    loading: () => (
-      <div 
-        className="relative w-full overflow-hidden h-[520px] lg:h-[1100px] bg-[#0D0D0D]"
-        style={{ contain: 'layout style paint' }}
-      />
-    ),
-  });
 
   // Make TiltCard client-only
   const TiltCard = dynamic(() => import('../animations/TiltCard'), { ssr: false });
@@ -472,7 +368,7 @@ function AboutUSPage() {
   return (
     <section className="w-full">
       <div className="main-about-page-content">
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <ScrollReveal direction="up" duration={1.2} start="top 92%" once staggerChildren={0.08}>
         <div className="main-about-hero-content" style={{ contain: 'layout style paint' }}>
           <div className="tag-container mx-[21] mt-[30] lg:mt-[60] lg:mx-[200]">
             <Tag text="About us" />
@@ -491,9 +387,10 @@ function AboutUSPage() {
 
           {/* PARALLAX IMAGE */}
           <div style={{ contain: 'layout style paint', willChange: 'transform' }}>
-            <ParallaxSection
+            <ParallaxAnimation
               imageSrc="/aboutAssets/Image-6.webp"
               imageAlt="About us hero image"
+              height="lg"
             />
           </div>
         </div>
@@ -515,20 +412,15 @@ function AboutUSPage() {
 
         {/* vision-mission-hero-section */}
         <div className="vision-mission-section-container" style={{ contain: 'layout style paint' }}>
-          <div className="vision-mission-parallax-section" style={{ opacity: 1, visibility: 'visible', contain: 'layout style paint' }}>
-            {/* <ParallaxSection
-              imageSrc="/aboutAssets/image-4.webp"
-              title="DEFINING THE FUTURE WE STAND FOR"
-              subtitle="Our guiding principles define how we operate today—and the impact we aim to make tomorrow. They guide our work, shape our decisions, and keep us aligned with the needs of a fast-evolving mining sector. Every step we take reflects our commitment to progress and long-term value."
-              startTextAnimation={parallaxTextRevealNearlyComplete}
-            /> */}
-
-            <ParallaxSection
-              imageSrc="/aboutAssets/Image-4.webp"
-              imageAlt="About us hero image"
-            />
-          </div>
-          {/* Use Intersection Observer instead of ScrollReveal to avoid animating the image */}
+          <ScrollReveal direction="up" duration={1.2} start="top 92%" once staggerChildren={0.08}>
+            <div className="vision-mission-parallax-section" style={{ contain: 'layout style paint' }}>
+              <ParallaxAnimation
+                imageSrc="/aboutAssets/Image-4.webp"
+                imageAlt="Vision and mission hero image"
+                height="lg"
+              />
+            </div>
+          </ScrollReveal>
           <ParallaxTextTrigger onTrigger={() => setParallaxTextRevealNearlyComplete(true)} />
         </div>
 
@@ -623,7 +515,7 @@ function AboutUSPage() {
               </div>
             </div>
             <div className="core-value-core-content-wrapper lg:pb-[200] lg:pt-[80]">
-              <CoreValuesCardsContainer ref={coreValuesContainerRef} cards={valueCards} />
+              <CoreValuesCardsContainer cards={valueCards} />
             </div>
           </div>
         </div>
@@ -782,11 +674,9 @@ function AboutUSPage() {
           <TeamMembersSection />
         </ScrollReveal>
 
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
         <div className="gallery-container lg:py-[100]" style={{ contain: 'layout style paint' }}>
           <GallerySection/>
         </div>
-        </ScrollReveal>
         
       </div>
     </section>

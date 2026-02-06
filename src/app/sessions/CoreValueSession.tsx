@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, memo, useCallback } from 'react';
 import gsap from 'gsap';
-import SplitType from 'split-type';
 import AnimationCopy from '../animations/WritingTextAnimation';
 import AnimatedMetricCard from '../components/AnimatedMetricCard';
-import PerfectCarousel3D from '../components/PerfectCarousel3D';
-import RingCarousel3D from '../components/RingCarousel3D';
+import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
 import Image from 'next/image';
 import LineByLineText from '../components/LineByLineText';
 
+// Animation constants - now used by HeaderLineByLineAnimation component
 const HEADER_LINE_Y = 28;
 const HEADER_STAGGER = 0.12;
 const HEADER_DURATION = 0.6;
@@ -40,14 +39,27 @@ interface CoreValueSessionProps {
   startTextAnimation?: boolean;
 }
 
+// PERFORMANCE: Memoize metrics array outside component
 const METRICS = [
   { text: 'years of combined experience', value: '15+' },
   { text: 'clients who rely on our consistent delivery and expertise.', value: '5+' },
   { text: 'client satisfaction built on trust, transparency, and performance.', value: '99%' },
   { text: 'on-time delivery, driven by efficiency and dependable logistics.', value: '98%' },
-];
+] as const;
 
 function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps) {
+  // PERFORMANCE: Memoize metrics array reference
+  const memoizedMetrics = useMemo(() => METRICS, []);
+  
+  // PERFORMANCE: Memoize callbacks to prevent re-renders
+  const handleEmptyShown = useCallback(() => {
+    setEmptyCardIndex((i) => Math.min(i + 1, METRICS.length));
+  }, []);
+  
+  const handleSequenceComplete = useCallback(() => {
+    setActiveCardIndex((i) => Math.min(i + 1, METRICS.length));
+  }, []);
+  
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
   const [showAnimationCopy, setShowAnimationCopy] = useState(false);
   const [startBodyAnimation, setStartBodyAnimation] = useState(false);
@@ -56,50 +68,12 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
   const [startContentPhase, setStartContentPhase] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
-  const headerTextRef = useRef<HTMLDivElement>(null);
-  const headerSplitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
   const hasLeftSectionRef = useRef(false);
   const prevInViewRef = useRef(false);
   const hasScrolledDownFromTopRef = useRef(false);
   const hasReturnedToTopRef = useRef(false);
-  const hasStartedHeaderRef = useRef(false);
   const pendingCopyRef = useRef<{ idleId: number; timeoutId: ReturnType<typeof setTimeout> } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-
-  // Split header into lines on mount and hide until animation starts
-  useEffect(() => {
-    const el = headerTextRef.current;
-    if (!el) return;
-
-    const split = new SplitType(el, { types: 'lines' });
-    const lines = split.lines;
-    if (!lines || lines.length === 0) return;
-
-    headerSplitRef.current = { split, lines: Array.from(lines) };
-    gsap.set(lines, { opacity: 0, y: HEADER_LINE_Y });
-
-    return () => {
-      split.revert();
-      headerSplitRef.current = null;
-    };
-  }, []);
-
-  // When scroll reveal fires: animate header line-by-line, then start body animation
-  useEffect(() => {
-    if (!startTextAnimation || hasStartedHeaderRef.current || !headerSplitRef.current) return;
-    hasStartedHeaderRef.current = true;
-
-    const { lines } = headerSplitRef.current;
-    gsap.to(lines, {
-      opacity: 1,
-      y: 0,
-      duration: HEADER_DURATION,
-      stagger: HEADER_STAGGER,
-      delay: HEADER_DELAY,
-      ease: 'power2.out',
-      onComplete: () => setStartBodyAnimation(true),
-    });
-  }, [startTextAnimation]);
 
   // When body line-by-line completes, start empty cards phase (shells appear one after the other)
   useEffect(() => {
@@ -133,7 +107,14 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
     const TOP_THRESHOLD = 150; // Consider "at top" if within 150px
     let wasAtTop = lastScrollY <= TOP_THRESHOLD;
 
+    // PERFORMANCE: Throttle scroll handler to reduce work
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
     const handleScroll = () => {
+      if (scrollTimeout) return;
+      scrollTimeout = setTimeout(() => {
+        scrollTimeout = null;
+      }, 16); // ~60fps max
+      
       const currentScrollY = window.scrollY;
       const isAtTop = currentScrollY <= TOP_THRESHOLD;
       const isScrollingDown = currentScrollY > lastScrollY;
@@ -201,6 +182,7 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
       io.disconnect();
       window.removeEventListener('scroll', handleScroll);
       clearPending();
+      if (scrollTimeout) clearTimeout(scrollTimeout);
     };
   }, [showAnimationCopy]);
 
@@ -209,9 +191,17 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
       <div className="core-value-section-container">
         {/* Header - line-by-line first, then body animates */}
         <div className="section-header uppercase text-xl-semibold lg:mx-[200] ml-[22px] my-[30px] lg:text-4xl-semibold">
-          <div ref={headerTextRef} style={{ overflow: 'hidden' }}>
+          <HeaderLineByLineAnimation
+            startAnimation={startTextAnimation}
+            onComplete={() => setStartBodyAnimation(true)}
+            lineY={HEADER_LINE_Y}
+            duration={HEADER_DURATION}
+            stagger={HEADER_STAGGER}
+            delay={HEADER_DELAY}
+            style={{ overflow: 'hidden' }}
+          >
             what makes us <span className="text-primary-default">stand out</span>
-          </div>
+          </HeaderLineByLineAnimation>
         </div>
 
         {/* Description: line-by-line; then static; then AnimationCopy overlay (spacer keeps layout, no jump) */}
@@ -258,22 +248,19 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
 
         {/* Metrics: Phase 1 – empty card shells appear one after the other; Phase 2 – per card: text line-by-line then number (YouTube-style scroll) */}
         <div className="metrics-container lg: lg:mx-[200] lg:mb-[40] my-[30px] gap-6 mx-[21] lg:flex">
-          {METRICS.map((metric, index) => (
+          {memoizedMetrics.map((metric, index) => (
             <AnimatedMetricCard
               key={index}
               text={metric.text}
               value={metric.value}
               showAsEmpty={startMetricsAnimation && emptyCardIndex === index}
               showContent={startContentPhase && activeCardIndex === index}
-              onEmptyShown={() => setEmptyCardIndex((i) => Math.min(i + 1, METRICS.length))}
-              onSequenceComplete={() =>
-                setActiveCardIndex((i) => Math.min(i + 1, METRICS.length))
-              }
+              onEmptyShown={handleEmptyShown}
+              onSequenceComplete={handleSequenceComplete}
             />
           ))}
         </div>
 
-            <RingCarousel3D />
 
         {/* Images */}
         <div className="core-value-section-images flex flex-col gap-[20px] lg:flex">
@@ -283,7 +270,8 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
               src="/homeAssets/Image-3.jpg"
               alt="Core value visual"
               fill
-              priority
+              loading="lazy"
+              sizes="(max-width: 1024px) 100vw, 0px"
               className="object-cover"
             />
           </div>
@@ -295,6 +283,8 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
                 src="/homeAssets/Image-4.jpg"
                 alt="Core value visual"
                 fill
+                loading="lazy"
+                sizes="(max-width: 1024px) 50vw, 0px"
                 className="object-cover"
               />
             </div>
@@ -303,6 +293,8 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
                 src="/homeAssets/Image-5.jpg"
                 alt="Core value visual"
                 fill
+                loading="lazy"
+                sizes="(max-width: 1024px) 50vw, 0px"
                 className="object-cover"
               />
             </div>
@@ -313,4 +305,5 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
   );
 }
 
-export default CoreValueSession;
+// PERFORMANCE: Memoize component to prevent unnecessary re-renders
+export default memo(CoreValueSession);

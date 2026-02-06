@@ -58,7 +58,7 @@ export default function FaqSession() {
   };
 
   return (
-    <section className="mt-[100px] mx-[21px] lg:mx-[200] lg:my-[120] lg:">
+    <section className="mt-[100px] mx-[21px] lg:mx-[200] lg:my-[120] bg-white relative z-10">
       <div className="main-faq-section-container lg:flex lg:justify-between">
         <div className="faq-left-side-for-large-screens" data-scroll-reveal-item>
           <Tag text="Frequently asked questions" />

@@ -1,7 +1,12 @@
 'use client';
 
-import React from 'react';
-import Tag from '../components/tag';
+import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import LineByLineText from '@/app/components/LineByLineText';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const images = [
   '/aboutAssets/Image-1.webp',
@@ -31,35 +36,107 @@ const images = [
 ];
 
 const GallerySection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [startTextAnimation, setStartTextAnimation] = useState(false);
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const hasAnimatedImages = useRef(false);
+
   // Split images into rows of 6
   const rows: string[][] = [];
   for (let i = 0; i < images.length; i += 6) {
     rows.push(images.slice(i, i + 6));
   }
 
+  const handleHeaderComplete = () => {
+    if (hasAnimatedImages.current) return;
+    hasAnimatedImages.current = true;
+    const refs = imageRefs.current.filter(Boolean);
+    if (refs.length === 0) return;
+    gsap.to(refs, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 1,
+      stagger: 0.1,
+      ease: 'power3.out',
+      force3D: true,
+      overwrite: 'auto',
+    });
+  };
+
+  useLayoutEffect(() => {
+    const refs = imageRefs.current.filter(Boolean);
+    gsap.set(refs, {
+      opacity: 0,
+      y: 56,
+      scale: 0.88,
+      force3D: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => setStartTextAnimation(true),
+    });
+  }, []);
+
   return (
-    <section className="relative w-full py-16">
-      {/* ===== Header ===== */}
-      <div className="px-5 lg:px-20 max-w-7xl lg:mx-[180]">
-        <div className="mb-6  space-y-5">
+    <section ref={sectionRef} className="relative w-full py-16">
+      {/* ===== Header with LineByLineText ===== */}
+      <div className="px-5 lg:px-20 max-w-7xl lg:mx-[180] overflow-hidden">
+        <div className="mb-6 space-y-5">
           <div className="uppercase text-2xl lg:text-4xl font-semibold">
-            <div>Take a walk through</div>
-            <div className="text-primary-default">Our company gallery</div>
+            <LineByLineText
+              startAnimation={startTextAnimation}
+              className="text-default-body"
+              duration={0.55}
+              stagger={0.1}
+              delay={0.05}
+              yFrom={24}
+            >
+              Take a walk through
+            </LineByLineText>
+            <LineByLineText
+              startAnimation={startTextAnimation}
+              className="text-primary-default block mt-1"
+              duration={0.55}
+              stagger={0.1}
+              delay={0.2}
+              yFrom={24}
+            >
+              Our company gallery
+            </LineByLineText>
           </div>
 
-          <p className="max-w-4xl text-default-body">
+          <LineByLineText
+            startAnimation={startTextAnimation}
+            onComplete={handleHeaderComplete}
+            className="max-w-4xl text-default-body text-base lg:text-lg leading-relaxed"
+            duration={0.45}
+            stagger={0.06}
+            delay={0.35}
+            yFrom={18}
+            as="p"
+          >
             Take a walk through our company gallery, presenting the people and
             processes behind our success, reflecting our commitment to quality
             and integrity, reinforcing the standards we operate by and the
             impact we strive to create every day.
-          </p>
+          </LineByLineText>
         </div>
       </div>
 
-      {/* ===== Gallery ===== */}
+      {/* ===== Gallery - each image animates individually ===== */}
       <div className="mt-12 mx-[21px] space-y-5">
         {rows.map((rowImages, rowIndex) => {
           const isNormalRow = rowIndex % 2 === 0;
+          const rowStartIdx = rowIndex * 6;
 
           return (
             <div
@@ -69,10 +146,14 @@ const GallerySection = () => {
               <ImageBlock
                 images={rowImages.slice(0, 3)}
                 reverse={!isNormalRow}
+                startIndex={rowStartIdx}
+                imageRefs={imageRefs}
               />
               <ImageBlock
                 images={rowImages.slice(3, 6)}
                 reverse={!isNormalRow}
+                startIndex={rowStartIdx + 3}
+                imageRefs={imageRefs}
               />
             </div>
           );
@@ -80,8 +161,7 @@ const GallerySection = () => {
       </div>
 
       {/* ===== Bottom Fade Overlay ===== */}
-      {/* ===== Bottom Fade Overlay ===== */}
-      <div className="absolute bottom-16 left-0 w-full h-58 lg:h-64 bg-gradient-to-t from-white/100 to-transparent pointer-events-none" />
+      <div className="absolute bottom-16 left-0 w-full h-58 lg:h-64 bg-linear-to-t from-white to-transparent pointer-events-none" />
     </section>
   );
 };
@@ -95,29 +175,38 @@ export default GallerySection;
 type BlockProps = {
   images: string[];
   reverse?: boolean;
+  startIndex: number;
+  imageRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
 };
 
-const ImageBlock = ({ images, reverse }: BlockProps) => {
-  const renderImage = (src: string, tall: boolean = false) => (
-    <div
-      className={`w-[260px] sm:w-[300px] lg:w-[340px] ${
-        tall ? 'h-[420px] lg:h-[520px]' : 'h-[200px] lg:h-[250px]'
-      } overflow-hidden cursor-pointer`}
-    >
-      <img
-        src={src}
-        alt="Gallery"
-        className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-      />
-    </div>
-  );
+const ImageBlock = ({ images, reverse, startIndex, imageRefs }: BlockProps) => {
+  const renderImage = (src: string, tall: boolean, idx: number) => {
+    const globalIdx = startIndex + idx;
+    return (
+      <div
+        ref={(el) => { imageRefs.current[globalIdx] = el; }}
+        className={`w-[260px] sm:w-[300px] lg:w-[340px] overflow-hidden cursor-pointer opacity-0 ${
+          tall ? 'h-[420px] lg:h-[520px]' : 'h-[200px] lg:h-[250px]'
+        }`}
+      >
+        <Image
+          src={src}
+          alt="Gallery"
+          width={340}
+          height={520}
+          className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+          sizes="(max-width: 640px) 260px, (max-width: 1024px) 300px, 340px"
+        />
+      </div>
+    );
+  };
 
   return (
     <div className={`flex gap-4 ${reverse ? 'flex-row-reverse' : ''}`}>
-      {renderImage(images[0], true)}
+      {renderImage(images[0], true, 0)}
       <div className="flex flex-col justify-between gap-4">
-        {renderImage(images[1])}
-        {renderImage(images[2])}
+        {renderImage(images[1], false, 1)}
+        {renderImage(images[2], false, 2)}
       </div>
     </div>
   );

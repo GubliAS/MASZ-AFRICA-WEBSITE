@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import SplitType from 'split-type';
+import React, { useState, useMemo, memo } from 'react';
 import Tag from '../components/tag';
 import Link from 'next/link';
 import { MoveRight } from 'lucide-react';
 import Button from '../components/button';
+import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
+import AnimatedListContainer from '../animations/AnimatedListContainer';
 import LineByLineText from '../components/LineByLineText';
 
 const HEADER_LINE_Y = 28;
@@ -20,112 +20,67 @@ interface ServiceSessionProps {
   startTextAnimation?: boolean;
 }
 
+// PERFORMANCE: Memoize service list outside component
+const serviceList = [
+  {
+    id: 1,
+    title: 'Grinding media',
+    subtext:
+      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+  },
+  {
+    id: 2,
+    title: 'Activated Carbon',
+    subtext:
+      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+  },
+  {
+    id: 3,
+    title: 'Metal and steel Pipes',
+    subtext:
+      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+  },
+  {
+    id: 4,
+    title: 'Gear Box servicing and Heavy Machine Maintenance',
+    subtext:
+      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+  },
+] as const;
+
 function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   const [startListAnimation, setStartListAnimation] = useState(false);
-  const headerTextRef = useRef<HTMLDivElement>(null);
-  const headerSplitRef = useRef<{ split: SplitType; lines: Element[] } | null>(null);
-  const listContainerRef = useRef<HTMLDivElement>(null);
-  const hasStartedHeaderRef = useRef(false);
 
-  const serviceList = [
-    {
-      id: 1,
-      title: 'Grinding media',
-      subtext:
-        'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
-    },
-    {
-      id: 2,
-      title: 'Activated Carbon',
-      subtext:
-        'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
-    },
-    {
-      id: 3,
-      title: 'Metal and steel Pipes',
-      subtext:
-        'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
-    },
-    {
-      id: 4,
-      title: 'Gear Box servicing and Heavy Machine Maintenance',
-      subtext:
-        'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
-    },
-  ];
-
-  // Split header into lines on mount and hide until animation starts
-  useEffect(() => {
-    const el = headerTextRef.current;
-    if (!el) return;
-
-    const split = new SplitType(el, { types: 'lines' });
-    const lines = split.lines;
-    if (!lines || lines.length === 0) return;
-
-    headerSplitRef.current = { split, lines: Array.from(lines) };
-    gsap.set(lines, { opacity: 0, y: HEADER_LINE_Y });
-
-    return () => {
-      split.revert();
-      headerSplitRef.current = null;
-    };
-  }, []);
-
-  // When scroll reveal fires: animate header line-by-line, then show list and start list title animations
-  useEffect(() => {
-    if (!startTextAnimation || hasStartedHeaderRef.current || !headerSplitRef.current) return;
-    hasStartedHeaderRef.current = true;
-
-    const { lines } = headerSplitRef.current;
-    gsap.to(lines, {
-      opacity: 1,
-      y: 0,
-      duration: HEADER_DURATION,
-      stagger: HEADER_STAGGER,
-      delay: HEADER_DELAY,
-      ease: 'power2.out',
-      onComplete: () => setStartListAnimation(true),
-    });
-  }, [startTextAnimation]);
-
-  // When list animation starts: reveal list container, then list titles animate via LineByLineText
-  useEffect(() => {
-    if (!startListAnimation || !listContainerRef.current) return;
-    gsap.to(listContainerRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: 'power2.out',
-    });
-  }, [startListAnimation]);
-
-  // Hide list container initially (opacity 0) so it appears after header
-  useEffect(() => {
-    if (!listContainerRef.current) return;
-    gsap.set(listContainerRef.current, { opacity: 0, y: 20 });
-  }, []);
+  // PERFORMANCE: Memoize service list reference
+  const memoizedServiceList = useMemo(() => serviceList, []);
 
   return (
-    <section className="lg:mx-[200]">
+    <section className="lg:mx-[200] bg-white relative z-10">
       <div className="services-section-container my-[100]">
         <Tag text="services" className="ml-[22]" />
 
         <div className="services-section-header text-xl-semibold uppercase ml-[22] my-[30] lg:my-[70] lg:text-4xl-semibold">
-          <div ref={headerTextRef} style={{ overflow: 'hidden' }}>
+          <HeaderLineByLineAnimation
+            startAnimation={startTextAnimation}
+            onComplete={() => setStartListAnimation(true)}
+            lineY={HEADER_LINE_Y}
+            duration={HEADER_DURATION}
+            stagger={HEADER_STAGGER}
+            delay={HEADER_DELAY}
+            style={{ overflow: 'hidden' }}
+          >
             Explore our <span className="text-primary-default">products</span>{' '}
             <span>and</span>{' '}
             <span className="text-primary-default">services</span>
-          </div>
+          </HeaderLineByLineAnimation>
         </div>
 
-        <div
-          ref={listContainerRef}
+        <AnimatedListContainer
+          startAnimation={startListAnimation}
           className="services-session-product-list-container my-[60]"
-          style={{ opacity: 0, transform: 'translateY(20px)' }}
         >
           <ul>
-            {serviceList.map((list, index) => (
+            {memoizedServiceList.map((list, index) => (
               <li
                 key={list.id}
                 tabIndex={0} // allows focus for :focus-within
@@ -199,10 +154,11 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
             icon={<MoveRight size={16} />}
             className="ml-[22] my-[35] lg:my-[100]"
           />
-        </div>
+        </AnimatedListContainer>
       </div>
     </section>
   );
 }
 
-export default ServiceSession;
+// PERFORMANCE: Memoize component to prevent unnecessary re-renders
+export default memo(ServiceSession);

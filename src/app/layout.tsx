@@ -30,6 +30,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${geistSans.className} ${geistMono.className}`}>
+      <head>
+        {/* Run before React: clear scroll history on every load so scroll-to-reveal starts fresh */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window === 'undefined') return;
+                try {
+                  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+                  window.scrollTo(0, 0);
+                  if (document.documentElement) document.documentElement.scrollTop = 0;
+                  if (document.body) document.body.scrollTop = 0;
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="antialiased">
         <AppShell>{children}</AppShell>
       </body>

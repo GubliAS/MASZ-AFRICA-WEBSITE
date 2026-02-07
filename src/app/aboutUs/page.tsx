@@ -368,7 +368,7 @@ function AboutUSPage() {
   return (
     <section className="w-full">
       <div className="main-about-page-content">
-        <ScrollReveal direction="up" duration={1.2} start="top 92%" once staggerChildren={0.08}>
+        <ScrollReveal direction="up" duration={0.6} start="top 60%" once staggerChildren={0.08}>
         <div className="main-about-hero-content" style={{ contain: 'layout style paint' }}>
           <div className="tag-container mx-[21] mt-[30] lg:mt-[60] lg:mx-[200]">
             <Tag text="About us" />
@@ -399,8 +399,8 @@ function AboutUSPage() {
         {/* conpany-description-section */}
         <ScrollReveal 
           direction="up" 
-          duration={1.5} 
-          start="top 85%" 
+          duration={0.75} 
+          start="top 60%" 
           scale
           once
           onRevealNearlyComplete={() => setOurStoryRevealNearlyComplete(true)}
@@ -412,7 +412,7 @@ function AboutUSPage() {
 
         {/* vision-mission-hero-section */}
         <div className="vision-mission-section-container" style={{ contain: 'layout style paint' }}>
-          <ScrollReveal direction="up" duration={1.2} start="top 92%" once staggerChildren={0.08}>
+          <ScrollReveal direction="up" duration={0.6} start="top 60%" once staggerChildren={0.08}>
             <div className="vision-mission-parallax-section" style={{ contain: 'layout style paint' }}>
               <ParallaxAnimation
                 imageSrc="/aboutAssets/Image-4.webp"
@@ -425,7 +425,7 @@ function AboutUSPage() {
         </div>
 
         {/* vision-statement-section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale once>
         <div className="vision-mission-statement lg:mx-[200] lg:my-[150] " style={{ contain: 'layout style paint' }}>
           <div className="vision-statement lg:flex lg:justify-between ">
             <div className="text mx-[21]">
@@ -458,7 +458,7 @@ function AboutUSPage() {
         </ScrollReveal>
 
         {/* mission-statement */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale once>
         <div className="mission-statement lg:mx-[200]  lg:my-[250]" style={{ contain: 'layout style paint' }}>
           <div className="mission-statement lg:flex lg:justify-between lg:flex-row">
             <div className="hidden lg:block image-container relative w-full lg:w-1/2 h-[520px]">
@@ -498,7 +498,7 @@ function AboutUSPage() {
         </ScrollReveal>
 
         {/* Core Values section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale once>
         <div className="core-values-section bg-[#f3f3f3]  my-[100] lg:pt-[50]" style={{ contain: 'layout style paint' }}>
           <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[200]">
             <Tag text="Our core values" className="my-[60]" />
@@ -522,7 +522,7 @@ function AboutUSPage() {
         </ScrollReveal>
 
         {/* key-achievements-section */}
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale once>
         <div className="key-achievements-section " style={{ contain: 'layout style paint' }}>
           <div className="main-section-content mx-[21] lg:ml-[200] lg:pb-[100] lg:flex ">
             <div className="left-side ">
@@ -670,7 +670,7 @@ function AboutUSPage() {
           </div>
         </div> */}
 
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale once>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale once>
           <TeamMembersSection />
         </ScrollReveal>
 

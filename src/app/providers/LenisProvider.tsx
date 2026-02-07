@@ -13,11 +13,24 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
+    // Force fresh start on every reload: disable browser scroll restoration and reset scroll to 0
+    // so all scroll-reveal animations start from their initial state and only run when scrolled into view
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+
     const lenis = new Lenis({
-      duration: 0.85,
+      duration: 0.6,
       easing: (t: number) => 1 - Math.pow(1 - t, 4),
       smoothWheel: true,
+      touchMultiplier: 2,
     });
+
+    // Set Lenis scroll to 0 immediately so ScrollTrigger sees scroll at 0 when triggers are created
+    lenis.scrollTo(0, { immediate: true });
 
     /**
      * PERFORMANCE OPTIMIZATION: Throttled ScrollTrigger Updates
@@ -33,20 +46,15 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
      * - With throttling: Called max once per frame → smooth
      */
     let rafId: number | null = null;
-    let lastUpdateTime = 0;
-    const UPDATE_INTERVAL = 16; // ~60fps max update rate (16ms = 60fps)
-
+    let ticking = false;
     lenis.on('scroll', () => {
-      const now = performance.now();
-      // PERFORMANCE: Throttle ScrollTrigger updates to max 60fps
-      // Prevents excessive updates during fast scrolling
-      if (rafId === null && now - lastUpdateTime >= UPDATE_INTERVAL) {
-        rafId = requestAnimationFrame(() => {
-          ScrollTrigger.update();
-          lastUpdateTime = performance.now();
-          rafId = null;
-        });
-      }
+      if (ticking) return;
+      ticking = true;
+      rafId = requestAnimationFrame(() => {
+        ScrollTrigger.update();
+        ticking = false;
+        rafId = null;
+      });
     });
 
     /**
@@ -90,10 +98,20 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
     ScrollTrigger.config({ 
       ignoreMobileResize: true,
       // PERFORMANCE: Reduce refresh sensitivity for desktop
-      // Prevents excessive recalculations during window operations
       autoRefreshEvents: "visibilitychange,resize",
     });
-    ScrollTrigger.refresh();
+
+    // Defer first refresh so ScrollReveal components have mounted and set initial state (opacity 0).
+    // Then refresh again after layout/images settle so all triggers have correct positions.
+    const refreshDelays = [30, 100, 250, 600, 1200];
+    const refreshTids: ReturnType<typeof setTimeout>[] = [];
+    refreshDelays.forEach((delay) => {
+      refreshTids.push(
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, delay)
+      );
+    });
 
     /**
      * PERFORMANCE: Debounced ScrollTrigger Refresh on Resize
@@ -119,14 +137,18 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
     return () => {
       window.removeEventListener('resize', debouncedRefresh);
       clearTimeout(refreshTid);
+      refreshTids.forEach((id) => clearTimeout(id));
       lenisRef.current = null;
       lenis.destroy();
     };
   }, []);
 
-  // Scroll to top when route changes so new page starts at top and hero animates in once
+  // Scroll to top when route changes so new page starts at top and hero animates in once.
+  // Refresh ScrollTrigger so all scroll reveals (including Testimonial, FAQ) have correct positions and trigger again on the new page.
   useEffect(() => {
     lenisRef.current?.scrollTo(0, { immediate: true });
+    const tid = setTimeout(() => ScrollTrigger.refresh(), 80);
+    return () => clearTimeout(tid);
   }, [pathname]);
 
   return <>{children}</>;

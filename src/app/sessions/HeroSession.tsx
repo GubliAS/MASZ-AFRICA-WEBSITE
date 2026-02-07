@@ -131,12 +131,11 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
           showOverlay={true}
           overlayClassName="bg-surface-overlay opacity-100 lg:opacity-30"
         >
-          <div className="hero-image-text-info absolute inset-0 z-20 text-light font-bold lg:flex lg:items-center lg:justify-between lg:w-full lg:top-[100] will-change-transform">
+          <div className="hero-image-text-info absolute inset-0 z-20 text-light font-bold lg:flex lg:items-center lg:justify-between lg:w-full lg:top-[100]">
             <div className="hero-image-info-header flex items-center flex-col justify-center w-[430] lg:w-[790]">
               <p className="uppercase text-xl-semibold text-center py-[20] lg:p-0 lg:text-4xl-semibold lg:text-left lg:ml-[200] lg:leading-13">
                 Empowering the global mining industry through
               </p>
-
               <Image
                 src="/homeAssets/arrow-icon.svg"
                 alt=""
@@ -150,7 +149,6 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
               <div className="subtext-header uppercase text-xl-semibold my-[10] lg:text-4xl-semibold">
                 innovation
               </div>
-
               <div className="subtext-itself font-medium text-sm-medium my-[10] lg:text-xl-regular lg:w-[500]">
                 Our approach to innovation is practical, solving real problems
                 mines face everyday. Whether it's choosing the right media,

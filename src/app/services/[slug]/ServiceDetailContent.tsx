@@ -12,7 +12,7 @@ export default function ServiceDetailContent({ service }: { service: serviceDeta
   return (
     <section className="">
       <div className="main-section-content-container">
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale staggerChildren={0.1}>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale staggerChildren={0.1}>
           <div className="service-hero-section h-[600] lg:h-[850]">
             <div className="image-container relative h-full lg:h-full overflow-hidden ">
               <Image
@@ -35,7 +35,7 @@ export default function ServiceDetailContent({ service }: { service: serviceDeta
           </div>
         </ScrollReveal>
 
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale staggerChildren={0.1}>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale staggerChildren={0.1}>
           <div className="description lg:h-screen">
             <div className="description-content mx-[21] lg:mx-[200] my-[100] lg:my-[150]">
               <Tag text="details" className="mb-[40] lg:mb-[80]" />
@@ -46,7 +46,7 @@ export default function ServiceDetailContent({ service }: { service: serviceDeta
           </div>
         </ScrollReveal>
 
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale staggerChildren={0.1}>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale staggerChildren={0.1}>
           <div className="benefit-section-hero bg-[#f3f3f3] w-full lg:h-[700]">
             <div className="image-container relative w-full lg:h-full overflow-hidden">
               <Image
@@ -69,7 +69,7 @@ export default function ServiceDetailContent({ service }: { service: serviceDeta
           </div>
         </ScrollReveal>
 
-        <ScrollReveal direction="up" duration={1.5} start="top 85%" scale staggerChildren={0.1}>
+        <ScrollReveal direction="up" duration={0.75} start="top 60%" scale staggerChildren={0.1}>
           <div className="benefits bg-[#f3f3f3] lg:py-[120]">
             <div className="benefits-main-content flex">
               <div className="left-side  lg:mx-[200]">

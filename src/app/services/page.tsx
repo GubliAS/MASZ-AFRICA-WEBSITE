@@ -9,7 +9,7 @@ import ScrollReveal from '../components/ScrollReveal';
 export default function Page() {
   return (
     <section className="">
-      <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
+      <ScrollReveal direction="up" duration={0.75} start="top 60%" scale>
       <div className="services-main-content mx-[21] lg:mx-[200] mt-[80] lg:mt-[150] max-h-[800] pb-[100] lg:pb-0 lg:h-screen ">
         <Tag text='products and Services'/>
         <div className="text-content lg:mt-[50]">
@@ -33,7 +33,7 @@ export default function Page() {
       </div>
       </ScrollReveal>
 
-      <ScrollReveal direction="up" duration={1.5} start="top 85%" scale>
+      <ScrollReveal direction="up" duration={0.75} start="top 60%" scale>
       <div className="service-cards-section">
         <ServicesCardsSection />
       </div>

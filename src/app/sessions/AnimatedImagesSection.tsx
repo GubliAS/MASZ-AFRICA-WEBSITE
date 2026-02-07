@@ -18,51 +18,10 @@ interface GalleryImageProps {
 }
 
 function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
-  const imageRef = useRef<HTMLDivElement>(null);
   const imageInnerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  useGSAP(() => {
-    if (!imageRef.current || !imageInnerRef.current) return;
-
-    const image = imageRef.current;
-    const imageInner = imageInnerRef.current;
-
-    // Initial state
-    gsap.set(image, {
-      opacity: 0,
-      scale: 0.9,
-      x: 50,
-    });
-
-    gsap.set(imageInner, {
-      scale: 1.05,
-    });
-
-    // Reveal animation
-    ScrollTrigger.create({
-      trigger: image,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => {
-        gsap.to(image, {
-          opacity: 1,
-          scale: 1,
-          x: 0,
-          duration: 1,
-          delay: index * 0.1,
-          ease: 'power3.out',
-        });
-
-        gsap.to(imageInner, {
-          scale: 1,
-          duration: 1.2,
-          delay: index * 0.1,
-          ease: 'power3.out',
-        });
-      },
-    });
-  }, [index]);
+  // Staggered reveal: parent ScrollReveal animates each card one after the other via data-scroll-reveal-item
 
   // Portrait: width < height (e.g. 360×540)
   const IMAGE_WIDTH = 360;
@@ -72,7 +31,7 @@ function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
 
   return (
     <div
-      ref={imageRef}
+      data-scroll-reveal-item
       className="relative shrink-0 overflow-hidden group"
       style={{
         width: `${IMAGE_WIDTH}px`,
@@ -124,10 +83,10 @@ function GalleryImage({ src, alt, index, title, subtext }: GalleryImageProps) {
 
 export default function AnimatedImagesSection() {
   const galleryRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const offsetRef = useRef(0);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const IMAGE_WIDTH = 360;
@@ -256,23 +215,23 @@ export default function AnimatedImagesSection() {
     };
   }, []);
 
-  // Continuous horizontal scroll - direction changes based on vertical scroll
+  // Continuous horizontal scroll – uses ref + direct DOM (no React re-renders per frame)
   useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const totalWidth = (scrollingItems.length / 2) * (IMAGE_WIDTH + IMAGE_GAP);
     let animationFrameId: number;
 
     const step = () => {
       if (!isPaused) {
         const direction = scrollTriggerRef.current?.direction ?? 1;
-
-        setOffset((prev) => {
-          const totalWidth = (scrollingItems.length / 2) * (IMAGE_WIDTH + IMAGE_GAP);
-          const scrollSpeed = 0.5;
-          const directionMultiplier = direction === 1 ? -1 : 1;
-          const newOffset = prev + (scrollSpeed * directionMultiplier);
-          if (newOffset >= totalWidth) return 0;
-          if (newOffset < 0) return totalWidth;
-          return newOffset;
-        });
+        const scrollSpeed = 0.5;
+        const directionMultiplier = direction === 1 ? -1 : 1;
+        offsetRef.current += scrollSpeed * directionMultiplier;
+        if (offsetRef.current >= totalWidth) offsetRef.current = 0;
+        if (offsetRef.current < 0) offsetRef.current = totalWidth;
+        track.style.transform = `translate3d(-${offsetRef.current}px, 0, 0)`;
       }
       animationFrameId = requestAnimationFrame(step);
     };
@@ -306,18 +265,14 @@ export default function AnimatedImagesSection() {
             style={{ height: '650px' }}
           >
             <div
-              ref={scrollContainerRef}
               className="relative overflow-hidden w-full py-12"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
               <div
+                ref={trackRef}
                 className="flex gap-4"
-                style={{
-                  transform: `translateX(-${offset}px)`,
-                  transition: 'transform 0s linear',
-                  willChange: 'transform',
-                }}
+                style={{ transition: 'transform 0s linear' }}
               >
                 {scrollingItems.map((imageData, index) => {
                   const imageIndex = index % images.length;

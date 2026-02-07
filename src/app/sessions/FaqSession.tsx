@@ -1,11 +1,25 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import Tag from '../components/tag';
 import { ChevronDown, MoveRight } from 'lucide-react';
 import Button from '../components/button';
+import LineByLineText from '../components/LineByLineText';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function FaqSession() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const tagRef = useRef<HTMLDivElement>(null);
+  const accordionContainerRef = useRef<HTMLDivElement>(null);
+  const faqItemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [startTitleAnimation, setStartTitleAnimation] = useState(false);
+  const [startSubtextAnimation, setStartSubtextAnimation] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+  const hasAnimatedRef = useRef(false);
+
   const faqObject = [
     {
       id: 1,
@@ -48,6 +62,64 @@ export default function FaqSession() {
   const [openCards, setOpenCards] = useState<Set<number>>(new Set());
   const refs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Initial state: tag and FAQ items hidden (items staggered top-to-bottom later)
+  useLayoutEffect(() => {
+    if (tagRef.current) gsap.set(tagRef.current, { opacity: 0, x: 80, force3D: true });
+    faqItemRefs.current.forEach((el) => {
+      if (el) gsap.set(el, { opacity: 0, y: 48, force3D: true });
+    });
+  }, []);
+
+  // Sequence when section fully enters viewport: tag → title (line by line) → subtext (line by line) → accordion
+  useEffect(() => {
+    const section = sectionRef.current;
+    const tag = tagRef.current;
+    if (!section || !tag) return;
+
+    const st = ScrollTrigger.create({
+      trigger: section,
+      start: 'bottom bottom',
+      onEnter: () => {
+        if (hasAnimatedRef.current) return;
+        hasAnimatedRef.current = true;
+        gsap.to(tag, {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          force3D: true,
+          onComplete: () => setStartTitleAnimation(true),
+        });
+      },
+      onLeaveBack: () => {
+        setResetKey((k) => k + 1);
+        setStartTitleAnimation(false);
+        setStartSubtextAnimation(false);
+        hasAnimatedRef.current = false;
+        faqItemRefs.current.forEach((el) => {
+          if (el) gsap.set(el, { opacity: 0, y: 48, force3D: true });
+        });
+      },
+    });
+    return () => st.kill();
+  }, []);
+
+  const handleTitleComplete = () => setStartSubtextAnimation(true);
+
+  const handleSubtextComplete = () => {
+    const items = faqItemRefs.current.filter(Boolean) as HTMLDivElement[];
+    if (items.length > 0) {
+      gsap.to(items, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power2.out',
+        force3D: true,
+      });
+    }
+  };
+
   const toggleCard = (i: number) => {
     setOpenCards((prev) => {
       const newSet = new Set(prev);
@@ -58,27 +130,50 @@ export default function FaqSession() {
   };
 
   return (
-    <section className="mt-[100px] mx-[21px] lg:mx-[200] lg:my-[120] bg-white relative z-10">
+    <section ref={sectionRef} className="mt-[100px] mx-[21px] lg:mx-[200] lg:my-[120] bg-white relative z-10">
       <div className="main-faq-section-container lg:flex lg:justify-between">
-        <div className="faq-left-side-for-large-screens" data-scroll-reveal-item>
-          <Tag text="Frequently asked questions" />
+        <div className="faq-left-side-for-large-screens" key={resetKey}>
+          <div ref={tagRef}>
+            <Tag text="Frequently asked questions" />
+          </div>
           <div className="faq-title-and-card-for-large-screens lg:flex lg:flex-col lg:justify-between">
-            <div className="text-xl-semibold my-[30px] leading-6 lg:text-4xl-semibold lg:leading-13 lg:my-[70]" data-scroll-reveal-item>
-              GOT ANY QUESTIONS? <br />
-              <span className="text-primary-default">WE'VE GOT ANSWERS</span>
+            <div className="text-xl-semibold my-[30px] leading-6 lg:text-4xl-semibold lg:leading-13 lg:my-[70]">
+              <LineByLineText
+                startAnimation={startTitleAnimation}
+                onComplete={handleTitleComplete}
+                duration={0.5}
+                stagger={0.12}
+                delay={0.08}
+                yFrom={24}
+                as="div"
+              >
+                GOT ANY QUESTIONS? <br />
+                <span className="text-primary-default">WE'VE GOT ANSWERS</span>
+              </LineByLineText>
             </div>
 
             {/* faq-cta-card displayed on mobile */}
-            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[] transition-all duration-300" data-scroll-reveal-item>
+            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[] transition-all duration-300">
               <div className="header uppercase text-light text-lg-semibold lg:text-2xl-semibold">
                 Still have a question?
               </div>
               <div className="subtext text-light text-sm-medium lg:text-md-medium my-[25]">
-                Our team of industry experts is ready to provide the clarity and
+                <LineByLineText
+                  startAnimation={startSubtextAnimation}
+                  onComplete={handleSubtextComplete}
+                  duration={0.45}
+                  stagger={0.08}
+                  delay={0.05}
+                  yFrom={20}
+                  as="div"
+                  className="text-light"
+                >
+                  Our team of industry experts is ready to provide the clarity and
                 support you need. Whether it’s a general inquiry or a
                 project-specific discussion, we’re just a message away. Reach
                 out today and let us help move your operations forward with
                 confidence.
+                </LineByLineText>
               </div>
               <Button
                 label="Reach out to us"
@@ -91,13 +186,15 @@ export default function FaqSession() {
           </div>
         </div>
 
-        <div className="mt-[80px] lg:w-[40%] lg:mt-[120]">
+        <div ref={accordionContainerRef} className="mt-[80px] lg:w-[40%] lg:mt-[120]">
           {faqObject.map((item, i) => {
             const isOpen = openCards.has(i);
             return (
               <div
                 key={item.id}
-                data-scroll-reveal-item
+                ref={(el) => {
+                  faqItemRefs.current[i] = el;
+                }}
                 className={`relative mb-4 select-none
                 border-2 transition-colors duration-400
                 ${

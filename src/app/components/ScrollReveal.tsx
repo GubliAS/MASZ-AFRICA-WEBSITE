@@ -42,9 +42,9 @@ export default function ScrollReveal({
   children,
   direction = 'up',
   delay = 0,
-  duration = 1.4,
+  duration = 0.7, // 50% faster than 1.4
   once = false,
-  start = 'top 88%',
+  start = 'top 60%', // animate only when section has entered 40% of viewport height
   className,
   stagger,
   staggerChildren,
@@ -96,6 +96,7 @@ export default function ScrollReveal({
       end: 'bottom top',
       once,
       toggleActions: once ? 'play none none none' : 'play none none reverse',
+      invalidateOnRefresh: true, // Re-evaluate on refresh so reload + delayed refresh gives correct start
     };
 
     const ctx = gsap.context(() => {
@@ -162,7 +163,7 @@ export default function ScrollReveal({
               x: 0,
               y: 0,
               opacity: 1,
-              duration: 0.6,
+              duration: 0.3, // 50% faster than 0.6
               stagger: staggerChildren,
               delay: 0.2,
               ease: 'power2.inOut',

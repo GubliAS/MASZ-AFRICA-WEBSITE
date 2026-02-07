@@ -20,8 +20,6 @@ const ABOUT_BODY_TEXT = (
     global sourcing and strong technical understanding, we ensure
     every product we deliver performs exactly as required in demanding
     mining environments.
-    <br />
-    <br />
     Our team works closely with clients to understand their
     operational needs, recommend the right solutions, and provide
     support that genuinely improves performance. With a consistent

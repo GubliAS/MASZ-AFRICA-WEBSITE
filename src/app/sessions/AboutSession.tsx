@@ -163,7 +163,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
             </HeaderLineByLineAnimation>
           </div>
 
-          {/* Phase 1: line-by-line; Phase 2: static text; Phase 3: AnimationCopy overlay (spacer keeps layout, no jump) */}
+          {/* Phase 1: line-by-line reveal. Phase 2: static text stays visible. Phase 3 (optional): AnimationCopy overlay on second scroll from top. */}
           {!lineByLineComplete ? (
             <LineByLineText
               startAnimation={startBodyAnimation}
@@ -172,29 +172,24 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
             >
               {ABOUT_BODY_TEXT}
             </LineByLineText>
-          ) : (
+          ) : showAnimationCopy ? (
             <div className="relative overflow-hidden" style={{ contain: 'layout style paint' }}>
-              {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
               <div
                 className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body text-[#000000]"
-                style={showAnimationCopy ? { visibility: 'hidden', pointerEvents: 'none' } : undefined}
-                aria-hidden={showAnimationCopy}
+                style={{ visibility: 'hidden', pointerEvents: 'none' }}
+                aria-hidden
               >
                 {ABOUT_BODY_TEXT}
               </div>
-              {/* Pre-render AnimationCopy but keep it completely hidden until ready — prevents mount-time layout shift */}
-              <div 
+              <div
                 ref={overlayRef}
-                className="absolute top-0 left-0 right-0" 
-                style={{ 
-                  opacity: 0,
-                  visibility: showAnimationCopy ? 'visible' : 'hidden',
-                  pointerEvents: showAnimationCopy ? 'auto' : 'none',
-                  willChange: showAnimationCopy ? 'opacity' : 'auto',
+                className="absolute top-0 left-0 right-0"
+                style={{
+                  visibility: 'visible',
+                  pointerEvents: 'auto',
                   contain: 'layout style paint',
                   isolation: 'isolate',
                 }}
-                aria-hidden={!showAnimationCopy}
               >
                 <AnimationCopy>
                   <div className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
@@ -202,6 +197,14 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                   </div>
                 </AnimationCopy>
               </div>
+            </div>
+          ) : (
+            /* After line-by-line completes: always show static text (stays visible, no disappear) */
+            <div
+              className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body opacity-100"
+              style={{ visibility: 'visible' }}
+            >
+              {ABOUT_BODY_TEXT}
             </div>
           )}
 

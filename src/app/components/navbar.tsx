@@ -37,61 +37,101 @@ function Navbar() {
     const inner = innerRef.current;
     if (!header || !inner) return;
 
+    const mm = gsap.matchMedia();
+
     const ctx = gsap.context(() => {
-      gsap.set(header, {
-        width: '80%',
-        left: '10%',
-        y: '0',
-        backgroundColor: '#ffffff',
-        backdropFilter: 'blur(0px)',
-      });
-      gsap.set(inner, { marginLeft: '2.5rem', marginRight: '2.5rem' });
+      // Desktop / large screens: keep existing width + margin animation
+      mm.add('(min-width: 1024px)', () => {
+        gsap.set(header, {
+          width: '80%',
+          left: '10%',
+          y: '0',
+          backgroundColor: '#ffffff',
+          backdropFilter: 'blur(0px)',
+        });
+        gsap.set(inner, { marginLeft: '2.5rem', marginRight: '2.5rem' });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: document.body,
-          start: 'top top',
-          end: `${SCROLL_RANGE_PX}px top`,
-          scrub: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const shouldBeExpanded = self.progress > 0.4;
-            if (shouldBeExpanded !== isExpandedRef.current) {
-              isExpandedRef.current = shouldBeExpanded;
-              header.classList.toggle('navbar--expanded', shouldBeExpanded);
-            }
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: document.body,
+            start: 'top top',
+            end: `${SCROLL_RANGE_PX}px top`,
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const shouldBeExpanded = self.progress > 0.4;
+              if (shouldBeExpanded !== isExpandedRef.current) {
+                isExpandedRef.current = shouldBeExpanded;
+                header.classList.toggle('navbar--expanded', shouldBeExpanded);
+              }
+            },
           },
-        },
+        });
+
+        tl.to(
+          header,
+          {
+            width: '100%',
+            left: '0%',
+            y: 0,
+            backgroundColor: 'rgba(13, 13, 13, 0.94)',
+            backdropFilter: 'blur(14px)',
+            ease: 'none',
+            duration: 1,
+            force3D: true,
+          },
+          0
+        );
+        tl.to(
+          inner,
+          {
+            marginLeft: '5.5rem',
+            marginRight: '5.5rem',
+            ease: 'none',
+            duration: 1,
+            force3D: true,
+          },
+          0
+        );
       });
 
-      tl.to(
-        header,
-        {
+      // Mobile / tablet: only change background color, keep layout full-width
+      mm.add('(max-width: 1023px)', () => {
+        gsap.set(header, {
           width: '100%',
           left: '0%',
           y: 0,
-          backgroundColor: 'rgba(13, 13, 13, 0.94)',
-          backdropFilter: 'blur(14px)',
-          ease: 'none',
-          duration: 1,
-          force3D: true,
-        },
-        0
-      );
-      tl.to(
-        inner,
-        {
-          marginLeft: '5.5rem',
-          marginRight: '5.5rem',
-          ease: 'none',
-          duration: 1,
-          force3D: true,
-        },
-        0
-      );
+          backgroundColor: '#ffffff',
+          backdropFilter: 'blur(0px)',
+        });
+        gsap.set(inner, { marginLeft: '1.5rem', marginRight: '1.5rem' });
+
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: document.body,
+            start: 'top top',
+            end: `${SCROLL_RANGE_PX}px top`,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        }).to(
+          header,
+          {
+            backgroundColor: 'rgba(13, 13, 13, 0.94)',
+            backdropFilter: 'blur(14px)',
+            ease: 'none',
+            duration: 1,
+            force3D: true,
+          },
+          0
+        );
+      });
     }, header);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      mm.revert();
+    };
   }, []);
 
   // Hide menu initially
@@ -160,17 +200,17 @@ function Navbar() {
 
       <header
         ref={headerRef}
-        className="navbar navbar--compact fixed top-0 z-[100] h-[90px] will-change-transform"
+        className="navbar navbar--compact fixed top-0 z-[100] h-[90px] will-change-transform "
         style={{
-          width: '80%',
-          left: '10%',
+          width: '100%',
+          left: '0',
           transform: 'translateY(20%)',
           backgroundColor: '#ffffff',
         }}
       >
         <div
           ref={innerRef}
-          className="main-nav-container flex justify-between items-center h-full lg:mx-10"
+          className="main-nav-container flex justify-between items-center  h-full lg:mx-10 "
         >
           {/* Logo */}
           <div className="nav-logo">

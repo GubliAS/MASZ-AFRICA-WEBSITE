@@ -4,6 +4,7 @@ import React, { useState, memo, useCallback } from 'react';
 import HeroSession from './sessions/HeroSession';
 import AboutSession from './sessions/AboutSession';
 import ServiceSession from './sessions/ServiceSession';
+import HeroCarousel from './sessions/HeroCarousel';
 import CoreValueSession from './sessions/CoreValueSession';
 import TestimonialSession from './sessions/TestimonialSession';
 import AnimatedImagesSection from './sessions/AnimatedImagesSection';
@@ -15,6 +16,7 @@ import ScrollReveal from '@/app/components/ScrollReveal';
 const MemoHeroSession = memo(HeroSession);
 const MemoAboutSession = memo(AboutSession);
 const MemoServiceSession = memo(ServiceSession);
+const MemoHeroCarousel = memo(HeroCarousel);
 const MemoCoreValueSession = memo(CoreValueSession);
 const MemoTestimonialSession = memo(TestimonialSession);
 const MemoAnimatedImagesSection = memo(AnimatedImagesSection);
@@ -24,6 +26,7 @@ export default function Page() {
   const [heroRevealNearlyComplete, setHeroRevealNearlyComplete] = useState(false);
   const [aboutRevealNearlyComplete, setAboutRevealNearlyComplete] = useState(false);
   const [serviceRevealNearlyComplete, setServiceRevealNearlyComplete] = useState(false);
+  const [carouselRevealNearlyComplete, setCarouselRevealNearlyComplete] = useState(false);
   const [coreValueRevealNearlyComplete, setCoreValueRevealNearlyComplete] = useState(false);
 
   /**
@@ -40,6 +43,7 @@ export default function Page() {
   const onHeroReveal = useCallback(() => setHeroRevealNearlyComplete(true), []);
   const onAboutReveal = useCallback(() => setAboutRevealNearlyComplete(true), []);
   const onServiceReveal = useCallback(() => setServiceRevealNearlyComplete(true), []);
+  const onCarouselReveal = useCallback(() => setCarouselRevealNearlyComplete(true), []);
   const onCoreValueReveal = useCallback(() => setCoreValueRevealNearlyComplete(true), []);
 
   return (
@@ -75,6 +79,17 @@ export default function Page() {
         onRevealNearlyComplete={onServiceReveal}
       >
         <MemoServiceSession startTextAnimation={serviceRevealNearlyComplete} />
+      </ScrollReveal>
+      <ScrollReveal
+        direction="up"
+        duration={0.75}
+        start="top 60%"
+        scale
+        once
+        staggerChildren={0.1}
+        onRevealNearlyComplete={onCarouselReveal}
+      >
+        <MemoHeroCarousel startTextAnimation={carouselRevealNearlyComplete} />
       </ScrollReveal>
       <ScrollReveal
         direction="up"

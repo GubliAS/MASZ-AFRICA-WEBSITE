@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    qualities: [60, 75, 95],
   },
 
   // PERFORMANCE: Compression enabled

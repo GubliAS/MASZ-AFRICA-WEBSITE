@@ -4,8 +4,8 @@ import React from 'react';
 import Image from 'next/image';
 import Button from '../components/button';
 import { MoveRight } from 'lucide-react';
-import ParallaxAnimation from '../animations/ParallaxAnimation';
 import LineByLineText from '../components/LineByLineText';
+import AutoplayVideo from '../components/AutoplayVideo';
 
 interface HeroSessionProps {
   /** When true, the hero subtext line-by-line animation starts (after scroll reveal is about to end). */
@@ -116,21 +116,20 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
         </div>
       </div> */}
 
-      <div className="hero-image mt-[50] lg:mb-[100]">
-        <ParallaxAnimation
-          imageSrc="/homeAssets/image-10.webp"
-          imageAlt="Hero Image"
-          height="fullscreen"
-          mobileY="18%"
-          desktopY="35%"
-          mobileScale={1.06}
-          desktopScale={1.12}
-          mobileTextY="-10%"
-          desktopTextY="-18%"
-          scrub={1}
-          showOverlay={true}
-          overlayClassName="bg-surface-overlay opacity-100 lg:opacity-30"
-        >
+      {/* <div className="hero-image mt-[50] lg:mb-[100]">
+        <div className="relative w-full h-[600px] lg:h-screen overflow-hidden z-0">
+          <Image
+            src="/homeAssets/image-10.webp"
+            alt="Hero Image"
+            fill
+            priority
+            className="object-cover object-center"
+          />
+
+     
+          <div className="absolute inset-0 bg-surface-overlay z-10 opacity-100 lg:opacity-30" />
+
+   
           <div className="hero-image-text-info absolute inset-0 z-20 text-light font-bold lg:flex lg:items-center lg:justify-between lg:w-full lg:top-[100]">
             <div className="hero-image-info-header flex items-center flex-col justify-center w-[430] lg:w-[790]">
               <p className="uppercase text-xl-semibold text-center py-[20] lg:p-0 lg:text-4xl-semibold lg:text-left lg:ml-[200] lg:leading-13">
@@ -158,8 +157,12 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
               </div>
             </div>
           </div>
-        </ParallaxAnimation>
-      </div>
+        </div>
+      </div> */}
+
+      {/* Full viewport hero video */}
+      <AutoplayVideo src="/videos/homePageVid.mp4" classname="" />
+
     </div>
   );
 }

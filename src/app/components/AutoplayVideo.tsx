@@ -1,48 +1,57 @@
 'use client';
-import React from 'react';
-import { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface AutoplayVideoProps {
   src: string;
   classname?: string;
 }
 
-{
-  /* <AutoplayVideo
-       src= "maszAssets/masz-africa-logo-animation.mp4"
-       classname=''
-      /> */
-}
-
 function AutoplayVideo({ src, classname = '' }: AutoplayVideoProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const handleMouseEnter = () => {
-    const video = videoRef.current;
-    if (!video) return;
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof window === 'undefined') return;
 
-    video.currentTime = 0;
-    video.play();
-  };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          document.body.classList.add('video-in-view');
+        } else {
+          document.body.classList.remove('video-in-view');
+        }
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      document.body.classList.remove('video-in-view');
+    };
+  }, []);
 
   return (
-    <div className={classname}>
+    <div
+      ref={containerRef}
+      className={`relative w-screen h-[300px] lg:h-screen bg-[#0d0d0d] overflow-hidden flex items-center justify-center ${classname}`}
+    >
       <video
-        ref={videoRef}
         src={src}
         autoPlay
         muted
         playsInline
+        loop
         controls={false}
-        onMouseEnter={handleMouseEnter}
-        onEnded={() => {
-          if (videoRef.current) {
-            videoRef.current.pause();
-          }
-        }}
+        preload="auto"
+        className="h-full w-full object-contain"
       />
     </div>
   );
+  
 }
 
 export default AutoplayVideo;

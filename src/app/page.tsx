@@ -60,8 +60,8 @@ export default function Page() {
       </ScrollReveal>
       <ScrollReveal
         direction="up"
-        duration={0.75}
-        start="top 60%"
+        duration={0.4}
+        start="top 90%"
         scale
         once
         staggerChildren={0.1}
@@ -71,8 +71,8 @@ export default function Page() {
       </ScrollReveal>
       <ScrollReveal
         direction="up"
-        duration={0.75}
-        start="top 60%"
+        duration={0.4}
+        start="top 90%"
         scale
         once
         staggerChildren={0.1}
@@ -82,8 +82,8 @@ export default function Page() {
       </ScrollReveal>
       <ScrollReveal
         direction="up"
-        duration={0.75}
-        start="top 60%"
+        duration={0.4}
+        start="top 90%"
         scale
         once
         staggerChildren={0.1}
@@ -93,8 +93,8 @@ export default function Page() {
       </ScrollReveal>
       <ScrollReveal
         direction="up"
-        duration={0.75}
-        start="top 60%"
+        duration={0.4}
+        start="top 90%"
         scale
         once
         staggerChildren={0.1}
@@ -103,7 +103,7 @@ export default function Page() {
         <MemoCoreValueSession startTextAnimation={coreValueRevealNearlyComplete} />
       </ScrollReveal>
       <MemoTestimonialSession />
-      <ScrollReveal direction="up" duration={0.75} start="top top" scale staggerChildren={0.1}>
+      <ScrollReveal direction="up" duration={0.4} start="top 80%" scale once staggerChildren={0.1}>
         <MemoAnimatedImagesSection />
       </ScrollReveal>
       <MemoFaqSession />

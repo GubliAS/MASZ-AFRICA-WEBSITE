@@ -10,10 +10,10 @@ import AnimatedListContainer from '../animations/AnimatedListContainer';
 import LineByLineText from '../components/LineByLineText';
 
 const HEADER_LINE_Y = 28;
-const HEADER_STAGGER = 0.12;
-const HEADER_DURATION = 0.6;
+const HEADER_STAGGER = 0.07;
+const HEADER_DURATION = 0.3;
 const HEADER_DELAY = 0.1;
-const LIST_TITLE_STAGGER = 0.2;
+const LIST_TITLE_STAGGER = 0.08;
 
 interface ServiceSessionProps {
   /** When true, header line-by-line runs; on complete, list appears and list titles animate. */
@@ -77,6 +77,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
 
         <AnimatedListContainer
           startAnimation={startListAnimation}
+
           className="services-session-product-list-container my-[60]"
         >
           <ul>

@@ -60,6 +60,7 @@ export default function FaqSession() {
 
   // Multi-open state: store all open card indices
   const [openCards, setOpenCards] = useState<Set<number>>(new Set());
+  const [scrollHeights, setScrollHeights] = useState<number[]>([]);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Initial state: tag and FAQ items hidden (items staggered top-to-bottom later)
@@ -78,7 +79,7 @@ export default function FaqSession() {
 
     const st = ScrollTrigger.create({
       trigger: section,
-      start: 'bottom bottom',
+      start: 'top 70%',
       onEnter: () => {
         if (hasAnimatedRef.current) return;
         hasAnimatedRef.current = true;
@@ -91,15 +92,15 @@ export default function FaqSession() {
           onComplete: () => setStartTitleAnimation(true),
         });
       },
-      onLeaveBack: () => {
-        setResetKey((k) => k + 1);
-        setStartTitleAnimation(false);
-        setStartSubtextAnimation(false);
-        hasAnimatedRef.current = false;
-        faqItemRefs.current.forEach((el) => {
-          if (el) gsap.set(el, { opacity: 0, y: 48, force3D: true });
-        });
-      },
+      // onLeaveBack: () => {
+      //   setResetKey((k) => k + 1);
+      //   setStartTitleAnimation(false);
+      //   setStartSubtextAnimation(false);
+      //   hasAnimatedRef.current = false;
+      //   faqItemRefs.current.forEach((el) => {
+      //     if (el) gsap.set(el, { opacity: 0, y: 48, force3D: true });
+      //   });
+      // },
     });
     return () => st.kill();
   }, []);
@@ -112,13 +113,23 @@ export default function FaqSession() {
       gsap.to(items, {
         opacity: 1,
         y: 0,
-        duration: 0.5,
-        stagger: 0.1,
+        duration: 0.35,
+        stagger: 0.08,
         ease: 'power2.out',
         force3D: true,
       });
     }
   };
+
+  // Measure scrollHeights after mount and on resize
+  useEffect(() => {
+    const measure = () => {
+      setScrollHeights(refs.current.map((el) => el?.scrollHeight ?? 0));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
 
   const toggleCard = (i: number) => {
     setOpenCards((prev) => {
@@ -141,9 +152,9 @@ export default function FaqSession() {
               <LineByLineText
                 startAnimation={startTitleAnimation}
                 onComplete={handleTitleComplete}
-                duration={0.5}
+                duration={0.3}
                 stagger={0.12}
-                delay={0.08}
+                delay={0.04}
                 yFrom={24}
                 as="div"
               >
@@ -161,9 +172,9 @@ export default function FaqSession() {
                 <LineByLineText
                   startAnimation={startSubtextAnimation}
                   onComplete={handleSubtextComplete}
-                  duration={0.45}
+                  duration={0.2}
                   stagger={0.08}
-                  delay={0.05}
+                  delay={0.06}
                   yFrom={20}
                   as="div"
                   className="text-light"
@@ -250,7 +261,7 @@ export default function FaqSession() {
                   className="overflow-hidden transition-[max-height] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"
                   style={{
                     maxHeight: isOpen
-                      ? (refs.current[i]?.scrollHeight ?? 0) + 32
+                      ? (scrollHeights[i] ?? 0) + 32
                       : 0,
                   }}
                 >

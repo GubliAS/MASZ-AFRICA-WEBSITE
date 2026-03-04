@@ -19,10 +19,10 @@ export interface AnimatedMetricCardProps {
   className?: string;
 }
 
-const CARD_APPEAR_DURATION = 0.35;
-const TEXT_LINE_DURATION = 0.5;
-const TEXT_LINE_STAGGER = 0.08;
-const COUNT_UP_DURATION = 1.2;
+const CARD_APPEAR_DURATION = 0.07;
+const TEXT_LINE_DURATION = 0.2;
+const TEXT_LINE_STAGGER = 0.05;
+const COUNT_UP_DURATION = 0.8;
 
 export default function AnimatedMetricCard({
   text,

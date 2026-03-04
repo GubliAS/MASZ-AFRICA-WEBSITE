@@ -29,7 +29,7 @@ interface SplitRefs {
 export default function AnimationCopy({ 
     children,
     colorInitial = '#dddddd',
-    colorAccent = '#abff02',
+    colorAccent = '#41E932',
     colorFinal = '#000000',
     animateOnMount = false,
  }: AnimationCopyProps ){
@@ -115,6 +115,7 @@ export default function AnimationCopy({
                         duration: 0.1,
                         ease: "none",
                         color: colorFinal,
+                        overwrite: true, // prevent reverse gsap.set from being overridden
                         onComplete: () => {
                             completedChars.current.add(index)
                         }
@@ -129,7 +130,7 @@ export default function AnimationCopy({
         ScrollTrigger.create({
             trigger: container,
             start: "top 80%",
-            end: "top 10%",
+            end: "top 25%",
             scrub: 1,
             onUpdate: (self) => {
                 const progress = self.progress;
@@ -145,6 +146,7 @@ export default function AnimationCopy({
                             colorTransitionTimers.current.delete(index);
                         }
                         completedChars.current.delete(index);
+                        gsap.killTweensOf(char); // kill any in-flight colorFinal tween
                         targetColor = colorInitial;
                     } else if (completedChars.current.has(index)) {
                         return;

@@ -110,7 +110,7 @@ function TestimonialSession() {
 
     const st = ScrollTrigger.create({
       trigger: section,
-      start: 'bottom bottom',
+      start: 'top 80%',
       onEnter: () => {
         if (hasAnimatedRef.current) return;
         hasAnimatedRef.current = true;
@@ -124,12 +124,12 @@ function TestimonialSession() {
           onComplete: () => setStartTitleAnimation(true),
         });
       },
-      onLeaveBack: () => {
-        setResetKey((k) => k + 1);
-        setStartTitleAnimation(false);
-        setStartSubtextAnimation(false);
-        hasAnimatedRef.current = false;
-      },
+      // onLeaveBack: () => {
+      //   setResetKey((k) => k + 1);
+      //   setStartTitleAnimation(false);
+      //   setStartSubtextAnimation(false);
+      //   hasAnimatedRef.current = false;
+      // },
     });
 
     return () => {
@@ -194,8 +194,8 @@ function TestimonialSession() {
               startAnimation={startTitleAnimation}
               onComplete={handleTitleComplete}
               className="text-default-body"
-              duration={0.5}
-              stagger={0.12}
+              duration={0.2}
+              stagger={0.08}
               delay={0.08}
               yFrom={24}
               as="div"
@@ -209,9 +209,9 @@ function TestimonialSession() {
             <LineByLineText
               startAnimation={startSubtextAnimation}
               onComplete={handleSubtextComplete}
-              duration={0.45}
-              stagger={0.08}
-              delay={0.05}
+              duration={0.13}
+              stagger={0.05}
+              delay={0.03}
               yFrom={20}
               as="div"
             >

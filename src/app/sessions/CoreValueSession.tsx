@@ -10,9 +10,11 @@ import LineByLineText from '../components/LineByLineText';
 
 // Animation constants - now used by HeaderLineByLineAnimation component
 const HEADER_LINE_Y = 28;
-const HEADER_STAGGER = 0.12;
-const HEADER_DURATION = 0.6;
+const HEADER_STAGGER = 0.07;
+const HEADER_DURATION = 0.3;
 const HEADER_DELAY = 0.1;
+const CORE_VALUE_BODY_TEXT_DURATION = 0.1;
+const CORE_VALUE_BODY_TEXT_STAGGER = 0.05;
 
 const CORE_VALUE_BODY_TEXT = (
   <>
@@ -207,6 +209,8 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
         {/* Description: line-by-line; then static; then AnimationCopy overlay (spacer keeps layout, no jump) */}
         {!lineByLineComplete ? (
           <LineByLineText
+          duration={CORE_VALUE_BODY_TEXT_DURATION}
+          stagger={CORE_VALUE_BODY_TEXT_STAGGER}
             startAnimation={startBodyAnimation}
             onComplete={() => setLineByLineComplete(true)}
             className="core-value-section-subtext lg:mx-[200] text-lg-medium mx-[25px] lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
@@ -253,8 +257,8 @@ function CoreValueSession({ startTextAnimation = false }: CoreValueSessionProps)
               key={index}
               text={metric.text}
               value={metric.value}
-              showAsEmpty={startMetricsAnimation && emptyCardIndex === index}
-              showContent={startContentPhase && activeCardIndex === index}
+              showAsEmpty={startMetricsAnimation }
+              showContent={startContentPhase }
               onEmptyShown={handleEmptyShown}
               onSequenceComplete={handleSequenceComplete}
             />

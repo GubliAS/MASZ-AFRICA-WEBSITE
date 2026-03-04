@@ -37,9 +37,11 @@ interface AboutSessionProps {
 }
 
 const HEADER_LINE_Y = 28;
-const HEADER_STAGGER = 0.12;
-const HEADER_DURATION = 0.6;
+const HEADER_STAGGER = 0.07;
+const HEADER_DURATION = 0.2;
 const HEADER_DELAY = 0.1;
+const DESCRIPTION_DURATION = 0.13;
+const DESCRIPTION_STAGGER = 0.05;
 
 function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
   const [lineByLineComplete, setLineByLineComplete] = useState(false);
@@ -167,6 +169,8 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
           {!lineByLineComplete ? (
             <LineByLineText
               startAnimation={startBodyAnimation}
+              duration={DESCRIPTION_DURATION}
+              stagger={DESCRIPTION_STAGGER}
               onComplete={() => setLineByLineComplete(true)}
               className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
             >
@@ -191,7 +195,9 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                   isolation: 'isolate',
                 }}
               >
-                <AnimationCopy>
+                <AnimationCopy
+                colorAccent='#41E932'
+                >
                   <div className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
                     {ABOUT_BODY_TEXT}
                   </div>

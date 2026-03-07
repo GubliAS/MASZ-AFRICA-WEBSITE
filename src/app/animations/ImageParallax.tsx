@@ -8,6 +8,15 @@ import LineByLineText from '../components/LineByLineText';
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface ParallaxSectionProps {
+  imageSrc: string;
+  imageAlt?: string;
+  title?: string;
+  subtitle?: string;
+  height?: 'sm' | 'md' | 'lg' | 'xl';
+  startTextAnimation?: boolean;
+}
+
 export default function ParallaxSection({
   imageSrc,
   imageAlt = 'Parallax image',
@@ -15,7 +24,7 @@ export default function ParallaxSection({
   subtitle = '',
   height = 'lg',
   startTextAnimation = false,
-}) {
+}: ParallaxSectionProps) {
   const [titleComplete, setTitleComplete] = useState(false);
   const [showTextContainer, setShowTextContainer] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);

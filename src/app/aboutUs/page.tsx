@@ -18,7 +18,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { div } from "three/src/nodes/TSL.js";
 import AchievementsSession from "../sessions/AchievementsSession";
-import { achievements } from "../data/achievements";
+import { achievements } from "../Data/achievements";
 
 gsap.registerPlugin(ScrollTrigger);
 

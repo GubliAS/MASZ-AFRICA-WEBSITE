@@ -381,7 +381,7 @@ function Navbar() {
           <div
             ref={menuRef}
             className="nav-bar-list-items  bg-surface-card-primary fixed z-40 top-[90px] w-full left-0 right-0 h-[calc(100vh-90px)] transform origin-top lg:hidden overflow-y-auto"
-            style={{ scaleY: 0, opacity: 0, transformOrigin: 'top', visibility: 'hidden', scrollbarWidth: 'none' }}
+            style={{ transform: 'scaleY(0)', opacity: 0, transformOrigin: 'top', visibility: 'hidden', scrollbarWidth: 'none' as 'none' }}
           >
             <ul className="navList-item">
               {navLinks.map((link, index) => (

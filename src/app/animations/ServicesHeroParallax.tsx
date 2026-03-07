@@ -7,13 +7,21 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface ServicesHeroParallaxProps {
+  imageSrc: string;
+  imageAlt?: string;
+  tag?: string;
+  title?: string;
+  height?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
 export default function ServicesHeroParallax({
   imageSrc,
   imageAlt = 'Parallax image',
   tag,
   title,
   height = 'lg',
-}) {
+}: ServicesHeroParallaxProps) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const mediaRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLDivElement | null>(null);

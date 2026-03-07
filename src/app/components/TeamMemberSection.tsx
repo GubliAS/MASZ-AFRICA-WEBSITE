@@ -167,7 +167,7 @@ const TeamMembersSection: React.FC<Props> = ({ teamMembers }) => {
           {teamMembers.map((_, index) => (
             <div
               key={index}
-              ref={(el) => (indicatorsRef.current[index] = el)}
+              ref={(el) => { indicatorsRef.current[index] = el; }}
               className="w-2.5 h-2.5 bg-[#016BF2] cursor-pointer"
               onClick={() => handleIndicatorClick(index)}
             />
@@ -179,7 +179,7 @@ const TeamMembersSection: React.FC<Props> = ({ teamMembers }) => {
           <TeamMemberCard
             key={member.id}
             member={member}
-            ref={(el) => (cardsRef.current[index] = el)}
+            ref={(el) => { cardsRef.current[index] = el; }}
           />
         ))}
       </div>

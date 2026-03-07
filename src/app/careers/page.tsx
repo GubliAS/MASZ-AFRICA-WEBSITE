@@ -76,7 +76,6 @@ export default function CareersPage() {
           }}
           rendererSettings={{
             preserveAspectRatio: 'xMidYMid meet',
-            clearCanvas: true,
             progressiveLoad: false,
             hideOnTransparent: false,
           }}

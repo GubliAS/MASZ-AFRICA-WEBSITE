@@ -344,7 +344,7 @@ export default function ParallaxAnimation({
                     stagger={0.12}
                     delay={0.1}
                     yFrom={28}
-                    as="h2"
+                    as="div"
                   >
                     {title}
                   </LineByLineText>

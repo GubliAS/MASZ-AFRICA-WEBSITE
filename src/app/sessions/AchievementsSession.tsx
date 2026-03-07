@@ -5,7 +5,7 @@ import Tag from '../components/tag';
 import AchievementsTimeline, { Achievement } from '../components/AchievementsTimeline';
 import LineByLineText from '../components/LineByLineText';
 import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
-import { achievements } from '../data/achievements';
+import { achievements } from '../Data/achievements';
 // ============================================
 // DATA
 // ============================================

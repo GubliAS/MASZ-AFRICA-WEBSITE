@@ -11,6 +11,8 @@ interface ButtonProps {
   disabled?: boolean;
   icon?: React.ReactNode;
   className?: string;
+  iconClassName?: string; // extra classes on the icon span, e.g. 'group-hover/card:text-blue-500'
+  alwaysExpanded?: boolean; // skip the collapsed pill state, label always visible
   type?: 'button' | 'submit' | 'reset';
 }
 
@@ -22,10 +24,12 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   icon,
   className,
+  iconClassName,
+  alwaysExpanded = false,
   type = 'button',
 }) => {
   const baseClasses =
-    'text-sm-medium group relative overflow-hidden flex items-center justify-center rounded-full font-medium uppercase cursor-pointer transition-all duration-[700ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]';
+    'text-sm-medium group/btn relative overflow-hidden flex items-center justify-center rounded-full font-medium uppercase cursor-pointer transition-all duration-[700ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]';
 
   const variantClasses = {
     primary:
@@ -54,8 +58,8 @@ const Button: React.FC<ButtonProps> = ({
         variantClasses[variant],
         sizeClasses[size],
 
-        // Desktop animation behavior
-        'lg:w-[48px] lg:h-[48px] lg:px-0 lg:hover:w-auto lg:hover:px-6',
+        // Desktop animation behavior — skip collapsed pill if alwaysExpanded
+        !alwaysExpanded && 'lg:w-[48px] lg:h-[48px] lg:px-0 lg:hover:w-auto lg:hover:px-6',
 
         disabled && 'opacity-50 cursor-not-allowed',
         className
@@ -65,8 +69,8 @@ const Button: React.FC<ButtonProps> = ({
       <span
         className={clsx(
           'whitespace-nowrap transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]',
-          'lg:opacity-0 lg:max-w-0 lg:overflow-hidden',
-          'lg:group-hover:opacity-100 lg:group-hover:max-w-[200px]'
+          !alwaysExpanded && 'lg:opacity-0 lg:max-w-0 lg:overflow-hidden',
+          !alwaysExpanded && 'lg:group-hover/btn:opacity-100 lg:group-hover/btn:max-w-[200px]'
         )}
       >
         {label}
@@ -77,8 +81,9 @@ const Button: React.FC<ButtonProps> = ({
         <span
           className={clsx(
             'flex items-center justify-center transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]',
-            'lg:text-[#016BF2] lg:p-2 lg:group-hover:text-white lg:group-hover:translate-x-1',
-            'animate-[arrowFloat_1.5s_ease-in-out_infinite]'
+            'lg:text-[#016BF2] lg:p-2 lg:group-hover/btn:text-white lg:group-hover/btn:translate-x-1',
+            'group-hover/btn:animate-[arrowFloat_1.5s_ease-in-out_infinite]',
+            iconClassName
           )}
         >
           {icon}

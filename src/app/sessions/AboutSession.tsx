@@ -20,6 +20,7 @@ const ABOUT_BODY_TEXT = (
     global sourcing and strong technical understanding, we ensure
     every product we deliver performs exactly as required in demanding
     mining environments.
+    <br />
     Our team works closely with clients to understand their
     operational needs, recommend the right solutions, and provide
     support that genuinely improves performance. With a consistent
@@ -146,12 +147,11 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
   }, [showAnimationCopy]);
 
   return (
-    <section ref={sectionRef} className="lg:ml-[200] relative lg:my-[180]">
-      <div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-start lg:gap-[50px]">
-        {/* Left: Text + Button */}
+    <section ref={sectionRef} className=" lg:mx-[24] xl:mx-[120] relative lg:my-[170]">
+<div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-stretch lg:gap-[50px]">        {/* Left: Text + Button */}
         <div className="session-container lg:w-1/2" data-scroll-reveal-item>
-          <Tag text="About us" className="ml-[22]" />
-          <div className="about-us-header text-xl-semibold uppercase ml-[22] my-[30] lg:my-[70] lg:text-4xl-semibold">
+          <Tag text="About us" className="ml-[22] lg:ml-[0]" />
+          <div className="about-us-header text-xl-semibold uppercase ml-[22] lg:ml-[0] my-[30] lg:my-[37]  lg:text-4xl-semibold">
             <HeaderLineByLineAnimation
               startAnimation={startTextAnimation}
               onComplete={() => setStartBodyAnimation(true)}
@@ -172,14 +172,14 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
               duration={DESCRIPTION_DURATION}
               stagger={DESCRIPTION_STAGGER}
               onComplete={() => setLineByLineComplete(true)}
-              className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body"
+              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body"
             >
               {ABOUT_BODY_TEXT}
             </LineByLineText>
           ) : showAnimationCopy ? (
             <div className="relative overflow-hidden" style={{ contain: 'layout style paint' }}>
               <div
-                className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body text-[#000000]"
+                className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body "
                 style={{ visibility: 'hidden', pointerEvents: 'none' }}
                 aria-hidden
               >
@@ -198,7 +198,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
                 <AnimationCopy
                 colorAccent='#41E932'
                 >
-                  <div className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight">
+                  <div className="about-us-text text-default-body mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight">
                     {ABOUT_BODY_TEXT}
                   </div>
                 </AnimationCopy>
@@ -207,7 +207,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
           ) : (
             /* After line-by-line completes: always show static text (stays visible, no disappear) */
             <div
-              className="about-us-text mx-[25] text-lg-medium lg:text-2xl-medium lg:leading-8 lg:tracking-tight text-default-body opacity-100"
+              className="about-us-text mx-[25] lg:ml-[0] text-lg-medium lg:text-xl-medium lg:leading-8 lg:tracking-tight text-default-body opacity-100"
               style={{ visibility: 'visible' }}
             >
               {ABOUT_BODY_TEXT}
@@ -215,7 +215,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
           )}
 
           {/* Mobile-only image */}
-          <div className="lg:hidden about-us-image relative w-[88%] h-[400px] mx-[25] mt-[50] bg-red-500 flex items-center justify-center">
+          <div className="lg:hidden about-us-image rounded-[4px] overflow-hidden relative w-[88%] h-[400px] mx-[25] mt-[50] bg-red-500 flex items-center justify-center">
             <Image
               src="/homeAssets/Image-2.jpg"
               alt=""
@@ -230,15 +230,15 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
             variant="primary"
             size="large"
             icon={<MoveRight size={16} />}
-            className="ml-[22] my-[35] lg:my-[65]"
+            className="ml-[22] lg:ml-[0] my-[35] lg:mt-[65] lg:mb-0"
           />
         </div>
 
         {/* Right: Large screen image */}
-        <div className="hidden lg:flex lg:w-1/2 lg:justify-end lg:items-start" data-scroll-reveal-item>
-          <div className="about-us-image relative w-full h-[900px] flex items-center justify-center  transition-all ease-in-out">
-            <Image
-              src="/homeAssets/Image-14.webp"
+        <div className="hidden lg:flex lg:w-1/2 rounded-[4px] overflow-hidden lg:justify-end lg:items-stretch" data-scroll-reveal-item>
+        <div className="about-us-image relative w-full h-full flex items-center justify-center transition-all ease-in-out">
+           <Image
+              src="/homeAssets/Image-2.webp"
               alt=""
               fill
               priority

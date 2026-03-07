@@ -4,6 +4,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Monument+Extended&display=swap');
 @import "tailwindcss";
 
+/* Navbar initial state — CSS variables so the correct width/left are set
+   from the very first paint, before any JS hydration runs.
+   GSAP takes over these properties after mount. */
+:root {
+  --nav-initial-width: 100%;
+  --nav-initial-left: 0px;
+}
+@media (min-width: 1440px) {
+  :root {
+    --nav-initial-width: calc(100% - 240px);
+    --nav-initial-left: 120px;
+  }
+}
+
 /* Full-page grid background – covers entire viewport, bypasses all section margins */
 .page-grid-bg {
   position: fixed;
@@ -581,7 +595,7 @@ section {
   .bg-surface-card-primary { background-color: var(--surface-card-primary); }
   .bg-surface-card-secondary { background-color: var(--surface-card-secondary); }
   .bg-surface-card-colored-primary { background-color: var(--surface-card-colored-primary); }
-  .bg-surface-card-colored-primary { background-color: var(--surface-card-colored-primary); }
+  /* .bg-surface-card-colored-primary { background-color: var(--surface-card-colored-primary); } */
   .bg-surface-card-colored-secondary { background-color: var(--surface-card-colored-secondary);}
   .bg-surface-overlay { background-color: var(--surface-overlay); }
   .bg-surface-page-primary { background-color: var(--surface-page-primary); }

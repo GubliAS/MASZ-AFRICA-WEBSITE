@@ -64,7 +64,7 @@ export default function LineByLineText({
   useEffect(() => {
     if (!startAnimation || !splitRef.current) return;
 
-    const { lines } = splitRef.current;
+    const { lines, split } = splitRef.current;
     gsap.to(lines, {
       opacity: 1,
       y: 0,
@@ -74,6 +74,12 @@ export default function LineByLineText({
       delay,
       force3D: true,
       onComplete: () => {
+        // Revert SplitType BEFORE calling onComplete — this restores the
+        // natural DOM (no split wrapper divs) so the text reflows cleanly
+        // instead of staying in fixed-width line divs that look distorted.
+        gsap.set(lines, { clearProps: 'all' });
+        split.revert();
+        splitRef.current = null;
         onComplete?.();
       },
     });
@@ -85,7 +91,6 @@ export default function LineByLineText({
       className={className ?? undefined} 
       style={{ 
         overflow: 'hidden',
-        contain: 'layout style paint',
         willChange: startAnimation ? 'transform, opacity' : 'auto',
       }}
     >

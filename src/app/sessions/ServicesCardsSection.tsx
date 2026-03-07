@@ -178,15 +178,15 @@ function ServicesCardsSection(): React.JSX.Element {
       {cardsData.map((card: CardData, index: number) => (
         <div
           key={card.id}
-          className="sticky h-screen  flex justify-center items-center px-[21px] lg:px-[200px]"
+          className="sticky h-screen  flex justify-center items-center px-[] lg:px-[200px]"
           style={{
-            top: `${index * 30}px`,
+            top: `${index * 15}px`,
             zIndex: index + 1,
           }}
         >
           <div
             ref={(el) => { cardRefs.current[index] = el; }}
-            className="card-content w-full lg:w-[78%] lg:h-[580px] cursor-pointer overflow-hidden shadow-2xl transition-transform duration-300 ease-out hover:scale-[1.02]"
+            className="card-content w-[90%] mx-auto lg:mx-0 lg:w-[78%]  lg:h-[580px] cursor-pointer overflow-hidden shadow-2xl transition-transform duration-300 ease-out hover:scale-[1.02]"
             style={{
               transformOrigin: 'top center',
               willChange: 'transform',
@@ -199,17 +199,17 @@ function ServicesCardsSection(): React.JSX.Element {
                 <Tag text={card.category}/>
               </div>
               <div className="right-section">
-                <a
-                  href="#"
+                <Link
+                  href={`/services/${card.slug}`}
                   className="text-sm lg:text-base font-medium hover:underline transition-all"
                 >
                   Details
-                </a>
+                </Link>
               </div>
             </div>
 
             {/* Lower Section with Image */}
-            <div className="lower-section w-full h-[calc(100%-80px)] lg:h-[488px] relative">
+            <div className="lower-section w-full h-[280px] sm:h-[360px] lg:h-[488px] relative">
               <div className="image-container relative w-full h-full overflow-hidden">
                 {/* Background Image */}
                 <img
@@ -222,16 +222,16 @@ function ServicesCardsSection(): React.JSX.Element {
                 <div className="absolute inset-0 bg-black/20"></div>
 
                 {/* Content Overlay */}
-                <div className="absolute inset-0 flex justify-between items-center p-6 lg:p-12">
-                  <div className="text-white text-6xl lg:text-8xl font-bold opacity-100">
+                <div className="absolute inset-0 flex justify-between gap-4 items-center p-6 lg:p-12">
+                  <div className="text-white text-3xl sm:text-5xl lg:text-8xl font-bold opacity-100">
                     {card.number}
                   </div>
 
-                  <div className="text-container max-w-[600px] bg-white/10 backdrop-blur-lg border-2 border-white/40  p-6 lg:p-8 shadow-xl">
-                    <h3 className="text-2xl lg:text-4xl font-semibold text-white uppercase mb-4">
+                  <div className="text-container max-w-[600px] bg-white/10 backdrop-blur-lg border-2 border-white/40 p-3 sm:p-5 lg:p-8 shadow-xl">
+                    <h3 className="text-base sm:text-xl lg:text-4xl font-semibold text-white uppercase mb-2 lg:mb-4">
                       {card.title}
                     </h3>
-                    <p className="text-sm lg:text-md-regular text-white/90 mb-6 leading-relaxed">
+                    <p className="text-xs sm:text-sm lg:text-md-regular text-white/90 mb-3 lg:mb-6 leading-relaxed line-clamp-3 lg:line-clamp-none">
                       {card.description}
                     </p>
                     <Link href={`/services/${card.slug}`}>

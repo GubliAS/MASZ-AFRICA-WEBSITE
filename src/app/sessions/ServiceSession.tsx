@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo, memo } from 'react';
-import Tag from '../components/tag';
-import Link from 'next/link';
-import { MoveRight } from 'lucide-react';
-import Button from '../components/button';
-import HeaderLineByLineAnimation from '../animations/HeaderLineByLineAnimation';
-import AnimatedListContainer from '../animations/AnimatedListContainer';
-import LineByLineText from '../components/LineByLineText';
+import React, { useState, useMemo, memo } from "react";
+import Tag from "../components/tag";
+import Link from "next/link";
+import { MoveRight } from "lucide-react";
+import Button from "../components/button";
+import HeaderLineByLineAnimation from "../animations/HeaderLineByLineAnimation";
+import AnimatedListContainer from "../animations/AnimatedListContainer";
+import LineByLineText from "../components/LineByLineText";
 
 const HEADER_LINE_Y = 28;
 const HEADER_STAGGER = 0.07;
@@ -24,27 +24,27 @@ interface ServiceSessionProps {
 const serviceList = [
   {
     id: 1,
-    title: 'Grinding media',
+    title: "Grinding media",
     subtext:
-      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+      "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
   },
   {
     id: 2,
-    title: 'Activated Carbon',
+    title: "Activated Carbon",
     subtext:
-      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+      "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
   },
   {
     id: 3,
-    title: 'Metal and steel Pipes',
+    title: "Metal and steel Pipes",
     subtext:
-      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+      "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
   },
   {
     id: 4,
-    title: 'Gear Box servicing and Heavy Machine Maintenance',
+    title: "Gear Box servicing and Heavy Machine Maintenance",
     subtext:
-      'We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.',
+      "We offer complete gearbox diagnostics, repairs, and component replacements using OEM parts and experienced technicians. Our work helps restore equipment reliability and prevent costly downtime across crushers, mills, and conveyors.",
   },
 ] as const;
 
@@ -55,11 +55,11 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   const memoizedServiceList = useMemo(() => serviceList, []);
 
   return (
-    <section className="lg:mx-[200] bg-white relative z-10">
+    <section className="xl:mx-[120] mx-[24] bg-white relative z-10">
       <div className="services-section-container my-[100]">
-        <Tag text="services" className="ml-[22]" />
+        <Tag text="services" className="ml-[22] lg:ml-[0]" />
 
-        <div className="services-section-header text-xl-semibold uppercase ml-[22] my-[30] lg:my-[70] lg:text-4xl-semibold">
+        <div className="services-section-header flex items-center justify-between text-xl-semibold uppercase  my-[30] lg:mt-[37] lg:mb-[98] lg:text-4xl-semibold">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             onComplete={() => setStartListAnimation(true)}
@@ -67,17 +67,29 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
             duration={HEADER_DURATION}
             stagger={HEADER_STAGGER}
             delay={HEADER_DELAY}
-            style={{ overflow: 'hidden' }}
+            style={{ overflow: "hidden" }}
           >
-            Explore our <span className="text-primary-default">products</span>{' '}
-            <span>and</span>{' '}
+            Explore our <span className="text-primary-default">products</span>{" "}
+            <span>and</span>{" "}
             <span className="text-primary-default">services</span>
           </HeaderLineByLineAnimation>
+
+          {/* CTA button — always expanded (label always visible) */}
+          <Link href="/services" className=" hidden md:block shrink-0 ml-8 mr-[24]">
+            <Button
+              label="ALL PRODUCTS & SERVICES"
+              variant="primaryWhite"
+              iconClassName="text-primary-default group-hover/btn:text-white! "
+              size="large"
+              className="hover:bg-[#0160DA]! hover:text-white! border-primary-default! bg-transparent!"
+              alwaysExpanded
+              icon={<MoveRight size={20} />}
+            />
+          </Link>
         </div>
 
         <AnimatedListContainer
           startAnimation={startListAnimation}
-
           className="services-session-product-list-container my-[60]"
         >
           <ul>
@@ -85,7 +97,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
               <li
                 key={list.id}
                 tabIndex={0} // allows focus for :focus-within
-                className="relative mx-[22px] flex cursor-pointer border-b border-gray-300 outline-none service-item"
+                className="relative mx-[22px]  flex cursor-pointer border-b border-gray-300 outline-none service-item"
               >
                 {/* Number */}
                 <p className="pr-[80px] py-[20px] text-lg-semibold lg:text-2xl-semibold text-gray-700 flex items-center justify-center transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-gpu origin-center service-number">

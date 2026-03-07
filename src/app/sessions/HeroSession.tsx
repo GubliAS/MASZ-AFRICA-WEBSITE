@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import Button from '../components/button';
-import { MoveRight } from 'lucide-react';
-import LineByLineText from '../components/LineByLineText';
-import AutoplayVideo from '../components/AutoplayVideo';
+import React from "react";
+import Image from "next/image";
+import Button from "../components/button";
+import { MoveRight } from "lucide-react";
+import LineByLineText from "../components/LineByLineText";
+import AutoplayVideo from "../components/AutoplayVideo";
 
 interface HeroSessionProps {
   /** When true, the hero subtext line-by-line animation starts (after scroll reveal is about to end). */
@@ -24,54 +24,56 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
               linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
               linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)
             `,
-            backgroundSize: '64px 64px',
+            backgroundSize: "64px 64px",
           }}
         />
-        <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[200] lg:my-[80] relative z-10">
-        <div className="hero-logo flex items-center justify-center mt-[40] lg:mt-0">
-          <Image
-            src="/maszAssets/logotype.svg"
-            alt="masz-africa logotype"
-            width={370}
-            height={100}
-            className="w-[370px] h-auto lg:h-auto lg:w-[550]"
-          />
+        <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[24] xl:mx-[120] lg:my-[80] relative z-10">
+          <div className="hero-logo mx-[24px] flex items-center justify-center mt-[40] lg:mt-0">
+            <Image
+              src="/maszAssets/logotype.svg"
+              alt="masz-africa logotype"
+              width={370}
+              height={100}
+              className="w-full h-auto lg:h-auto lg:w-[550]"
+            />
+          </div>
+
+          {/* Hero subtext: line-by-line reveal after scroll reveal */}
+          <div className="hero-section-logo-and-subtext lg:w-[40%]">
+            <LineByLineText
+            duration={0.4}
+            stagger={0.08}
+              startAnimation={startTextAnimation}
+              className="text-sm-medium sm:text-md-medium md:text-lg-medium text-default-body mx-[24] mt-[30] lg:text-xl-medium tracking-tight"
+            >
+              Unleash reliable mining performance with MASZ-Africa, delivering
+              certified consumables built for tough environments, supported by
+              real engineering expertise and on-site technical service, so your
+              operation stays efficient, productive, and continuously running.
+            </LineByLineText>
+
+            {/* Button now shows correctly */}
+            <Button
+              label="Explore our services"
+              variant="primary"
+              size="large"
+              icon={
+                <>
+                  {/* Mobile / default arrow */}
+                  <span className="lg:hidden">
+                    <MoveRight size={16} strokeWidth={2} />
+                  </span>
+
+                  {/* Desktop / large screen thicker arrow */}
+                  <span className="hidden lg:inline-block">
+                    <MoveRight size={16} strokeWidth={3} width={50} />
+                  </span>
+                </>
+              }
+              className="ml-[22] my-[35]"
+            />
+          </div>
         </div>
-
-        {/* Hero subtext: line-by-line reveal after scroll reveal */}
-        <div className="hero-section-logo-and-subtext lg:w-[40%]">
-          <LineByLineText
-            startAnimation={startTextAnimation}
-            className="text-sm-medium text-default-body mx-[24] mt-[30] lg:text-xl-medium tracking-tight"
-          >
-            Unleash reliable mining performance with MASZ-Africa, delivering
-            certified consumables built for tough environments, supported by
-            real engineering expertise and on-site technical service, so your
-            operation stays efficient, productive, and continuously running.
-          </LineByLineText>
-
-          {/* Button now shows correctly */}
-          <Button
-            label="Explore our services"
-            variant="primary"
-            size="large"
-            icon={
-              <>
-                {/* Mobile / default arrow */}
-                <span className="lg:hidden">
-                  <MoveRight size={16} strokeWidth={2} />
-                </span>
-
-                {/* Desktop / large screen thicker arrow */}
-                <span className="hidden lg:inline-block">
-                  <MoveRight size={16} strokeWidth={3} width={50} />
-                </span>
-              </>
-            }
-            className="ml-[22] my-[35]"
-          />
-        </div>
-      </div>
       </div>
 
       {/* <div className="hero-image mt-[50]">
@@ -161,8 +163,9 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
       </div> */}
 
       {/* Full viewport hero video */}
-      <AutoplayVideo src="/videos/homePageVid.mp4" classname="" />
-
+      <div className="hero-video-wrapper mx-[21px] lg:mx-[24] xl:mx-[120px]">
+        <AutoplayVideo src="/videos/homePageVid.mp4" fullWidth={false} />
+      </div>
     </div>
   );
 }

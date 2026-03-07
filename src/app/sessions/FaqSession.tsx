@@ -13,6 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function FaqSession() {
   const sectionRef = useRef<HTMLElement>(null);
   const tagRef = useRef<HTMLDivElement>(null);
+  const mobileTagRef = useRef<HTMLDivElement>(null);
   const accordionContainerRef = useRef<HTMLDivElement>(null);
   const faqItemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [startTitleAnimation, setStartTitleAnimation] = useState(false);
@@ -63,19 +64,20 @@ export default function FaqSession() {
   const [scrollHeights, setScrollHeights] = useState<number[]>([]);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Initial state: tag and FAQ items hidden (items staggered top-to-bottom later)
+  // Initial state: tag and FAQ items hidden
   useLayoutEffect(() => {
     if (tagRef.current) gsap.set(tagRef.current, { opacity: 0, x: 80, force3D: true });
+    if (mobileTagRef.current) gsap.set(mobileTagRef.current, { opacity: 0, x: 80, force3D: true });
     faqItemRefs.current.forEach((el) => {
       if (el) gsap.set(el, { opacity: 0, y: 48, force3D: true });
     });
   }, []);
 
-  // Sequence when section fully enters viewport: tag → title (line by line) → subtext (line by line) → accordion
   useEffect(() => {
     const section = sectionRef.current;
     const tag = tagRef.current;
-    if (!section || !tag) return;
+    const mobileTag = mobileTagRef.current;
+    if (!section) return;
 
     const st = ScrollTrigger.create({
       trigger: section,
@@ -83,24 +85,25 @@ export default function FaqSession() {
       onEnter: () => {
         if (hasAnimatedRef.current) return;
         hasAnimatedRef.current = true;
-        gsap.to(tag, {
-          opacity: 1,
-          x: 0,
-          duration: 0.5,
-          ease: 'power2.out',
-          force3D: true,
-          onComplete: () => setStartTitleAnimation(true),
-        });
+        // animate whichever tag is visible
+        const activeTag = tag || mobileTag;
+        if (activeTag) {
+          gsap.to(activeTag, {
+            opacity: 1,
+            x: 0,
+            duration: 0.5,
+            ease: 'power2.out',
+            force3D: true,
+            onComplete: () => setStartTitleAnimation(true),
+          });
+        } else {
+          setStartTitleAnimation(true);
+        }
+        // also animate the other one silently
+        if (tag && mobileTag) {
+          gsap.to([tag, mobileTag], { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out', force3D: true });
+        }
       },
-      // onLeaveBack: () => {
-      //   setResetKey((k) => k + 1);
-      //   setStartTitleAnimation(false);
-      //   setStartSubtextAnimation(false);
-      //   hasAnimatedRef.current = false;
-      //   faqItemRefs.current.forEach((el) => {
-      //     if (el) gsap.set(el, { opacity: 0, y: 48, force3D: true });
-      //   });
-      // },
     });
     return () => st.kill();
   }, []);
@@ -141,14 +144,30 @@ export default function FaqSession() {
   };
 
   return (
-    <section ref={sectionRef} className="mt-[100px] mx-[21px] lg:mx-[200] lg:my-[120] bg-white relative z-10">
-      <div className="main-faq-section-container lg:flex lg:justify-between">
-        <div className="faq-left-side-for-large-screens" key={resetKey}>
-          <div ref={tagRef}>
-            <Tag text="Frequently asked questions" />
-          </div>
-          <div className="faq-title-and-card-for-large-screens lg:flex lg:flex-col lg:justify-between">
-            <div className="text-xl-semibold my-[30px] leading-6 lg:text-4xl-semibold lg:leading-13 lg:my-[70]">
+    <section ref={sectionRef} className="mt-[100px] mx-[21px] lg:mx-[24] xl:mx-[120] lg:my-[120] bg-white relative z-10">
+      <div className="main-faq-section-container lg:flex lg:justify-between lg:items-stretch lg:gap-[50px]">
+
+        {/* ─────────────────────────────────────────────
+            DESKTOP LEFT PANEL — bg image + overlay
+        ───────────────────────────────────────────── */}
+        <div
+          className="hidden lg:flex flex-col gap-[50px] lg:px-[32px] xl:px-[52] py-[47] justify-between relative overflow-hidden lg:w-[50%] min-h-[800px]"
+          style={{
+            backgroundImage: "url('/homeAssets/Image-16.webp')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          key={resetKey}
+        >
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/0" />
+
+          {/* TAG + TITLE — top */}
+          <div className="relative z-10 ">
+            <div ref={tagRef}>
+              <Tag className='lg:text-white! lg:border-white!' text="Frequently asked questions" />
+            </div>
+            <div className="text-xl-semibold mt-[28px] leading-6 lg:text-2xl-semibold xl:text-3xl-semibold  lg:leading-13">
               <LineByLineText
                 startAnimation={startTitleAnimation}
                 onComplete={handleTitleComplete}
@@ -157,47 +176,74 @@ export default function FaqSession() {
                 delay={0.04}
                 yFrom={24}
                 as="div"
+                className="text-white! uppercase lg:text-4xl-semibold"
               >
                 GOT ANY QUESTIONS? <br />
-                <span className="text-primary-default">WE'VE GOT ANSWERS</span>
+                <span className="text-white!">WE&apos;VE GOT ANSWERS</span>
               </LineByLineText>
             </div>
+          </div>
 
-            {/* faq-cta-card displayed on mobile */}
-            <div className="hidden lg:block faq-cta-card bg-surface-card-colored-primary lg:w-[530] px-[25] py-[25] my-[100] lg:mt-[] transition-all duration-300">
-              <div className="header uppercase text-light text-lg-semibold lg:text-2xl-semibold">
-                Still have a question?
-              </div>
-              <div className="subtext text-light text-sm-medium lg:text-md-medium my-[25]">
-                <LineByLineText
-                  startAnimation={startSubtextAnimation}
-                  onComplete={handleSubtextComplete}
-                  duration={0.2}
-                  stagger={0.08}
-                  delay={0.06}
-                  yFrom={20}
-                  as="div"
-                  className="text-light"
-                >
-                  Our team of industry experts is ready to provide the clarity and
-                support you need. Whether it’s a general inquiry or a
-                project-specific discussion, we’re just a message away. Reach
+          {/* CTA CARD — bottom, backdrop blur dark tint */}
+          <div className="relative z-10  lg:px-[32px] 2xl:px-[40] py-[32px] max-w-[450px]  flex flex-col lg:gap-[28px] xl:gap-[32px] bg-[#8B8B8B24] backdrop-blur-[10px] border border-[#8B8B8B24] ">
+            <div className="header uppercase text-white text-lg-semibold lg:text-2xl-semibold ">
+              Still have a question?
+            </div>
+            <div className="subtext text-white/75 text-sm-medium lg:text-sm-medium ">
+              <LineByLineText
+                startAnimation={startSubtextAnimation}
+                onComplete={handleSubtextComplete}
+                duration={0.2}
+                stagger={0.08}
+                delay={0.06}
+                yFrom={20}
+                as="div"
+                className='text-md-medium text-white'
+              >
+                Our team of industry experts is ready to provide the clarity and
+                support you need. Whether it&apos;s a general inquiry or a
+                project-specific discussion, we&apos;re just a message away. Reach
                 out today and let us help move your operations forward with
                 confidence.
-                </LineByLineText>
-              </div>
-              <Button
-                label="Reach out to us"
-                variant="primaryWhite"
-                size="large"
-                icon={<MoveRight size={16} />}
-                className=""
-              />
+              </LineByLineText>
             </div>
+            <Button
+              label="Reach out to us"
+              variant="primaryWhite"
+              size="large"
+              icon={<MoveRight className='text-white group-hover:text-[#016BF2]!'  size={16} />}
+              className=" lg:bg-transparent! lg:border-white! text-white! hover:bg-white! hover:text-[#016BF2]! hover:w-fit! hover:border-transparent! transition-colors duration-300"
+            />
           </div>
         </div>
 
-        <div ref={accordionContainerRef} className="mt-[80px] lg:w-[40%] lg:mt-[120]">
+        {/* ─────────────────────────────────────────────
+            MOBILE LEFT — plain tag + title (unchanged)
+        ───────────────────────────────────────────── */}
+        <div className="lg:hidden" key={resetKey + '-mobile'}>
+          <div ref={mobileTagRef}>
+            <Tag text="Frequently asked questions" />
+          </div>
+          <div className="text-xl-semibold my-[30px] leading-6">
+            <LineByLineText
+              startAnimation={startTitleAnimation}
+              onComplete={handleTitleComplete}
+              duration={0.3}
+              stagger={0.12}
+              delay={0.04}
+              yFrom={24}
+              as="div"
+            >
+              GOT ANY QUESTIONS? <br />
+              <span className="text-primary-default">WE&apos;VE GOT ANSWERS</span>
+            </LineByLineText>
+          </div>
+        </div>
+
+        {/* ─────────────────────────────────────────────
+            ACCORDION — same on both breakpoints
+        ───────────────────────────────────────────── */}
+        <div ref={accordionContainerRef} className="mt-[80px] flex flex-col gap-4 justify-between lg:w-[50%] lg:mt-0">
           {faqObject.map((item, i) => {
             const isOpen = openCards.has(i);
             return (
@@ -206,7 +252,7 @@ export default function FaqSession() {
                 ref={(el) => {
                   faqItemRefs.current[i] = el;
                 }}
-                className={`relative mb-4 select-none
+                className={`relative lg:flex-1 lg:flex lg:flex-col lg:justify-center   select-none
                 border-2 transition-colors duration-400
                 ${
                   isOpen
@@ -231,7 +277,7 @@ export default function FaqSession() {
 
                   <div
                     className={`flex items-center justify-center rounded-full
-                    transition-colors duration-300 w-8 h-8
+                    transition-colors duration-300 w-8 h-8 shrink-0
                     ${
                       isOpen
                         ? 'bg-surface-card-colored-primary text-light'
@@ -278,15 +324,17 @@ export default function FaqSession() {
           })}
         </div>
 
-        {/* faq-cta-card displayed on mobile */}
+        {/* ─────────────────────────────────────────────
+            MOBILE CTA card — below accordion (unchanged)
+        ───────────────────────────────────────────── */}
         <div className="lg:hidden faq-cta-card bg-surface-card-colored-primary px-[25] py-[25] my-[100] transition-all duration-300" data-scroll-reveal-item>
           <div className="header uppercase text-light text-lg-semibold">
             Still have a question?
           </div>
           <div className="subtext text-light text-sm-medium my-[25]">
             Our team of industry experts is ready to provide the clarity and
-            support you need. Whether it’s a general inquiry or a
-            project-specific discussion, we’re just a message away. Reach out
+            support you need. Whether it&apos;s a general inquiry or a
+            project-specific discussion, we&apos;re just a message away. Reach out
             today and let us help move your operations forward with confidence.
           </div>
           <Button
@@ -297,6 +345,7 @@ export default function FaqSession() {
             className=""
           />
         </div>
+
       </div>
     </section>
   );

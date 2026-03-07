@@ -89,7 +89,7 @@ const GallerySection = () => {
   return (
     <section ref={sectionRef} className="relative w-full py-16">
       {/* ===== Header with LineByLineText ===== */}
-      <div className="px-5 lg:px-20 max-w-7xl lg:mx-[180] overflow-hidden">
+      <div className=" mx-[24] xl:mx-[120] overflow-hidden">
         <div className="mb-6 space-y-5">
           <div className="uppercase text-2xl lg:text-4xl font-semibold">
             <LineByLineText
@@ -133,7 +133,7 @@ const GallerySection = () => {
       </div>
 
       {/* ===== Gallery - each image animates individually ===== */}
-      <div className="mt-12 mx-[21px] space-y-5">
+      <div className="mt-12 mx-[24px] space-y-5">
         {rows.map((rowImages, rowIndex) => {
           const isNormalRow = rowIndex % 2 === 0;
           const rowStartIdx = rowIndex * 6;
@@ -141,7 +141,7 @@ const GallerySection = () => {
           return (
             <div
               key={rowIndex}
-              className="flex flex-wrap lg:flex-nowrap justify-center gap-4"
+              className="flex  lg:flex-nowrap justify-center gap-4"
             >
               <ImageBlock
                 images={rowImages.slice(0, 3)}

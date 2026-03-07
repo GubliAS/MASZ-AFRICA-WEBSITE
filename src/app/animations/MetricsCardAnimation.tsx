@@ -38,46 +38,31 @@ function MetricsCardAnimation({
   cardClassName,
 }: MetricsCardAnimationProps) {
   const [startMetricsAnimation, setStartMetricsAnimation] = useState(false);
-  const [emptyCardIndex, setEmptyCardIndex] = useState(0);
   const [startContentPhase, setStartContentPhase] = useState(false);
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
 
   // PERFORMANCE: Memoize metrics array
   const memoizedMetrics = useMemo(() => metrics, [metrics]);
 
   // Start metrics animation when trigger fires
   useEffect(() => {
-    if (startAnimation) {
-      setStartMetricsAnimation(true);
-    }
+    if (startAnimation) setStartMetricsAnimation(true);
   }, [startAnimation]);
 
-  // When all empty cards have been shown, start content phase
-  useEffect(() => {
-    if (emptyCardIndex < memoizedMetrics.length) return;
-    setStartContentPhase(true);
-    setActiveCardIndex(0);
-  }, [emptyCardIndex, memoizedMetrics.length]);
-
-  // Memoized callbacks to prevent unnecessary re-renders
-  const handleEmptyShown = () => {
-    setEmptyCardIndex((i) => Math.min(i + 1, memoizedMetrics.length));
-  };
-
-  const handleSequenceComplete = () => {
-    setActiveCardIndex((i) => Math.min(i + 1, memoizedMetrics.length));
-  };
+  // When first empty card is shown, start content phase for all cards simultaneously
+  const handleEmptyShown = () => setStartContentPhase(true);
+  const handleSequenceComplete = () => {};
 
   return (
-    <div className={className || 'metrics-container my-[50px] lg:flex lg:gap-8 mt-[50]'}>
+    <div className={ `metrics-container my-[50px] lg:grid lg:gap-8 mt-[50] ${className}`}>
       {memoizedMetrics.map((metric, index) => (
         <AnimatedMetricCard
+        index={index}
           key={index}
           text={metric.text}
           value={metric.value}
-          showAsEmpty={startMetricsAnimation && emptyCardIndex === index}
-          showContent={startContentPhase && activeCardIndex === index}
-          onEmptyShown={handleEmptyShown}
+          showAsEmpty={startMetricsAnimation}
+          showContent={startContentPhase}
+          onEmptyShown={index === 0 ? handleEmptyShown : undefined}
           onSequenceComplete={handleSequenceComplete}
           className={cardClassName}
         />

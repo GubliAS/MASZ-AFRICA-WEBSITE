@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import Tag from '../components/tag';
-import Image from 'next/image';
-import LineByLineText from '../components/LineByLineText';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Tag from "../components/tag";
+import Image from "next/image";
+import LineByLineText from "../components/LineByLineText";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import PartnersMarquee from "../components/PartnersMarquee";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,67 +29,76 @@ function TestimonialSession() {
   const testimonialDetails = [
     {
       id: 1,
-      logo: '/homeAssets/Logo-1.jpg',
+      logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        'MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.',
-      picture: '/homeAssets/Picture-1.jpg',
-      name: 'Samuel Okwabeng',
+        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+      picture: "/homeAssets/Picture-1.jpg",
+      name: "Samuel Okwabeng",
       position: "CEO, the Builders' Friend",
     },
     {
       id: 2,
-      logo: '/homeAssets/Logo-1.jpg',
+      logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        'MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.',
-      picture: '/homeAssets/Picture-1.jpg',
-      name: 'Samuel Okwabeng',
+        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+      picture: "/homeAssets/Picture-1.jpg",
+      name: "Samuel Okwabeng",
       position: "CEO, the Builders' Friend",
     },
     {
       id: 3,
-      logo: '/homeAssets/Logo-1.jpg',
+      logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        'MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.',
-      picture: '/homeAssets/Picture-1.jpg',
-      name: 'Samuel Okwabeng',
+        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+      picture: "/homeAssets/Picture-1.jpg",
+      name: "Samuel Okwabeng",
       position: "CEO, the Builders' Friend",
     },
     {
       id: 4,
-      logo: '/homeAssets/Logo-1.jpg',
+      logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        'MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.',
-      picture: '/homeAssets/Picture-1.jpg',
-      name: 'Samuel Okwabeng',
+        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+      picture: "/homeAssets/Picture-1.jpg",
+      name: "Samuel Okwabeng",
       position: "CEO, the Builders' Friend",
     },
     {
       id: 5,
-      logo: '/homeAssets/Logo-1.jpg',
+      logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        'MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.',
-      picture: '/homeAssets/Picture-1.jpg',
-      name: 'Samuel Okwabeng',
+        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+      picture: "/homeAssets/Picture-1.jpg",
+      name: "Samuel Okwabeng",
       position: "CEO, the Builders' Friend",
     },
     {
       id: 6,
-      logo: '/homeAssets/Logo-1.jpg',
+      logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        'MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.',
-      picture: '/homeAssets/Picture-1.jpg',
-      name: 'Samuel Okwabeng',
+        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+      picture: "/homeAssets/Picture-1.jpg",
+      name: "Samuel Okwabeng",
       position: "CEO, the Builders' Friend",
     },
     {
       id: 7,
-      logo: '/homeAssets/Logo-1.jpg',
+      logo: "/homeAssets/Logo-1.jpg",
       subtext:
-        'MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.',
-      picture: '/homeAssets/Picture-1.jpg',
-      name: 'Samuel Okwabeng',
+        "MASZ-Africa has been one of the most reliable suppliers we’ve worked with. Every product we receive is authentic, traceable, and exactly as specified. Their on-time delivery record has helped us avoid unnecessary downtime, and their communication is always clear and professional.",
+      picture: "/homeAssets/Picture-1.jpg",
+      name: "Samuel Okwabeng",
       position: "CEO, the Builders' Friend",
     },
+  ];
+
+  const partners = [
+    { id: 1, name: "DIADORA", logo: "" },
+    { id: 2, name: "NIO", logo: "/partnerLogos/Partner-2.svg" },
+    { id: 3, name: "adidas", logo: "/partnerLogos/Partner-1.svg" },
+    { id: 4, name: "DIADORA", logo: "" },
+    { id: 5, name: "PUMA", logo: "" },
+    { id: 6, name: "NIKE", logo: "" },
   ];
 
   const scrollingItems = [...testimonialDetails, ...testimonialDetails];
@@ -110,7 +120,7 @@ function TestimonialSession() {
 
     const st = ScrollTrigger.create({
       trigger: section,
-      start: 'top 80%',
+      start: "top 80%",
       onEnter: () => {
         if (hasAnimatedRef.current) return;
         hasAnimatedRef.current = true;
@@ -119,7 +129,7 @@ function TestimonialSession() {
           opacity: 1,
           x: 0,
           duration: 0.5,
-          ease: 'power2.out',
+          ease: "power2.out",
           force3D: true,
           onComplete: () => setStartTitleAnimation(true),
         });
@@ -147,7 +157,7 @@ function TestimonialSession() {
         opacity: 1,
         duration: 0.5,
         stagger: 0.1,
-        ease: 'power2.out',
+        ease: "power2.out",
         force3D: true,
       });
     }
@@ -160,7 +170,9 @@ function TestimonialSession() {
     let animationFrameId: number;
 
     const step = (time: number) => {
-      const dt = lastTimeRef.current ? Math.min((time - lastTimeRef.current) / 1000, 0.1) : 0;
+      const dt = lastTimeRef.current
+        ? Math.min((time - lastTimeRef.current) / 1000, 0.1)
+        : 0;
       lastTimeRef.current = time;
 
       // Use actual track width so loop resets seamlessly (no flicker)
@@ -183,42 +195,47 @@ function TestimonialSession() {
   }, [isPaused, scrollingItems.length]);
 
   return (
-    <section ref={sectionRef} className="h-screen bg-[#f3f3f3] py-24 mt-[100] relative ">
-      <div className="testimonial-session-main-container lg:mx-[200]">
+    <section
+      ref={sectionRef}
+      className="min-h-screen bg-[#f3f3f3] py-24   mt-[100] relative "
+    >
+      <div className="testimonial-session-main-container lg:mx-[24] lg:mb-[180]  xl:mx-[120]">
         <div className="testimonial-session-content" key={resetKey}>
           <div ref={tagRef}>
             <Tag text="testimonial" className="uppercase ml-5" />
           </div>
-          <div className="testimonial-session-header uppercase text-xl font-semibold my-6 leading-6 ml-5 lg:text-4xl-semibold lg:leading-15">
-            <LineByLineText
-              startAnimation={startTitleAnimation}
-              onComplete={handleTitleComplete}
-              className="text-default-body"
-              duration={0.2}
-              stagger={0.08}
-              delay={0.08}
-              yFrom={24}
-              as="div"
-            >
-              Why our clients <br />
-              <span className="text-primary-default">love to work with us</span>
-            </LineByLineText>
-          </div>
+          <div className="md:flex gap-[50px] md:mx-5 md:justify-between">
+            <div className="testimonial-session-header uppercase text-xl font-semibold my-6  leading-6 ml-5 md:ml-0 lg:text-4xl-semibold lg:leading-15">
+              <LineByLineText
+                startAnimation={startTitleAnimation}
+                onComplete={handleTitleComplete}
+                className="text-default-heading"
+                duration={0.2}
+                stagger={0.08}
+                delay={0.08}
+                yFrom={24}
+                as="div"
+              >
+               <span className=" text-nowrap">Why our clients</span> <br />
+                <span className="text-primary-default text-nowrap">
+                  love to work with us
+                </span>
+              </LineByLineText>
+            </div>
 
-          <div className="testimonial-section-subtext text-md-medium font-medium text-default-body ml-5">
-            <LineByLineText
-              startAnimation={startSubtextAnimation}
-              onComplete={handleSubtextComplete}
-              duration={0.13}
-              stagger={0.05}
-              delay={0.03}
-              yFrom={20}
-              as="div"
-            >
-              Our clients choose us for our expert knowledge, <br /> clear
-              communication, commitment to their <br /> businesses, ability to
-              adapt, and our trustworthy <br /> approach.
-            </LineByLineText>
+            <div className="testimonial-section-subtext max-w-[484px] md:my-6 text-md-medium lg:text-xl-medium font-medium text-default-body mx-5">
+              <LineByLineText
+                startAnimation={startSubtextAnimation}
+                onComplete={handleSubtextComplete}
+                duration={0.13}
+                stagger={0.05}
+                delay={0.03}
+                yFrom={20}
+                as="div"
+              >
+                Our clients choose us for our expert knowledge, clear communication, commitment to their businesses, ability to adapt, and our trustworthy approach.
+              </LineByLineText>
+            </div>
           </div>
 
           <div className="scroll ">
@@ -232,7 +249,7 @@ function TestimonialSession() {
               <div
                 ref={trackRef}
                 className="flex gap-6 mt-[50] will-change-transform"
-                style={{ transition: 'none' }}
+                style={{ transition: "none" }}
               >
                 {scrollingItems.map((item, index) => (
                   <div
@@ -240,7 +257,7 @@ function TestimonialSession() {
                     ref={(el) => {
                       cardRefs.current[index] = el;
                     }}
-                    className="bg-surface-card-primary border-default-card-stroke w-[280] lg:w-[320] p-5 shrink-0"
+                    className="bg-surface-card-primary border border-transparent hover:border-[#0160DA] w-[280] lg:w-[320] p-5 shrink-0 transition-colors duration-300"
                   >
                     <div className="relative w-10 h-10 mb-4 overflow-hidden">
                       <Image
@@ -288,6 +305,11 @@ function TestimonialSession() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Partners Marquee */}
+      <div className="absolute  bottom-0 left-0 right-0">
+        <PartnersMarquee partners={partners} speed={60} />
       </div>
     </section>
   );

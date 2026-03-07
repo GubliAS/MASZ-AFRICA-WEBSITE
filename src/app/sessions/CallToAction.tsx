@@ -2,6 +2,7 @@ import Image from 'next/image';
 import React from 'react';
 import Button from '../components/button';
 import { MoveRight } from 'lucide-react';
+import Link from 'next/link';
 
 function CallToAction() {
   return (
@@ -49,7 +50,7 @@ function CallToAction() {
             step.
           </p>
 
-          <div className="my-[50]">
+          <Link href="/contactUs" className="my-[50]">
             <Button
               label="contact us"
               variant="primary"
@@ -66,7 +67,7 @@ function CallToAction() {
               }
               className="text-lg lg:text-xl"
             />
-          </div>
+          </Link>
         </div>
       </div>
     </section>

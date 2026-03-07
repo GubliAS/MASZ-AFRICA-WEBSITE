@@ -85,8 +85,18 @@ export default function AnimatedCardsContainer({
       },
     });
 
+    // Refresh ScrollTrigger on resize so trigger positions stay accurate
+    let resizeTid: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTid);
+      resizeTid = setTimeout(() => ScrollTrigger.refresh(), 150);
+    };
+    window.addEventListener('resize', onResize);
+
     return () => {
       st.kill();
+      window.removeEventListener('resize', onResize);
+      clearTimeout(resizeTid);
     };
   }, [start, once, duration, stagger, ease]);
 
@@ -94,7 +104,7 @@ export default function AnimatedCardsContainer({
     <div 
       ref={containerRef}
       className={className || 'flex flex-col lg:flex-row gap-4 lg:gap-8'}
-      style={{ contain: 'layout style paint' }}
+      style={{ overflow: 'visible' }}
     >
       {children}
     </div>

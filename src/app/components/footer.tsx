@@ -4,7 +4,7 @@ import { title } from 'process';
 import Link from 'next/link';
 import { Mail, Inbox, Phone, MapPin } from 'lucide-react';
 import { Linkedin } from 'lucide-react';
-import { IconBrandBehance } from '@tabler/icons-react';
+import { IconBrandBehance, IconBrandInstagram, IconBrandLinkedin } from '@tabler/icons-react';
 import { IconBrandFacebook } from '@tabler/icons-react';
 import { IconBrandTwitter } from '@tabler/icons-react';
 
@@ -64,11 +64,11 @@ function Footer() {
   ];
 
   return (
-    <section className="bg-surface-overlay min-h-screen flex flex-col  px-6 lg:px-0 lg:flex ">
-      <div className="main-footer-container lg:flex lg:mx-[240]">
-        <div className="footer-left-column  w-full text-left text-sm-regular ">
+    <section className="bg-surface-overlay  flex flex-col  px-6 lg:px-0 lg:flex ">
+      <div className="main-footer-container lg:flex lg:gap-12.5 lg:mx-[24] xl:gap-16 2xl:mx-[120]">
+        <div className="footer-left-column  w-full lg:w-1/2 text-left text-sm-regular ">
           {/* Logo */}
-          <div className="footer-logo-container relative w-[380px] h-[150px]  mb-6 lg:w-[600] lg:h-[300]">
+          <div className="footer-logo-container relative w-full sm:w-[380px] h-[150px]  mb-6 lg:w-[500] xl:w-[600] lg:h-[300]">
             <Image
               src="/maszAssets/logo-white.svg"
               alt="footer logo"
@@ -79,7 +79,7 @@ function Footer() {
           </div>
 
           {/* Subtext */}
-          <p className="footer-subtext text-white text-sm-regular lg:text-md-regular leading-relaxed lg:w-[600]">
+          <p className="footer-subtext text-white text-sm-regular lg:text-md-regular leading-relaxed lg:w-[500] xl:w-[600]">
             MASZ-Africa is a trusted mining solutions company dedicated to
             supporting safe, efficient, and sustainable mining operations across
             Africa. We provide expert services in mining operations support,
@@ -91,9 +91,9 @@ function Footer() {
         </div>
 
         {/* footer links */}
-        <div className="footerlinks-plus-subscription lg:flex lg:flex-col lg:justify-between lg:h-[480]">
-          <div className="footer-right-column my-[30] lg:my-[50] lg:w-[600]">
-            <ul className="footer-link text-light text-md-regular lg:text-lg-regular lg:flex lg:justify-between">
+        <div className="footerlinks-plus-subscription sm:flex  lg:w-1/2 lg:flex-col sm:justify-between   ">
+          <div className="footer-right-column my-[30] lg:my-[50] ">
+            <ul className="footer-link text-light text-md-regular lg:text-lg-regular  flex sm:flex-col  lg:items-center justify-between flex-row md:flex-col  lg:flex-row   lg:justify-between">
               {footerLinks.map((item) => (
                 <li key={item.id} className="my-[10] ">
                   <Link href={item.path}>{item.title}</Link>
@@ -105,12 +105,13 @@ function Footer() {
           {/* Email subscription section */}
 
           <div className="subscription-session">
-            <div className="upper-text text-light text-sm-regular  lg:w-[400]">
+            <div className="upper-text text-light text-sm-regular my-[30] lg:w-[400]">
               Join our newsletter for more updates about our Company
             </div>
-            <div className="input-and-button flex items-center my-[20] lg:w-full lg:justify-between">
+            <div className="input-and-button flex lg:flex-col lg:gap-4 lg:items-start items-center my-[20] lg:w-full lg:justify-between">
               <div className="input-bar bg-surface-card-primary bg-surface-card-primary h-[60] w-[250] lg:w-[400] text-center flex justify-center mr-[20]">
                 <input
+                className='w-full h-full focus:outline-none px-4'
                   type="text"
                   name="email"
                   placeholder="Enter your email"
@@ -131,7 +132,7 @@ function Footer() {
       {/* Address details */}
 
       <div className="location-and-contact-details my-[30] ">
-        <ul className="address-list lg:flex lg:justify-between lg:mx-[240] lg:my-[100] text-sm-regular">
+        <ul className="address-list xl:flex lg:justify-between lg:mx-[24] grid sm:grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5 xl:mx-[120] lg:my-[100] text-sm-regular">
           {addressObject.map((item) => (
             <li
               key={item.id}
@@ -147,41 +148,56 @@ function Footer() {
       </div>
 
       <div className="socials-container py-[30px] border-t border-blue-600 flex flex-col items-center justify-center">
+        {/* Social icons */}
         <div className="footer-socials flex items-center py-[] gap-4">
-          {/* LinkedIn */}
-          <div className="relative rounded-full">
-            {/* background */}
-            <div className="absolute inset-0 bg-surface-card-colored-primary opacity-40 rounded-full" />
-            {/* icon */}
-            <div className="relative p-[8px] text-primary-default">
-              <Linkedin size={20} fill="currentColor" strokeWidth={0} />
-            </div>
-          </div>
+                {/* LinkedIn */}
+                <Link
+                  href="/"
+                  className="relative rounded-full overflow-hidden"
+                >
+                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+                    <Linkedin size={20} fill="currentColor" strokeWidth={0} />{" "}
+                  </button>
+                </Link>
 
-          {/* Behance */}
-          <div className="relative rounded-full">
-            <div className="absolute inset-0 bg-surface-card-colored-primary opacity-40 rounded-full" />
-            <div className="relative p-[8px] text-primary-default">
-              <IconBrandBehance size={20} />
-            </div>
-          </div>
+                {/* Instagram */}
+                <Link
+                  href="/"
+                  className="relative rounded-full overflow-hidden"
+                >
+                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+                    <IconBrandInstagram size={20} />
+                  </button>
+                </Link>
 
-          {/* Facebook */}
-          <div className="relative rounded-full">
-            <div className="absolute inset-0 bg-surface-card-colored-primary opacity-40 rounded-full" />
-            <div className="relative p-[8px] text-primary-default">
-              <IconBrandFacebook size={20} fill="currentColor" stroke={0} />
-            </div>
-          </div>
+                {/* Facebook */}
+                <Link
+                  href="/"
+                  className="relative rounded-full overflow-hidden"
+                >
+                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+                    <IconBrandFacebook
+                      size={20}
+                      fill="currentColor"
+                      stroke={0}
+                    />{" "}
+                  </button>
+                </Link>
 
-          {/* Twitter */}
-          <div className="relative rounded-full">
-            <div className="absolute inset-0 bg-surface-card-colored-primary opacity-40 rounded-full" />
-            <div className="relative p-[8px] text-primary-default">
-              <IconBrandTwitter size={20} fill="currentColor" stroke={0} />
-            </div>
-          </div>
-        </div>
+                {/* Twitter */}
+                <Link
+                  href="/"
+                  className="relative rounded-full overflow-hidden"
+                >
+                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+                    <IconBrandTwitter
+                      size={20}
+                      fill="currentColor"
+                      stroke={0}
+                    />
+                  </button>
+                </Link>
+              </div>
         <div className="copy-right-statement text-light text-xs-regular py-[10]">
           &copy; 2025 Masz-Africa general mining and services Limited. All
           Rights Reserved

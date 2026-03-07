@@ -166,11 +166,11 @@ export default function TeamMembersAnimated() {
   return (
     <div
       ref={sectionRef}
-      className="min-h-screen bg-[#f3f3f3] flex items-center justify-center py-16"
+      className="min-h-screen bg-[#f3f3f3] py-16"
     >
-      <div className="w-full max-w-6xl flex flex-col gap-10 lg:gap-25">
+      <div className="w-full px-5 lg:px-[24px] xl:px-[120px] flex flex-col gap-10 lg:gap-25">
         {/* Upper Section */}
-        <div className="flex flex-col lg:flex-row items-center gap-10">
+        <div className="flex flex-col lg:flex-row  items-center gap-10">
           {/* Image */}
           <div className="relative w-full max-w-[390px] lg:max-w-[450px] h-[270px] lg:h-[470px] cursor-pointer flex-shrink-0">
             <div
@@ -187,7 +187,7 @@ export default function TeamMembersAnimated() {
           </div>
 
           {/* Details */}
-          <div className="flex-1  lg:mt-0 lg:text-left">
+          <div className="flex-1  flex flex-col justify-center lg:justify-start lg:items-start items-center  lg:mt-0 lg:text-left">
             <h2
               ref={nameRef}
               className="uppercase text-blue-600 text-2xl-semibold lg:text-3xl-semibold font-semibold mb-2 mx-[21] lg:mx-0"
@@ -204,7 +204,7 @@ export default function TeamMembersAnimated() {
 
             <p
               ref={descriptionRef}
-              className="text-gray-700 text-sm-regular mx-[5] lg:mx-0 lg:text-md-regular lg:leading-relaxed text-left px-4 lg:px-0 lg:w-[800]"
+              className="text-gray-700 text-sm-regular mx-[5] lg:mx-0 lg:text-md-regular lg:leading-relaxed text-left px-4 lg:px-0 lg:max-w-[700px]"
             >
               {activeMember.description}
             </p>

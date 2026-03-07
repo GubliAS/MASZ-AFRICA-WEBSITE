@@ -17,6 +17,8 @@ export interface AnimatedMetricCardProps {
   /** Called when the full content sequence (text + number) completes. */
   onSequenceComplete?: () => void;
   className?: string;
+  /** Card index for alternating styles (0-based) */
+  index?: number;
 }
 
 const CARD_APPEAR_DURATION = 0.07;
@@ -32,6 +34,7 @@ export default function AnimatedMetricCard({
   onEmptyShown,
   onSequenceComplete,
   className,
+  index = 0,
 }: AnimatedMetricCardProps) {
   const [startText, setStartText] = useState(false);
   const [startNumber, setStartNumber] = useState(false);
@@ -59,8 +62,13 @@ export default function AnimatedMetricCard({
   useEffect(() => {
     if (!showContent || hasStartedContentRef.current) return;
     hasStartedContentRef.current = true;
-    if (contentRef.current) gsap.set(contentRef.current, { opacity: 1 });
-    setStartText(true);
+    if (contentRef.current) {
+      gsap.to(contentRef.current, {
+        opacity: 1,
+        duration: 0,
+        onComplete: () => setStartText(true),
+      });
+    }
   }, [showContent]);
 
   const handleTextComplete = () => setStartNumber(true);
@@ -69,9 +77,17 @@ export default function AnimatedMetricCard({
     onSequenceComplete?.();
   };
 
+  // const cardClassName =
+  //   className ??
+  //   'metrics-container flex items-center bg-surface-card-colored-secondary justify-between lg:flex lg:justify-center lg:gap-22 w-auto lg:w-auto my-[20] px-[20] lg:px-[25] h-[90] lg:h-[95]';
+
+  const isOdd = index % 2 === 0; // 0, 2 are "odd" positions (1st, 3rd cards)
+  const bgColor = isOdd ? 'bg-[#4693F6]' : 'bg-[#FFFFFF]';
+  const textColor = isOdd ? 'text-white' : 'text-primary-default';
+  
   const cardClassName =
-    className ??
-    'metrics-container flex items-center bg-surface-card-colored-secondary justify-between lg:flex lg:justify-center lg:gap-22 w-auto lg:w-auto my-[20] px-[20] lg:px-[25] h-[90] lg:h-[95]';
+    
+    `metrics-container flex items-center ${bgColor} justify-between xl:flex xl:justify-center xl:gap-[26px] w-auto lg:w-auto  px-[20]  xl:px-[25] py-[27] min-h-[90]  ${className}`;
 
   return (
     <div
@@ -82,10 +98,10 @@ export default function AnimatedMetricCard({
       <div
         ref={contentRef}
         style={{ opacity: 0 }}
-        className="flex w-full flex-1 items-center justify-between gap-4 lg:gap-22"
+        className="flex w-full flex-1  items-center justify-between gap-4 lg:gap-6"
       >
-        <div className="metrics-desription text-primary-default text-sm-medium w-[250] lg:w-[150] leading-5">
-          <LineByLineText
+<div className={`metrics-desription ${textColor} text-sm-medium w-full leading-5`}>
+            <LineByLineText
             startAnimation={startText}
             onComplete={handleTextComplete}
             duration={TEXT_LINE_DURATION}
@@ -97,7 +113,7 @@ export default function AnimatedMetricCard({
           </LineByLineText>
         </div>
         <div
-          className="metrics-value text-3xl-semibold text-primary-default"
+  className={`metrics-value  text-3xl-semibold xl:text-4xl-semibold ${textColor}`}
           style={{ opacity: startNumber ? 1 : 0, visibility: startNumber ? 'visible' : 'hidden' }}
           aria-hidden={!startNumber}
         >

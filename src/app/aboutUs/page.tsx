@@ -304,7 +304,7 @@ function OurStorySection({
   return (
     <div
       ref={sectionRef}
-      className="desctiption-text mx-[21] lg:mx-[24] xl:mx-[120]"
+      className="desctiption-text mx-[21] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!"
       style={{ contain: "layout style paint" }}
     >
       <Tag text="our story" className="my-[40]" />
@@ -528,12 +528,12 @@ function AboutUSPage() {
             className="main-about-hero-content  "
             style={{ contain: "layout style paint" }}
           >
-            <div className="tag-container flex flex-col  items-start  mt-[30] lg:mt-[60] mx-6 lg:mx-[24] xl:mx-[120]">
+            <div className="tag-container flex flex-col  items-start  mt-[30] lg:mt-[60] mx-6 lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!">
               <Tag text="About us" />
             </div>
 
             {/* TOP TEXT */}
-            <div className="about-page-hero-text-container flex flex-col  items-start  mx-6  lg:mx-[24] xl:mx-[120px] my-[40px] lg:my-[40px]">
+            <div className="about-page-hero-text-container flex flex-col  items-start  mx-6  lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]! my-[40px] lg:my-[40px]">
               <div className="page-header text-xl-semibold uppercase lg:text-4xl-bold">
                 We are{" "}
                 <span className="subtext text-primary-default">
@@ -548,7 +548,7 @@ function AboutUSPage() {
             {/* PARALLAX IMAGE */}
             <div
               style={{ contain: "layout style paint", willChange: "transform" }}
-              className="lg:mx-6 mx-6 xl:mx-[120]"
+              className="lg:mx-6 mx-6 xl:mx-[120] min-[1920px]:mx-[200]!"
             >
               <ParallaxAnimation
                 imageSrc="/aboutAssets/Image-18.webp"
@@ -556,7 +556,7 @@ function AboutUSPage() {
                 height="lg"
               />
             </div>
-            <div className="flex justify-between text-[13.4px] px-2 leading-[140%] text-[#777777] mx-6 mt-4.5 lg:mx-6 xl:mx-[120]">
+            <div className="flex justify-between text-[13.4px] px-2 leading-[140%] text-[#777777] mx-6 mt-4.5 lg:mx-6 xl:mx-[120] min-[1920px]:mx-[200]!">
               <span>Concept 1.0</span>
               <span>Brand Identity Animation</span>
             </div>
@@ -667,7 +667,7 @@ function AboutUSPage() {
         {/* vision-statement-section */}
         <ScrollReveal direction="up" duration={0.3} start="top 90%" scale once>
           <div
-            className="vision-mission-statement lg:mx-[24] xl:mx-[120] lg:my-[150] "
+            className="vision-mission-statement lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! lg:my-[150] "
             style={{ contain: "layout style paint" }}
           >
             <div className="vision-statement lg:flex lg:justify-between ">
@@ -703,7 +703,7 @@ function AboutUSPage() {
         {/* mission-statement */}
         <ScrollReveal direction="up" duration={0.35} start="top 90%" scale once>
           <div
-            className="mission-statement lg:mx-[24] xl:mx-[120]  lg:my-[250]"
+            className="mission-statement lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!  lg:my-[250]"
             style={{ contain: "layout style paint" }}
           >
             <div className="mission-statement lg:flex lg:justify-between lg:flex-row">
@@ -749,7 +749,7 @@ function AboutUSPage() {
             id="core-values"
             className="core-values-section bg-[#f3f3f3]  my-[100] lg:pt-[50]"
           >
-            <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[24px] xl:mx-[120]">
+            <div className="core-value-section-content-wrapper  mx-[21] lg:mx-[24px] xl:mx-[120] min-[1920px]:mx-[200]!">
               <Tag text="Our core values" className="my-[60]" />
               <div className="core-values-text-wrapper">
                 <div className="section-header uppercase text-xl-semibold lg:text-4xl-semibold">

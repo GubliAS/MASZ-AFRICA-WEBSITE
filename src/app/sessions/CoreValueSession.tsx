@@ -242,7 +242,7 @@ function CoreValueSession({
     <section ref={sectionRef} className="lg:my-[140] my-[80]">
       <div className="core-value-section-container">
         {/* Header - line-by-line first, then body animates */}
-        <div className="section-header uppercase text-xl-semibold lg:mx-[24] xl:mx-[120] ml-[22] mt-[30] mb-[51] lg:text-4xl-semibold">
+        <div className="section-header uppercase text-xl-semibold lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! ml-[22] mt-[30] mb-[51] lg:text-4xl-semibold">
           <HeaderLineByLineAnimation
             startAnimation={startTextAnimation}
             onComplete={() => setStartBodyAnimation(true)}
@@ -259,7 +259,7 @@ function CoreValueSession({
 
         {/* Description: line-by-line; then static; then AnimationCopy overlay (spacer keeps layout, no jump) */}
        
-          <div className="flex flex-col  lg:flex-row gap-5 lg:gap-[50px] xl:gap-[100px] mb-[60] lg:mx-[24] xl:mx-[120]  justify-between mx-[25px]">
+          <div className="flex flex-col  lg:flex-row gap-5 lg:gap-[50px] xl:gap-[100px] mb-[60] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]!  justify-between mx-[25px]">
             <LineByLineText
               duration={CORE_VALUE_BODY_TEXT_DURATION}
               stagger={CORE_VALUE_BODY_TEXT_STAGGER}
@@ -287,7 +287,7 @@ function CoreValueSession({
             </LineByLineText>
           </div>
       
-        <div className="lg:mx-[24] xl:mx-[120] bg-[#016BF2]">
+        <div className="lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! bg-[#016BF2]">
           {/* Image above metrics */}
           <div className="relative h-[500px]  overflow-hidden   lg:h-[700px]">
             {/* overlay */}

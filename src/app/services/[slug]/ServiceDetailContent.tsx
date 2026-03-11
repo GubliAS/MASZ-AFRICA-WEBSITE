@@ -19,7 +19,7 @@ export default function ServiceDetailContent({
     <section className="">
       <div className="main-section-content-container">
         <ScrollReveal
-          className="mx-[24] xl:mx-[120] py-[60] lg:py-[100]"
+          className="mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! py-[60] lg:py-[100]"
           direction="up"
           duration={0.75}
           start="top 60%"
@@ -93,7 +93,7 @@ export default function ServiceDetailContent({
           staggerChildren={0.1}
         >
           <div className="description lg:h-screen">
-            <div className="description-content mx-[21] lg:mx-[24] xl:mx-[120] my-[100] lg:my-[150]">
+            <div className="description-content mx-[21] lg:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! my-[100] lg:my-[150]">
               <Tag text="details" className="mb-[40] lg:mb-[50]" />
               <div className=" lg:flex gap-[50] xl:gap-[100] text-default-body">
                 <AnimationCopy>
@@ -135,7 +135,7 @@ export default function ServiceDetailContent({
               />
               <div className="absolute inset-0 bg-black/40 pointer-events-none" />
               <div className="text-container text-light absolute bottom-70 left-0 right-0 flex ">
-                <div className="title uppercase  lg:text-4xl-semibold lg:w-[650] lg:mx-[24] xl:mx-[120] leading-13">
+                <div className="title uppercase  lg:text-4xl-semibold lg:w-[650] lg:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! leading-13">
                   {service.benefitsTitle}
                 </div>
                 <div className="subtext lg:text-lg-medium lg:max-w-[500]">
@@ -154,7 +154,7 @@ export default function ServiceDetailContent({
           staggerChildren={0.1}
           className="py-[80] bg-[#f3f3f3]  px-[24]"
         >
-          <div className=" lg:hidden lg:mx-[24]   xl:mx-[120]">
+          <div className=" lg:hidden lg:mx-[24]   xl:mx-[120]  min-[1920px]:mx-[200]!">
             <Tag className="mb-[50]" text="benefits" />
             <LineByLineText
               startAnimation={true}
@@ -171,7 +171,7 @@ export default function ServiceDetailContent({
           </div>
           <div className="benefits flex justify-center lg:justify-start  py-[60]">
             <div className="benefits-main-content flex">
-              <div className="left-side    xl:mx-[120]">
+              <div className="left-side    xl:mx-[120]  min-[1920px]:mx-[200]!">
               <div className="benefits-list grid grid-cols-1 md:grid-cols-2 lg:flex items-stretch justify-center lg:flex-start gap-6 lg:flex-wrap">
             {service.benefits.map((item, index) => (
               <div

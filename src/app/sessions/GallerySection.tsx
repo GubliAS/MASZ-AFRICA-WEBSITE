@@ -89,7 +89,7 @@ const GallerySection = () => {
   return (
     <section ref={sectionRef} className="relative w-full py-16">
       {/* ===== Header with LineByLineText ===== */}
-      <div className=" mx-[24] xl:mx-[120] overflow-hidden">
+      <div className=" mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]! overflow-hidden">
         <div className="mb-6 space-y-5">
           <div className="uppercase text-2xl lg:text-4xl font-semibold">
             <LineByLineText
@@ -133,7 +133,7 @@ const GallerySection = () => {
       </div>
 
       {/* ===== Gallery - each image animates individually ===== */}
-      <div className="mt-12 md:mx-[24] xl:mx-[120]   space-y-2 lg:space-y-4">
+      <div className="mt-12 md:mx-[24] xl:mx-[120]  min-[1920px]:mx-[200]!   space-y-2 lg:space-y-4">
         {rows.map((rowImages, rowIndex) => {
           const isNormalRow = rowIndex % 2 === 0;
           const rowStartIdx = rowIndex * 6;
@@ -186,7 +186,7 @@ const ImageBlock = ({ images, reverse, startIndex, imageRefs }: BlockProps) => {
     return (
       <div
         ref={(el) => { imageRefs.current[globalIdx] = el; }}
-        className={`w-[120px] md:w-full lg:w-full overflow-hidden cursor-pointer opacity-0 ${
+        className={`w-[120px]   md:w-full lg:w-full overflow-hidden cursor-pointer opacity-0 ${
           tall ? 'h-[400px] md:h-full lg:h-[520px]' : 'h-[200px] lg:h-[250px]'
         }`}
       >

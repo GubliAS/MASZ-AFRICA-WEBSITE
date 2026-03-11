@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <section className="">
       <ScrollReveal direction="up" duration={0.75} start="top 60%" scale>
-        <div className="services-main-content mx-[24]  xl:mx-[120] mt-[80] lg:mt-[150] max-h-[800] pb-[100] lg:pb-0 lg:h-screen ">
+        <div className="services-main-content mx-[24]  xl:mx-[120]  min-[1920px]:mx-[200]! mt-[80] lg:mt-[150] max-h-[800] pb-[100] lg:pb-0 lg:h-screen ">
           <Tag text="products and Services" />
           <div className="text-content lg:mt-[50]">
             <div className="header uppercase text-xl-semibold lg:text-4xl-semibold mt-[50] xl:mt-[100]  mb-[30] lg:mb-[50]">

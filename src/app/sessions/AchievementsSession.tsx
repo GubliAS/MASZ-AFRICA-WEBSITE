@@ -60,7 +60,7 @@ function AchievementsSession({ startTextAnimation = false }: AchievementsSession
 
   return (
     <section className="achievements-session py-[80px] lg:py-[120px]">
-      <div className="achievements-content mx-[21px] lg:mx-[24px] xl:mx-[120px]">
+      <div className="achievements-content mx-[21px] lg:mx-[24px] xl:mx-[120px] min-[1920px]:mx-[200]!">
         {/* Tag */}
         <Tag text="Key Achievements" className="mb-[30px]" />
 

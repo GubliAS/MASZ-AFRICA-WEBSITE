@@ -147,7 +147,7 @@ function AboutSession({ startTextAnimation = false }: AboutSessionProps) {
   }, [showAnimationCopy]);
 
   return (
-    <section ref={sectionRef} className=" lg:mx-[24] xl:mx-[120] relative lg:my-[170]">
+    <section ref={sectionRef} className=" lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! relative lg:my-[170]">
 <div className="about-session-container my-[100] lg:flex lg:justify-between lg:items-stretch lg:gap-[50px]">        {/* Left: Text + Button */}
         <div className="session-container lg:w-1/2" data-scroll-reveal-item>
           <Tag text="About us" className="ml-[22] lg:ml-[0]" />

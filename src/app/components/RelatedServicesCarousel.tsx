@@ -180,7 +180,7 @@ export default function RelatedServicesCarousel({ currentSlug }: Props) {
 
   return (
     <section className="related-services-carousel py-[80px] lg:py-[120px]">
-      <div className="mx-[24px] xl:mx-[120px]">
+      <div className="mx-[24px] xl:mx-[120px]  min-[1920px]:mx-[200]!">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-[40px] lg:mb-[71px] gap-4">
           <div>
             <Tag text="services" className="mb-[30px] lg:mb-[50px]" />

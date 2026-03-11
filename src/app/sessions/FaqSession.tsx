@@ -144,7 +144,7 @@ export default function FaqSession() {
   };
 
   return (
-    <section ref={sectionRef} className="mt-[100px] mx-[21px] lg:mx-[24] xl:mx-[120] lg:my-[120] bg-white relative z-10">
+    <section ref={sectionRef} className="mt-[100px] mx-[21px] lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! lg:my-[120] bg-white relative z-10">
       <div className="main-faq-section-container lg:flex lg:justify-between lg:items-stretch lg:gap-[50px]">
 
         {/* ─────────────────────────────────────────────

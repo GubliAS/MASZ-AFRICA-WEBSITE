@@ -27,8 +27,8 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
             backgroundSize: "64px 64px",
           }}
         />
-        <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[24] xl:mx-[120] lg:my-[80] relative z-10">
-          <div className="hero-logo mx-[24px] flex items-center justify-center mt-[40] lg:mt-0">
+        <div className="hero-message lg:flex lg:items-center lg:justify-between lg:mx-[24] xl:mx-[120] min-[1920px]:mx-[200]! lg:my-[80] relative z-10">
+          <div className="hero-logo mx-[24px] lg:mx-0 flex items-center justify-center mt-[40] lg:mt-0">
             <Image
               src="/maszAssets/logotype.svg"
               alt="masz-africa logotype"
@@ -44,7 +44,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
             duration={0.4}
             stagger={0.08}
               startAnimation={startTextAnimation}
-              className="text-sm-medium sm:text-md-medium md:text-lg-medium text-default-body mx-[24] mt-[30] lg:text-xl-medium tracking-tight"
+              className="text-sm-medium sm:text-md-medium md:text-lg-medium text-default-body mx-[24] lg:mx-0 mt-[30] xl:text-xl-medium tracking-tight"
             >
               Unleash reliable mining performance with MASZ-Africa, delivering
               certified consumables built for tough environments, supported by
@@ -163,7 +163,7 @@ function HeroSession({ startTextAnimation = false }: HeroSessionProps) {
       </div> */}
 
       {/* Full viewport hero video */}
-      <div className="hero-video-wrapper mx-[21px] lg:mx-[24] xl:mx-[120px]">
+      <div className="hero-video-wrapper mx-[21px] lg:mx-[24] xl:mx-[120px] min-[1920px]:mx-[200]!">
         <AutoplayVideo src="/videos/homePageVid.mp4" fullWidth={false} />
       </div>
     </div>

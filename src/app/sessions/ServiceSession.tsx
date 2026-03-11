@@ -55,7 +55,7 @@ function ServiceSession({ startTextAnimation = false }: ServiceSessionProps) {
   const memoizedServiceList = useMemo(() => serviceList, []);
 
   return (
-    <section className="xl:mx-[120] mx-[24] bg-white relative z-10">
+    <section className="xl:mx-[120] min-[1920px]:mx-[200]! mx-[24] bg-white relative z-10">
       <div className="services-section-container my-[100]">
         <Tag text="services" className="ml-[22] lg:ml-[0]" />
 

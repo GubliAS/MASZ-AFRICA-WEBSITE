@@ -199,7 +199,7 @@ function TestimonialSession() {
       ref={sectionRef}
       className="min-h-screen bg-[#f3f3f3] py-24   mt-[100] relative "
     >
-      <div className="testimonial-session-main-container lg:mx-[24] lg:mb-[180]  xl:mx-[120]">
+      <div className="testimonial-session-main-container lg:mx-[24] lg:mb-[180]  xl:mx-[120] min-[1920px]:mx-[200]!">
         <div className="testimonial-session-content" key={resetKey}>
           <div ref={tagRef}>
             <Tag text="testimonial" className="uppercase ml-5" />

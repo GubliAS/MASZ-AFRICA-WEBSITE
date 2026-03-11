@@ -74,8 +74,72 @@ function Navbar() {
     const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
+// 2XL Desktop / large screens: keep existing width + margin animation
+mm.add("(min-width: 1919px)", () => {
+  // gsap.set(header, {
+  //   width: '80%',
+  //   left: '10%',
+  //   y: '0',
+  //   backgroundColor: '#ffffff',
+  //   backdropFilter: 'blur(0px)',
+  // });
+  gsap.set(header, {
+    width: "calc(100% - 400px)",
+    left: "200px",
+    y: "0",
+    backgroundColor: "#ffffff",
+    backdropFilter: "blur(0px)",
+  });
+  gsap.set(inner, { marginLeft: "0rem", marginRight: "0rem" });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: document.body,
+      start: "top top",
+      end: `${SCROLL_RANGE_PX}px top`,
+      scrub: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const shouldBeExpanded = self.progress > 0.4;
+        if (shouldBeExpanded !== isExpandedRef.current) {
+          isExpandedRef.current = shouldBeExpanded;
+          header.classList.toggle("navbar--expanded", shouldBeExpanded);
+          setIsScrolled(shouldBeExpanded);
+        }
+      },
+    },
+  });
+
+  tl.to(
+    header,
+    {
+      width: "100%",
+      left: "0%",
+      y: 0,
+      backgroundColor: "rgba(13, 13, 13, 0.94)",
+      backdropFilter: "blur(14px)",
+      ease: "none",
+      duration: 1,
+      force3D: true,
+    },
+    0
+  );
+  tl.to(
+    inner,
+    {
+      marginLeft: "7.5rem",
+      marginRight: "7.5rem",
+      ease: "none",
+      duration: 1,
+      force3D: true,
+    },
+    0
+  );
+});
+
+
       // Desktop / large screens: keep existing width + margin animation
-      mm.add("(min-width: 1440px)", () => {
+      mm.add("(min-width: 1440px) and (max-width: 1919px)", () => {
         // gsap.set(header, {
         //   width: '80%',
         //   left: '10%',
@@ -90,7 +154,7 @@ function Navbar() {
           backgroundColor: "#ffffff",
           backdropFilter: "blur(0px)",
         });
-        gsap.set(inner, { marginLeft: "2.5rem", marginRight: "2.5rem" });
+        gsap.set(inner, { marginLeft: "0rem", marginRight: "0rem" });
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -265,7 +329,7 @@ function Navbar() {
       >
         <div
           ref={innerRef}
-          className="main-nav-container flex justify-between items-center  h-full lg:mx-10 "
+          className="main-nav-container flex justify-between items-center h-full"
         >
           {/* Logo */}
           <Link href="/" className="nav-logo">

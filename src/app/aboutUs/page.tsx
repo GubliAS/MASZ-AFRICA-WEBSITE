@@ -107,7 +107,7 @@ const OUR_STORY_TEXT_1 = (
     supply chain management, and business improvement, the company was created
     to address the lack of dependable, responsive, and technically knowledgeable
     supply partners within the African mining sector.
-    <br className="hidden md:block" />
+    <br className="hidden lg:block" />
     <br  />
     From the beginning, MASZ-Africa has focused on quality, reliability, and
     client satisfaction.
@@ -119,7 +119,7 @@ const OUR_STORY_TEXT_2 = (
     Through strong partnerships with globally recognized manufacturers and
     original equipment suppliers, the company delivers world-class products
     supported by solid technical expertise and consistent on-time delivery.
-    <br className="hidden md:block" />
+    <br className="hidden lg:block" />
     <br  />
     With a growing presence across West Africa, MASZ-Africa aims to become a
     continental leader in mining supply, logistics, and technical services. The
@@ -311,7 +311,7 @@ function OurStorySection({
       {/* Phase 1: line-by-line; Phase 2: static text; Phase 3: AnimationCopy overlay (spacer keeps layout, no jump) */}
       {!lineByLineComplete ? (
         <div
-          className="flex flex-col md:flex-row  gap-8 md:gap-6 lg:gap-[50px] relative"
+          className="flex flex-col lg:flex-row  gap-8  lg:gap-[50px] relative"
           style={{ contain: "layout style paint" }}
         >
           <LineByLineText
@@ -320,7 +320,7 @@ function OurStorySection({
             delay={0}
             startAnimation={startBodyAnimation}
             onComplete={() => setLineByLineComplete(true)}
-            className="main-text-description md:w-1/2 text-md-medium   lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+            className="main-text-description lg:w-1/2 text-md-medium   lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
           >
             {OUR_STORY_TEXT_1}
           </LineByLineText>
@@ -330,19 +330,19 @@ function OurStorySection({
             delay={0}
             startAnimation={startBodyAnimation}
             onComplete={() => setLineByLineComplete(true)}
-            className="main-text-description md:w-1/2 text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
+            className="main-text-description lg:w-1/2 text-md-medium lg:text-xl-medium lg:mt-[10] lg:leading-8 lg:tracking-tight text-[#777777]"
           >
             {OUR_STORY_TEXT_2}
           </LineByLineText>
         </div>
       ) : (
         <div
-          className="flex flex-col md:flex-row gap-8 md:gap-6 lg:gap-[50px] relative"
+          className="flex flex-col lg:flex-row gap-8  lg:gap-[50px] relative"
           style={{ contain: "layout style paint" }}
         >
           {/* 1 */}
           <div
-            className="relative md:w-1/2 overflow-hidden"
+            className="relative lg:w-1/2 overflow-hidden"
             style={{ contain: "layout style paint" }}
           >
             {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}
@@ -379,7 +379,7 @@ function OurStorySection({
           </div>
           {/* 2 */}
           <div
-            className="relative md:w-1/2 overflow-hidden"
+            className="relative lg:w-1/2 overflow-hidden"
             style={{ contain: "layout style paint" }}
           >
             {/* Spacer: always in DOM, holds height; hidden when overlay is shown so layout never shifts */}

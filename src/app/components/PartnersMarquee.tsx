@@ -11,31 +11,46 @@ interface Partner {
 
 interface PartnersMarqueeProps {
   partners: Partner[];
-  speed?: number; // pixels per second
+  speed?: number;
   className?: string;
+  reverse?: boolean;       // scroll right instead of left
+  scrollReverse?: boolean; // flip direction when user scrolls up
 }
 
-const BG_COLORS = ['#016BF2', '#16a34a']; // blue → green
+const BG_COLORS = ['#016BF2', '#16a34a'];
 const INTERVAL_MS = 3000;
 const TRANSITION_MS = 800;
 
-function PartnersMarquee({ partners, speed = 50, className = '' }: PartnersMarqueeProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const offsetRef = useRef(0);
+function PartnersMarquee({ partners, speed = 50, className = '', reverse = false, scrollReverse = false }: PartnersMarqueeProps) {
+  const trackRef    = useRef<HTMLDivElement>(null);
+  const wrapperRef  = useRef<HTMLDivElement>(null);
+  const offsetRef   = useRef(0);
   const lastTimeRef = useRef<number>(0);
+  const scrollDirRef = useRef<1 | -1>(1); // 1 = down, -1 = up
   const [colorIndex, setColorIndex] = useState(0);
 
-  // Duplicate partners for seamless loop
   const scrollingPartners = [...partners, ...partners, ...partners];
 
-  // Cycle background color on interval
+  // Cycle background color
   useEffect(() => {
     const id = setInterval(() => {
       setColorIndex(i => (i + 1) % BG_COLORS.length);
     }, INTERVAL_MS);
     return () => clearInterval(id);
   }, []);
+
+  // Watch scroll direction
+  useEffect(() => {
+    if (!scrollReverse) return;
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      scrollDirRef.current = y >= lastY ? 1 : -1;
+      lastY = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [scrollReverse]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -48,12 +63,15 @@ function PartnersMarquee({ partners, speed = 50, className = '' }: PartnersMarqu
       lastTimeRef.current = time;
 
       const halfWidth = track.scrollWidth / 2;
-
       if (halfWidth > 0) {
-        offsetRef.current += speed * dt;
-        if (offsetRef.current >= halfWidth) {
-          offsetRef.current -= halfWidth;
-        }
+        const baseDir  = reverse ? -1 : 1;
+        const scrollDir = scrollReverse ? scrollDirRef.current : 1;
+        offsetRef.current += speed * dt * baseDir * scrollDir;
+
+        // Wrap in both directions
+        if (offsetRef.current >= halfWidth) offsetRef.current -= halfWidth;
+        if (offsetRef.current < 0)          offsetRef.current += halfWidth;
+
         track.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
       }
 
@@ -62,7 +80,7 @@ function PartnersMarquee({ partners, speed = 50, className = '' }: PartnersMarqu
 
     animationFrameId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [speed, scrollingPartners.length]);
+  }, [speed, reverse, scrollReverse, scrollingPartners.length]);
 
   return (
     <div
@@ -83,10 +101,7 @@ function PartnersMarquee({ partners, speed = 50, className = '' }: PartnersMarqu
             key={`${partner.id}-${index}`}
             className="flex items-center gap-3 shrink-0"
           >
-            {/* Diamond/arrow icon */}
             {!partner.logo && (<div className="w-3 h-3 rotate-45 bg-white/30" />)}
-            
-            {/* Partner logo or name */}
             {partner.logo ? (
               <div className="relative h-8 w-auto">
                 <Image

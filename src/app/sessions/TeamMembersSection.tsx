@@ -1,48 +1,55 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { gsap } from 'gsap';
-import { SplitText } from 'gsap/dist/SplitText';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { gsap } from "gsap";
+import { SplitText } from "gsap/dist/SplitText";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import Link from "next/link";
+import { Linkedin } from "lucide-react";
+import {
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBrandTwitter,
+} from "@tabler/icons-react";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const teamMembers = [
   {
     id: 1,
-    name: 'Samuel Okwabeng',
-    position: 'CEO of MASZ-Africa',
+    name: "Samuel Okwabeng",
+    position: "CEO of MASZ-Africa",
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: '/aboutAssets/TEAM-1.jpg',
+    image: "/aboutAssets/TEAM-1.jpg",
   },
   {
     id: 2,
-    name: 'Samuel Okwabeng',
-    position: 'CEO of MASZ-Africa',
+    name: "Samuel Okwabeng",
+    position: "CEO of MASZ-Africa",
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: '/aboutAssets/TEAM-2.jpg',
+    image: "/aboutAssets/TEAM-2.jpg",
   },
   {
     id: 3,
-    name: 'Samuel Okwabeng',
-    position: 'CEO of MASZ-Africa',
+    name: "Samuel Okwabeng",
+    position: "CEO of MASZ-Africa",
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: '/aboutAssets/TEAM-3.jpg',
+    image: "/aboutAssets/TEAM-3.jpg",
   },
   {
     id: 4,
-    name: 'Samuel Okwabeng',
-    position: 'CEO of MASZ-Africa',
+    name: "Samuel Okwabeng",
+    position: "CEO of MASZ-Africa",
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: '/aboutAssets/TEAM-4.jpg',
+    image: "/aboutAssets/TEAM-4.jpg",
   },
   {
     id: 5,
-    name: 'Samuel Okwabeng',
-    position: 'CEO of MASZ-Africa',
+    name: "Samuel Okwabeng",
+    position: "CEO of MASZ-Africa",
     description: `Samuel Okwabeng is the Chief Executive Officer of MASZ-AFRICA, where he leads the company’s strategic vision and drives operational excellence across all its services. With extensive experience in procurement, supply chain management, engineering, and business operations, Samuel has transformed MASZ-AFRICA into a trusted partner for clients seeking quality, efficiency, and innovation. His leadership blends deep industry knowledge with a forward-thinking approach, ensuring the company stays ahead in a competitive and dynamic market. Under his guidance, MASZ-AFRICA has significantly expanded its reach across Africa and internationally, strengthened its service delivery, and earned a reputation for integrity, reliability, and client satisfaction.`,
-    image: '/aboutAssets/TEAM-5.jpg',
+    image: "/aboutAssets/TEAM-5.jpg",
   },
 ];
 
@@ -56,6 +63,7 @@ export default function TeamMembersAnimated() {
   const imageRef = useRef<HTMLDivElement | null>(null);
   const nameRef = useRef<HTMLHeadingElement | null>(null);
   const positionRef = useRef<HTMLParagraphElement | null>(null);
+  const socialsRef = useRef<HTMLDivElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const splitRef = useRef<any>(null);
 
@@ -68,17 +76,17 @@ export default function TeamMembersAnimated() {
       // Only use SplitText on desktop
       if (splitRef.current) splitRef.current.revert();
       splitRef.current = new SplitText(descriptionRef.current, {
-        type: 'lines',
+        type: "lines",
       });
       const lines = splitRef.current.lines;
 
       // Make lines inline-block to prevent gaps
       lines.forEach((line: HTMLElement) => {
-        line.style.display = 'inline-block';
-        line.style.width = '100%';
+        line.style.display = "inline-block";
+        line.style.width = "100%";
       });
 
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       tl.fromTo(
         imageRef.current,
@@ -90,25 +98,32 @@ export default function TeamMembersAnimated() {
         nameRef.current,
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.7 },
-        '-=0.6'
+        "-=0.6"
       );
 
       tl.fromTo(
         positionRef.current,
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6 },
-        '-=0.5'
+        "-=0.5"
+      );
+
+      tl.fromTo(
+        socialsRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        "-=0.4"
       );
 
       tl.fromTo(
         lines,
-        { y: 20, opacity: 0, filter: 'blur(2px)' },
-        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.15 },
-        '-=0.4'
+        { y: 20, opacity: 0, filter: "blur(2px)" },
+        { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.7, stagger: 0.15 },
+        "-=0.4"
       );
     } else {
       // Mobile: animate the whole paragraph as one block
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       tl.fromTo(
         imageRef.current,
@@ -120,21 +135,28 @@ export default function TeamMembersAnimated() {
         nameRef.current,
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.7 },
-        '-=0.6'
+        "-=0.6"
       );
 
       tl.fromTo(
         positionRef.current,
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6 },
-        '-=0.5'
+        "-=0.5"
+      );
+
+      tl.fromTo(
+        socialsRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        "-=0.4"
       );
 
       tl.fromTo(
         descriptionRef.current,
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8 },
-        '-=0.5'
+        "-=0.5"
       );
     }
   };
@@ -144,7 +166,7 @@ export default function TeamMembersAnimated() {
 
     const st = ScrollTrigger.create({
       trigger: sectionRef.current,
-      start: 'top 80%',
+      start: "top 80%",
       onEnter: () => animateMember(activeIndex > prevIndex ? 1 : -1),
       onEnterBack: () => animateMember(activeIndex > prevIndex ? 1 : -1),
     });
@@ -166,11 +188,11 @@ export default function TeamMembersAnimated() {
   return (
     <div
       ref={sectionRef}
-      className="min-h-screen bg-[#f3f3f3] py-16"
+      className="bg-[#f3f3f3] py-16 flex flex-col items-center justify-center overflow-hidden"
     >
-      <div className="w-full px-5 lg:px-[24px] xl:px-[120px] flex flex-col gap-10 lg:gap-25">
+      <div className="flex flex-col gap-10 w-full px-6 lg:px-[24px] xl:px-[120px] lg:gap-25">
         {/* Upper Section */}
-        <div className="flex flex-col lg:flex-row  items-center gap-10">
+        <div className="flex flex-col lg:flex-row justify-center  items-center gap-10">
           {/* Image */}
           <div className="relative w-full max-w-[390px] lg:max-w-[450px] h-[270px] lg:h-[470px] cursor-pointer flex-shrink-0">
             <div
@@ -187,10 +209,10 @@ export default function TeamMembersAnimated() {
           </div>
 
           {/* Details */}
-          <div className="flex-1  flex flex-col justify-center lg:justify-start lg:items-start items-center  lg:mt-0 lg:text-left">
+          <div className="  flex flex-col  justify-center lg:justify-start lg:items-start items-center  lg:mt-0 lg:text-left">
             <h2
               ref={nameRef}
-              className="uppercase text-blue-600 text-2xl-semibold lg:text-3xl-semibold font-semibold mb-2 mx-[21] lg:mx-0"
+              className="uppercase text-blue-600 text-2xl-semibold  lg:text-3xl-semibold font-semibold mb-2 mx-[21] lg:mx-0"
             >
               {activeMember.name}
             </h2>
@@ -202,9 +224,32 @@ export default function TeamMembersAnimated() {
               {activeMember.position}
             </p>
 
+            {/* Social icons */}
+            <div ref={socialsRef} className="footer-socials flex mb-6 items-center gap-4">
+              {/* LinkedIn */}
+              <Link href="/">
+                <button className="cursor-pointer hover:border-[#016BF2] hover:border hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] rounded-full p-[8px] text-white">
+                  <Linkedin size={20} fill="currentColor" strokeWidth={0} />
+                </button>
+              </Link>
+
+              {/* Instagram */}
+              <Link href="/">
+                <button className="cursor-pointer hover:bg-white hover:text-[#016BF2] hover:border-[#016BF2] hover:border transition-colors ease-in-out duration-150 bg-[#016BF2] rounded-full p-[8px] text-white">
+                  <IconBrandInstagram size={20} />
+                </button>
+              </Link>
+
+              {/* Facebook */}
+              <Link href="/">
+                <button className="cursor-pointer hover:border-[#016BF2] hover:border hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] rounded-full p-[8px] text-white">
+                  <IconBrandFacebook size={20} fill="currentColor" stroke={0} />
+                </button>
+              </Link>
+            </div>
             <p
               ref={descriptionRef}
-              className="text-gray-700 text-sm-regular mx-[5] lg:mx-0 lg:text-md-regular lg:leading-relaxed text-left px-4 lg:px-0 lg:max-w-[700px]"
+              className="text-gray-700 text-sm-regular  text-center lg:text-left mx-[5] lg:mx-0 lg:text-md-regular lg:leading-relaxed   lg:px-0 lg:max-w-[700px]"
             >
               {activeMember.description}
             </p>
@@ -222,8 +267,8 @@ export default function TeamMembersAnimated() {
                 className={`relative rounded-full p-[3px] transition-all duration-300 hover:scale-105 cursor-pointer
                   ${
                     isActive
-                      ? 'ring-2 ring-blue-500'
-                      : 'ring-1 ring-transparent'
+                      ? "ring-2 ring-blue-500"
+                      : "ring-1 ring-transparent"
                   }
                 `}
               >

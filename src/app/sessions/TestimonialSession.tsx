@@ -309,7 +309,7 @@ function TestimonialSession() {
 
       {/* Partners Marquee */}
       <div className="absolute  bottom-0 left-0 right-0">
-        <PartnersMarquee partners={partners} speed={60} />
+        <PartnersMarquee partners={partners} speed={60}  scrollReverse />
       </div>
     </section>
   );

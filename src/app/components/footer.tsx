@@ -1,41 +1,45 @@
-import React from 'react';
-import Image from 'next/image';
-import { title } from 'process';
-import Link from 'next/link';
-import { Mail, Inbox, Phone, MapPin } from 'lucide-react';
-import { Linkedin } from 'lucide-react';
-import { IconBrandBehance, IconBrandInstagram, IconBrandLinkedin } from '@tabler/icons-react';
-import { IconBrandFacebook } from '@tabler/icons-react';
-import { IconBrandTwitter } from '@tabler/icons-react';
+import React from "react";
+import Image from "next/image";
+import { title } from "process";
+import Link from "next/link";
+import { Mail, Inbox, Phone, MapPin } from "lucide-react";
+import { Linkedin } from "lucide-react";
+import {
+  IconBrandBehance,
+  IconBrandInstagram,
+  IconBrandLinkedin,
+} from "@tabler/icons-react";
+import { IconBrandFacebook } from "@tabler/icons-react";
+import { IconBrandTwitter } from "@tabler/icons-react";
 
 function Footer() {
   const footerLinks = [
     {
       id: 1,
-      title: 'About',
-      path: '/aboutUs',
+      title: "About",
+      path: "/aboutUs",
     },
     {
       id: 2,
-      title: 'Services',
-      path: '/services',
+      title: "Services",
+      path: "/services",
     },
     {
       id: 3,
-      title: 'Careers',
-      path: '/careers',
+      title: "Careers",
+      path: "/careers",
     },
     {
       id: 4,
-      title: 'Contact Us',
-      path: '/contactUs',
+      title: "Contact Us",
+      path: "/contactUs",
     },
   ];
 
   const addressObject = [
     {
       id: 1,
-      description: 'admin@maszgh,com',
+      description: "admin@maszgh,com",
       icon: <Mail size={16} />,
     },
     {
@@ -49,7 +53,7 @@ function Footer() {
     },
     {
       id: 3,
-      description: 'P.O. Box 729, Tarkwa,Western Region, Ghana',
+      description: "P.O. Box 729, Tarkwa,Western Region, Ghana",
       icon: <Inbox size={16} />,
     },
     {
@@ -111,7 +115,7 @@ function Footer() {
             <div className="input-and-button flex lg:flex-col lg:gap-4 lg:items-start items-center my-[20] lg:w-full lg:justify-between">
               <div className="input-bar bg-surface-card-primary bg-surface-card-primary h-[60] w-[250] lg:w-[400] text-center flex justify-center mr-[20]">
                 <input
-                className='w-full h-full focus:outline-none px-4'
+                  className="w-full h-full focus:outline-none px-4"
                   type="text"
                   name="email"
                   placeholder="Enter your email"
@@ -150,54 +154,34 @@ function Footer() {
       <div className="socials-container py-[30px] border-t border-blue-600 flex flex-col items-center justify-center">
         {/* Social icons */}
         <div className="footer-socials flex items-center py-[] gap-4">
-                {/* LinkedIn */}
-                <Link
-                  href="/"
-                  className="relative rounded-full overflow-hidden"
-                >
-                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
-                    <Linkedin size={20} fill="currentColor" strokeWidth={0} />{" "}
-                  </button>
-                </Link>
+          {/* LinkedIn */}
+          <Link href="/" className="relative rounded-full overflow-hidden">
+            <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+              <Linkedin size={20} fill="currentColor" strokeWidth={0} />{" "}
+            </button>
+          </Link>
 
-                {/* Instagram */}
-                <Link
-                  href="/"
-                  className="relative rounded-full overflow-hidden"
-                >
-                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
-                    <IconBrandInstagram size={20} />
-                  </button>
-                </Link>
+          {/* Instagram */}
+          <Link href="/" className="relative rounded-full overflow-hidden">
+            <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+              <IconBrandInstagram size={20} />
+            </button>
+          </Link>
 
-                {/* Facebook */}
-                <Link
-                  href="/"
-                  className="relative rounded-full overflow-hidden"
-                >
-                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
-                    <IconBrandFacebook
-                      size={20}
-                      fill="currentColor"
-                      stroke={0}
-                    />{" "}
-                  </button>
-                </Link>
+          {/* Facebook */}
+          <Link href="/" className="relative rounded-full overflow-hidden">
+            <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+              <IconBrandFacebook size={20} fill="currentColor" stroke={0} />{" "}
+            </button>
+          </Link>
 
-                {/* Twitter */}
-                <Link
-                  href="/"
-                  className="relative rounded-full overflow-hidden"
-                >
-                  <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
-                    <IconBrandTwitter
-                      size={20}
-                      fill="currentColor"
-                      stroke={0}
-                    />
-                  </button>
-                </Link>
-              </div>
+          {/* Twitter */}
+          <Link href="/" className="relative rounded-full overflow-hidden">
+            <button className="relative cursor-pointer hover:bg-white hover:text-[#016BF2] transition-colors ease-in-out duration-150 bg-[#016BF2] p-[8px] text-white">
+              <IconBrandTwitter size={20} fill="currentColor" stroke={0} />
+            </button>
+          </Link>
+        </div>
         <div className="copy-right-statement text-light text-xs-regular py-[10]">
           &copy; 2025 Masz-Africa general mining and services Limited. All
           Rights Reserved

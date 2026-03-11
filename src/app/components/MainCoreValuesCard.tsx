@@ -23,7 +23,7 @@ const GAP = 32; // gap-8 = 2rem = 32px
 // Desktop resting state
 const D = {
   number:      { x: 30, y: 30 },
-  title:       { rotation: 90, x: 115, y: 65, fontSize: '1.25rem', fontWeight: 600, padding: 0 },
+  title:       { rotation: 90, x: 40, y: 55, fontSize: '1.25rem', fontWeight: 600, padding: 0 },
   description: { autoAlpha: 0, x: 0, y: 230 },
   card:        { width: BASE_WIDTH, height: 550 },
 } as const;
@@ -147,13 +147,13 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         .to(cardEl,  { width: EXPANDED_WIDTH,  duration: 0.35, ease: 'power3.out' }, 0)
         .to(siblings,{ width: shrinkWidth,     duration: 0.35, ease: 'power3.out' }, 0)
         .to(image,   { autoAlpha: 1,           duration: 0.35, ease: 'power3.out' }, 0)
-        .to(number,  { fontSize: '1.875rem',   duration: 0.35, ease: 'power3.out' }, 0)
+        .to(number,  { x: 30, y: 30, fontSize: '1.875rem',   duration: 0.35, ease: 'power3.out' }, 0)
         .to(title,   {
-          rotation: 0, x: 30, y: 60,
+          rotation: 0, x: 90, y:34,
           fontSize: '1.5rem', fontWeight: 700, padding: 0,
           duration: 0.35, ease: 'power3.out',
         }, 0)
-        .to(desc, { autoAlpha: 1, x: 30, y: 230, duration: 0.35, delay: 0.05, ease: 'power3.out' }, 0);
+        .to(desc, { autoAlpha: 1, x: 30, y: 90, duration: 0.35, delay: 0.05, ease: 'power3.out' }, 0);
     };
 
     // ── Desktop collapse ────────────────────────────────────────────────────
@@ -172,7 +172,7 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
         .to(cardEl,  { width: restoreWidth, duration: 0.35, ease: 'power3.in' }, 0)
         .to(siblings,{ width: restoreWidth, duration: 0.35, ease: 'power3.in' }, 0)
         .to(image,   { autoAlpha: 0,                 duration: 0.25, ease: 'power3.in' }, 0)
-        .to(number,  { fontSize: D.title.fontSize,   duration: 0.35, ease: 'power3.in' }, 0)
+        .to(number,  { x: D.number.x, y: D.number.y, fontSize: D.title.fontSize,   duration: 0.35, ease: 'power3.in' }, 0)
         .to(title,   {
           rotation: D.title.rotation,
           x: D.title.x, y: D.title.y,
@@ -237,14 +237,14 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
       </div>
 
       {/* Content — absolutely positioned, coordinates set entirely by GSAP */}
-      <div className="relative z-10 h-full">
-        <p ref={numberRef} className="font-semibold absolute" style={{ fontSize: '1.25rem' }}>
+      <div className="relative z-10  h-full">
+        <p ref={numberRef} className="text-[22px] absolute" >
           {card.number}.
         </p>
 
         <p
           ref={titleRef}
-          className="uppercase font-semibold absolute whitespace-nowrap"
+          className="uppercase font-semibold absolute  whitespace-nowrap"
           style={{ transformOrigin: 'left center' }}
         >
           {card.title}
@@ -252,9 +252,9 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ card }) => {
 
         <p
           ref={descriptionRef}
-          className="absolute text-white/90 leading-relaxed"
+          className="absolute text-white text-sm-semibold md:text-md-semibold lg:text-lg-semibold w-full pr-[50px] md:pr-[74px] lg:bottom-[150px]   leading-relaxed"
           // width capped so text wraps nicely inside expanded card
-          style={{ width: '340px', fontSize: '0.875rem', opacity: 0 }}
+          // style={{ width: '340px', fontSize: '0.875rem', opacity: 0 }}
         >
           {card.description}
         </p>

@@ -133,7 +133,7 @@ const GallerySection = () => {
       </div>
 
       {/* ===== Gallery - each image animates individually ===== */}
-      <div className="mt-12 mx-[24px] space-y-5">
+      <div className="mt-12 md:mx-[24] xl:mx-[120]   space-y-2 lg:space-y-4">
         {rows.map((rowImages, rowIndex) => {
           const isNormalRow = rowIndex % 2 === 0;
           const rowStartIdx = rowIndex * 6;
@@ -141,13 +141,14 @@ const GallerySection = () => {
           return (
             <div
               key={rowIndex}
-              className="flex  lg:flex-nowrap justify-center gap-4"
+              className="flex  lg:flex-nowrap justify-center gap-2 lg:gap-4"
             >
               <ImageBlock
                 images={rowImages.slice(0, 3)}
                 reverse={!isNormalRow}
                 startIndex={rowStartIdx}
                 imageRefs={imageRefs}
+
               />
               <ImageBlock
                 images={rowImages.slice(3, 6)}
@@ -185,8 +186,8 @@ const ImageBlock = ({ images, reverse, startIndex, imageRefs }: BlockProps) => {
     return (
       <div
         ref={(el) => { imageRefs.current[globalIdx] = el; }}
-        className={`w-[260px] sm:w-[300px] lg:w-[340px] overflow-hidden cursor-pointer opacity-0 ${
-          tall ? 'h-[420px] lg:h-[520px]' : 'h-[200px] lg:h-[250px]'
+        className={`w-[120px] md:w-full lg:w-full overflow-hidden cursor-pointer opacity-0 ${
+          tall ? 'h-[400px] md:h-full lg:h-[520px]' : 'h-[200px] lg:h-[250px]'
         }`}
       >
         <Image
@@ -202,9 +203,9 @@ const ImageBlock = ({ images, reverse, startIndex, imageRefs }: BlockProps) => {
   };
 
   return (
-    <div className={`flex gap-4 ${reverse ? 'flex-row-reverse' : ''}`}>
+    <div className={`flex gap-2 lg:gap-4 ${reverse ? 'flex-row-reverse' : ''}`}>
       {renderImage(images[0], true, 0)}
-      <div className="flex flex-col justify-between gap-4">
+      <div className="flex flex-col justify-between gap-2 lg:gap-4">
         {renderImage(images[1], false, 1)}
         {renderImage(images[2], false, 2)}
       </div>

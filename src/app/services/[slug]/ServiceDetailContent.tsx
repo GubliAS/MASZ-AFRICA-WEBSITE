@@ -58,12 +58,22 @@ export default function ServiceDetailContent({
                 priority
                 className="object-cover"
               />
+
               <div className="absolute inset-0 bg-black/60 pointer-events-none" />
-              <div className="text-container text-light absolute bottom-20 left-0 right-0 flex items-center justify-center flex-col">
-                <div className="hero-tag text-md-medium uppercase border-2 rounded-full lg:p-[10]">
+              <div className="text-container   text-light absolute pt-10 pb-[63px] lg:pb-40 bottom-0 left-0 right-0 gap-[11px] lg:gap-10 flex items-center justify-center flex-col">
+                <div
+                  className="absolute inset-0 backdrop-blur-[4px] "
+                  style={{
+                    maskImage:
+                      "linear-gradient(to bottom, transparent 0%, black 20%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to bottom, transparent 0%, black 20%)",
+                  }}
+                />
+                <div className="hero-tag z-10 text-[10.4px] font-medium lg:text-md-medium uppercase border-2 rounded-full py-1.5 px-3 lg:p-[10]">
                   {service.heroTag}
                 </div>
-                <div className="title uppercase lg:text-4xl-semibold">
+                <div className="title z-10 uppercase text-xl-semibold md:text-2xl-semibold lg:text-4xl-semibold">
                   {service.heroTitle}
                 </div>
               </div>
@@ -154,37 +164,37 @@ export default function ServiceDetailContent({
               className="description text-default-heading leading-tight text-2xl-semibold lg:text-4xl-semibold"
             >
               ENGINEERED FOR{" "}
-              <span className="text-primary-default">EFFICIENCY</span>{" "}
-              AND{" "}<br />
+              <span className="text-primary-default">EFFICIENCY</span> AND{" "}
+              <br />
               <span className="text-primary-default">PROFITABILITY</span>
             </LineByLineText>
           </div>
           <div className="benefits flex justify-center lg:justify-start  py-[60]">
             <div className="benefits-main-content flex">
               <div className="left-side    xl:mx-[120]">
-                <div className="benefits-list grid grid-cols-1 md:grid-cols-2 lg:flex items-center justify-center lg:flex-start gap-6 lg:flex-wrap">
-                  {service.benefits.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="item-list group  relative overflow-hidden bg-white flex flex-col 
-                    max-w-[400px] lg:h-[350px] items-center justify-center 
-                    lg:gap-10 px-[30px] py-[40px] cursor-pointer"
-                    >
-                      <span className="liquid-bg absolute inset-0 -z-0" />
-                      <div className="item-icon relative z-10 bg-surface-card-colored-secondary rounded-full p-[10px] transition-colors duration-500 group-hover:bg-white">
-                        <Square3Stack3DIcon className="h-8  lg:w-auto text-primary-default transition-colors duration-500 group-hover:text-blue-600" />
-                      </div>
-                      <div className="mt-2 item-text relative z-10 text-center flex flex-col items-center justify-center transition-colors duration-500 group-hover:text-white">
-                        <div className="title capitalize lg:text-xl-medium">
-                          {item.title}
-                        </div>
-                        <div className="subtext lg:mt-[20px] lg:text-md-regular">
-                          {item.description}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+              <div className="benefits-list grid grid-cols-1 md:grid-cols-2 lg:flex items-stretch justify-center lg:flex-start gap-6 lg:flex-wrap">
+            {service.benefits.map((item, index) => (
+              <div
+                key={item.id}
+                className="item-list group relative overflow-hidden bg-white flex flex-col 
+              max-w-[400px] lg:min-h-[350px] items-center justify-center 
+              lg:gap-10 px-[30px] py-[40px] cursor-pointer"
+              >
+                <span className="liquid-bg absolute inset-0 -z-0" />
+                <div className="item-icon relative z-10 bg-surface-card-colored-secondary rounded-full p-[10px] transition-colors duration-500 group-hover:bg-white">
+                  <Square3Stack3DIcon className="h-8 lg:w-auto text-primary-default transition-colors duration-500 group-hover:text-blue-600" />
                 </div>
+                <div className="mt-2 item-text relative z-10 text-center flex flex-col items-center justify-center transition-colors duration-500 group-hover:text-white">
+                  <div className="title capitalize lg:text-xl-medium">
+                    {item.title}
+                  </div>
+                  <div className="subtext lg:mt-[20px] lg:text-md-regular">
+                    {item.description}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
               </div>
             </div>
           </div>

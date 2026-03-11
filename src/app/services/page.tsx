@@ -50,7 +50,7 @@ export default function Page() {
         </div>
       </ScrollReveal>
 
-      <ScrollReveal direction="up" duration={0.75} start="top 70%" scale>
+      <ScrollReveal direction="up" duration={0.75} start="top 80%" scale>
         <div className="service-cards-section">
           <ServicesCardsSection />
         </div>
